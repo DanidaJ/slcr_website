@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "category": "Academic",
+    "title": "Annual Academic Sessions 2026 – Registration Now Open",
+    "excerpt": "Members are invited to register for the forthcoming Annual Academic Sessions of the Sri Lanka College of Radiologists, scheduled to be held in July 2026 at the BMICH, Colombo. Early-bird registration closes 15 June.",
+    "date": "2026-05-10",
+    "featured": true,
+    "href": "#"
+  },
+  {
+    "id": 2,
+    "category": "Events",
+    "title": "Sri Lanka Radiology Congress 2026 – Call for Abstracts",
+    "excerpt": "The organizing committee invites submission of original research abstracts for presentation at the Sri Lanka Radiology Congress 2026. Deadline for abstract submission is 30 June 2026.",
+    "date": "2026-04-28",
+    "featured": false,
+    "href": "#"
+  },
+  {
+    "id": 3,
+    "category": "Publication",
+    "title": "New Clinical Guidelines for Contrast Media Administration Released",
+    "excerpt": "The SLCR has released updated clinical guidelines for the safe administration of contrast media in CT and MRI procedures across Sri Lankan hospitals and imaging centres.",
+    "date": "2026-04-15",
+    "featured": false,
+    "href": "#"
+  },
+  {
+    "id": 4,
+    "category": "Education",
+    "title": "Fellowship Examination Results – March 2026 Sitting",
+    "excerpt": "The Board of Examiners is pleased to announce the results of the Fellowship Examination conducted in March 2026. Congratulations to all successful candidates.",
+    "date": "2026-04-02",
+    "featured": false,
+    "href": "#"
+  }
+]
