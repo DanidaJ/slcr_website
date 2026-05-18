@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X, ChevronDown } from "lucide-react";
 
 type NavItem = {
@@ -103,11 +104,13 @@ export default function Navbar() {
               href="/"
               className="flex items-center gap-2.5 sm:gap-3 flex-shrink-0"
             >
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/10 border-2 border-white/40 flex items-center justify-center flex-shrink-0">
-                <span className="text-white text-base font-extrabold font-heading">
-                  R
-                </span>
-              </div>
+              <Image
+                src="/images/logo.png"
+                alt="SLCR Logo"
+                width={40}
+                height={40}
+                className="flex-shrink-0 object-contain"
+              />
               <div>
                 <p className="text-white font-bold text-[12px] sm:text-sm leading-tight font-heading whitespace-nowrap">
                   Sri Lanka College of Radiologists
@@ -201,13 +204,22 @@ export default function Navbar() {
               <div className="p-5 sm:p-6">
                 {/* Drawer header */}
                 <div className="flex items-center justify-between mb-8">
-                  <div>
-                    <p className="text-white font-bold text-sm font-heading">
-                      SLCR
-                    </p>
-                    <p className="text-white/55 text-[11px] font-medium tracking-[0.15em] uppercase">
-                      To Enlighten &amp; Relieve
-                    </p>
+                  <div className="flex items-center gap-2.5">
+                    <Image
+                      src="/images/logo.png"
+                      alt="SLCR Logo"
+                      width={34}
+                      height={34}
+                      className="flex-shrink-0 object-contain"
+                    />
+                    <div>
+                      <p className="text-white font-bold text-sm font-heading">
+                        SLCR
+                      </p>
+                      <p className="text-white/55 text-[11px] font-medium tracking-[0.15em] uppercase">
+                        To Enlighten &amp; Relieve
+                      </p>
+                    </div>
                   </div>
                   <button
                     onClick={() => setMobileOpen(false)}

@@ -6,15 +6,26 @@ import Link from "next/link";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { fadeUp } from "@/lib/motion";
 
+const DESKTOP_SRCS = [
+  { webm: "/videos/background1.webm", mp4: "/videos/background1.mp4" },
+  { webm: "/videos/background2.webm", mp4: "/videos/background2.mp4" },
+];
+
+const MOBILE_SRCS = [
+  { mp4: "/videos/background_video_mobile.mp4" },
+  { mp4: "/videos/background_video_mobile2.mp4" },
+];
+
 export default function HeroSection() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [secondLoaded, setSecondLoaded] = useState(false);
+  // null = device type not yet determined (avoids loading wrong sources on first render)
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
   const video0Ref = useRef<HTMLVideoElement>(null);
   const video1Ref = useRef<HTMLVideoElement>(null);
   const videoRefs = [video0Ref, video1Ref];
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Parallax: content drifts up + fades as you scroll past the hero
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
@@ -22,8 +33,30 @@ export default function HeroSection() {
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 130]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
 
-  // Defer loading the 2nd clip until the 1st is playing — saves ~2 MB on first paint.
+  // Detect device type — stays null until this runs so we never load the wrong sources
   useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  // Start (or restart) the primary video once device type is known or changes.
+  // By this point the correct <source> tags are already in the DOM.
+  useEffect(() => {
+    if (isMobile === null) return;
+    const v0 = video0Ref.current;
+    if (!v0) return;
+    setActiveIdx(0);
+    setSecondLoaded(false);
+    v0.load();
+    v0.play().catch(() => {});
+  }, [isMobile]);
+
+  // Defer loading the 2nd clip until the 1st is playing — saves bandwidth on first paint
+  useEffect(() => {
+    if (isMobile === null) return;
     const v0 = video0Ref.current;
     if (!v0) return;
     const onPlaying = () => setSecondLoaded(true);
@@ -33,9 +66,8 @@ export default function HeroSection() {
       v0.removeEventListener("playing", onPlaying);
       window.clearTimeout(idleTimer);
     };
-  }, []);
+  }, [isMobile]);
 
-  // Once the second video's <source> tags are rendered, ask the browser to load them.
   useEffect(() => {
     if (secondLoaded) video1Ref.current?.load();
   }, [secondLoaded]);
@@ -46,21 +78,22 @@ export default function HeroSection() {
     videoRefs[nextIdx].current?.play().catch(() => {});
   }, [activeIdx]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const srcs = isMobile ? MOBILE_SRCS : DESKTOP_SRCS;
+
   return (
     <section
       ref={sectionRef}
       className="relative h-screen min-h-[560px] h-[100svh] w-full overflow-hidden"
     >
-      {/* Fallback */}
+      {/* Fallback — visible until video starts */}
       <div className="absolute inset-0 bg-navy" />
 
-      {/* Video 0 — primary, loads immediately */}
+      {/* Video 0 — no autoPlay; we call .play() manually after device type is known */}
       <video
         ref={video0Ref}
         muted
         playsInline
-        autoPlay
-        preload="auto"
+        preload="none"
         poster="/videos/hero-poster.jpg"
         aria-hidden="true"
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
@@ -68,8 +101,14 @@ export default function HeroSection() {
         }`}
         onEnded={activeIdx === 0 ? handleVideoEnd : undefined}
       >
-        <source src="/videos/background1.webm" type="video/webm" />
-        <source src="/videos/background1.mp4" type="video/mp4" />
+        {isMobile !== null && (
+          <>
+            {!isMobile && (
+              <source src={DESKTOP_SRCS[0].webm} type="video/webm" />
+            )}
+            <source src={srcs[0].mp4} type="video/mp4" />
+          </>
+        )}
       </video>
 
       {/* Video 1 — deferred until video 0 starts playing */}
@@ -84,10 +123,12 @@ export default function HeroSection() {
         }`}
         onEnded={activeIdx === 1 ? handleVideoEnd : undefined}
       >
-        {secondLoaded && (
+        {isMobile !== null && secondLoaded && (
           <>
-            <source src="/videos/background2.webm" type="video/webm" />
-            <source src="/videos/background2.mp4" type="video/mp4" />
+            {!isMobile && (
+              <source src={DESKTOP_SRCS[1].webm} type="video/webm" />
+            )}
+            <source src={srcs[1].mp4} type="video/mp4" />
           </>
         )}
       </video>
@@ -129,7 +170,6 @@ export default function HeroSection() {
           animate="visible"
           className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mt-8 sm:mt-12 w-full sm:w-auto max-w-xs sm:max-w-none"
         >
-          {/* Primary — pill with sweep fill + arrow badge */}
           <Link
             href="#"
             className="group relative inline-flex items-center justify-between sm:justify-start gap-4 w-full sm:w-auto pl-6 sm:pl-7 pr-2 py-2 rounded-full border border-white/40 overflow-hidden"
@@ -143,7 +183,6 @@ export default function HeroSection() {
             </span>
           </Link>
 
-          {/* Secondary — underline-reveal text link */}
           <Link
             href="#"
             className="group inline-flex items-center gap-2 text-sm font-semibold text-white/90 hover:text-white py-2 transition-colors"

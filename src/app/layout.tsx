@@ -19,6 +19,10 @@ export const metadata: Metadata = {
   title: "Sri Lanka College of Radiologists",
   description:
     "To Enlighten & Relieve — The official website of the Sri Lanka College of Radiologists.",
+  icons: {
+    icon: "/images/logo.png",
+    apple: "/images/logo.png",
+  },
 };
 
 export const viewport: Viewport = {

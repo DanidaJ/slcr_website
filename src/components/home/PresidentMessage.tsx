@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { fadeLeft, fadeRight } from "@/lib/motion";
 
 const VIEWPORT = { once: false, margin: "-80px" } as const;
@@ -24,21 +25,14 @@ export default function PresidentMessage() {
               <div className="absolute -inset-2 sm:-inset-3 rounded-2xl border border-white/15" />
               <div className="absolute -inset-4 sm:-inset-6 rounded-2xl border border-white/[0.07]" />
 
-              <div className="relative w-56 h-72 sm:w-64 sm:h-80 md:w-72 md:h-[22rem] xl:w-80 xl:h-96 rounded-2xl overflow-hidden shadow-2xl shadow-navy-dark/60 bg-navy-light flex flex-col items-center justify-center gap-3">
-                {/* Placeholder — drop president.jpg into /public/images/ to replace */}
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-navy border-2 border-white/30 flex items-center justify-center">
-                  <span className="text-white/70 text-lg sm:text-xl font-heading font-extrabold">
-                    NS
-                  </span>
-                </div>
-                <div className="text-center">
-                  <p className="text-white/40 text-[11px] sm:text-xs">
-                    Add <code className="text-white/50">president.jpg</code>
-                  </p>
-                  <p className="text-white/30 text-[10px]">
-                    to /public/images/
-                  </p>
-                </div>
+              <div className="relative w-56 h-72 sm:w-64 sm:h-80 md:w-72 md:h-[22rem] xl:w-80 xl:h-96 rounded-2xl overflow-hidden shadow-2xl shadow-navy-dark/60">
+                <Image
+                  src="/images/president.png"
+                  alt="Dr Nayana Samarasinghe — President, Sri Lanka College of Radiologists"
+                  fill
+                  className="object-cover object-top"
+                  sizes="(max-width: 1024px) 320px, 320px"
+                />
               </div>
             </div>
           </motion.div>

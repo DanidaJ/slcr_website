@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { Users, CalendarDays, Stethoscope } from "lucide-react";
 import { fadeLeft, fadeRight, fadeUp, staggerContainer } from "@/lib/motion";
 
@@ -95,19 +96,14 @@ export default function OurCollege() {
             {/* Decorative offset frame */}
             <div className="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 w-full h-full border-2 border-navy/15 rounded-xl pointer-events-none" />
 
-            <div className="relative rounded-xl overflow-hidden shadow-2xl aspect-[4/3] bg-gradient-to-br from-navy-light to-navy flex flex-col items-center justify-center gap-2 px-4 text-center">
-              {/* Placeholder — drop college-building.jpg into /public/images/ to replace */}
-              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/10 flex items-center justify-center">
-                <span className="text-white/60 text-lg sm:text-xl font-heading font-extrabold">
-                  SLCR
-                </span>
-              </div>
-              <p className="text-white/30 text-[11px] sm:text-xs">
-                Add{" "}
-                <code className="text-white/50 break-all">
-                  /public/images/college-building.jpg
-                </code>
-              </p>
+            <div className="relative rounded-xl overflow-hidden shadow-2xl aspect-[4/3]">
+              <Image
+                src="/images/college-building.jpg"
+                alt="Sri Lanka College of Radiologists Building"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
             </div>
           </motion.div>
         </div>
