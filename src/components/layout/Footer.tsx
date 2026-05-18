@@ -2,10 +2,13 @@ import Link from "next/link";
 import { MapPin, Phone, Mail, ExternalLink } from "lucide-react";
 
 const QUICK_LINKS = [
-  { label: "Ministry of Health", href: "#" },
-  { label: "Epidemiology Unit", href: "#" },
-  { label: "Medical Research Institute", href: "#" },
-  { label: "National Medicines Regulatory Authority", href: "#" },
+  { label: "Ministry of Health", href: "https://www.health.gov.lk/" },
+  { label: "Epidemiology Unit", href: "https://www.epid.gov.lk/" },
+  { label: "Medical Research Institute", href: "https://www.mri.gov.lk/" },
+  {
+    label: "National Medicines Regulatory Authority",
+    href: "https://www.nmra.gov.lk/",
+  },
 ];
 
 export default function Footer() {
@@ -80,6 +83,8 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="group flex items-start gap-2 text-white/55 hover:text-white text-sm transition-colors"
                   >
                     <ExternalLink className="w-3.5 h-3.5 text-white/30 group-hover:text-white transition-colors flex-shrink-0 mt-0.5" />

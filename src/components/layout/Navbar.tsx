@@ -101,18 +101,18 @@ export default function Navbar() {
             {/* Logo + name */}
             <Link
               href="/"
-              className="flex items-center gap-2.5 sm:gap-3 flex-shrink min-w-0"
+              className="flex items-center gap-2.5 sm:gap-3 flex-shrink-0"
             >
               <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/10 border-2 border-white/40 flex items-center justify-center flex-shrink-0">
                 <span className="text-white text-base font-extrabold font-heading">
                   R
                 </span>
               </div>
-              <div className="min-w-0">
-                <p className="text-white font-bold text-[12px] sm:text-sm leading-tight font-heading truncate">
+              <div>
+                <p className="text-white font-bold text-[12px] sm:text-sm leading-tight font-heading whitespace-nowrap">
                   Sri Lanka College of Radiologists
                 </p>
-                <p className="text-white/55 text-[10px] sm:text-[11px] font-medium tracking-[0.15em] uppercase truncate">
+                <p className="text-white/55 text-[10px] sm:text-[11px] font-medium tracking-[0.15em] uppercase whitespace-nowrap">
                   To Enlighten &amp; Relieve
                 </p>
               </div>

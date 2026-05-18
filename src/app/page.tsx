@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import BackToTop from "@/components/layout/BackToTop";
 import HeroSection from "@/components/home/HeroSection";
 import LatestStories from "@/components/home/LatestStories";
 import OurCollege from "@/components/home/OurCollege";
@@ -14,6 +15,7 @@ export default function Home() {
       <OurCollege />
       <PresidentMessage />
       <Footer />
+      <BackToTop />
     </main>
   );
 }
