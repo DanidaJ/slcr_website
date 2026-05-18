@@ -68,28 +68,28 @@ export default function LatestStories() {
   ];
 
   return (
-    <section className="py-20 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-14 sm:py-16 lg:py-20 xl:py-24 bg-white overflow-hidden">
+      <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8">
         {/* Section header */}
         <motion.div
           variants={fadeUp()}
           initial="hidden"
           whileInView="visible"
           viewport={VIEWPORT}
-          className="flex items-end justify-between mb-10"
+          className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 sm:mb-10"
         >
           <div>
-            <p className="text-navy/50 text-xs font-semibold tracking-[0.2em] uppercase mb-1">
+            <p className="text-navy/50 text-[11px] sm:text-xs font-semibold tracking-[0.2em] uppercase mb-1">
               Latest From Us
             </p>
-            <h2 className="font-heading text-3xl md:text-4xl text-navy font-extrabold tracking-tight">
+            <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl xl:text-[2.75rem] text-navy font-extrabold tracking-tight">
               Latest Stories
             </h2>
             <div className="mt-3 w-12 h-0.5 bg-gold" />
           </div>
           <Link
             href="#"
-            className="group hidden sm:flex items-center gap-1.5 text-navy hover:text-navy/60 text-sm font-semibold transition-colors"
+            className="group inline-flex items-center gap-1.5 text-navy hover:text-navy/60 text-sm font-semibold transition-colors self-start sm:self-auto"
           >
             View All
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -97,7 +97,7 @@ export default function LatestStories() {
         </motion.div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 sm:gap-6">
           {/* Featured card */}
           {featured && (
             <motion.article
@@ -111,18 +111,18 @@ export default function LatestStories() {
                 href={featured.href}
                 className="group block h-full rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300"
               >
-                <div className="h-60 overflow-hidden">
+                <div className="h-48 sm:h-56 lg:h-60 xl:h-72 overflow-hidden">
                   <CardPlaceholder label={featured.category} />
                 </div>
-                <div className="p-7 border-l-2 border-transparent group-hover:border-gold transition-colors duration-300">
-                  <div className="flex items-center gap-3 mb-3">
+                <div className="p-5 sm:p-6 lg:p-7 border-l-2 border-transparent group-hover:border-gold transition-colors duration-300">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
                     <CategoryBadge category={featured.category} />
                     <span className="text-gray-400 text-xs flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       {formatDate(featured.date)}
                     </span>
                   </div>
-                  <h3 className="font-heading text-2xl text-navy font-bold mb-3 group-hover:text-navy/70 transition-colors leading-snug">
+                  <h3 className="font-heading text-xl sm:text-2xl xl:text-3xl text-navy font-bold mb-3 group-hover:text-navy/70 transition-colors leading-snug">
                     {featured.title}
                   </h3>
                   <p className="text-gray-500 text-sm leading-relaxed line-clamp-3">
@@ -158,10 +158,10 @@ export default function LatestStories() {
                     href={story.href}
                     className="group flex rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300"
                   >
-                    <div className="w-24 flex-shrink-0 min-h-[104px]">
+                    <div className="w-20 sm:w-24 flex-shrink-0 min-h-[96px] sm:min-h-[104px]">
                       <CardPlaceholder label={story.category} />
                     </div>
-                    <div className="flex-1 p-4 border-l-2 border-transparent group-hover:border-gold transition-colors duration-300">
+                    <div className="flex-1 min-w-0 p-3 sm:p-4 border-l-2 border-transparent group-hover:border-gold transition-colors duration-300">
                       <div className="mb-1.5">
                         <CategoryBadge category={story.category} />
                       </div>

@@ -11,8 +11,8 @@ const QUICK_LINKS = [
 export default function Footer() {
   return (
     <footer className="bg-navy-dark text-white/75">
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8 py-12 sm:py-14 lg:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10 lg:gap-12">
           {/* About */}
           <div>
             <h3 className="text-white font-bold text-xs tracking-[0.2em] uppercase mb-2 font-heading">
@@ -94,7 +94,7 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
           <p className="text-white/35 text-xs">
             © 2026 Sri Lanka College of Radiologists. All rights reserved.
           </p>

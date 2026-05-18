@@ -69,7 +69,7 @@ export default function Navbar() {
             scrolled ? "border-navy-light/50" : "border-white/20"
           }`}
         >
-          <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
+          <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-6 lg:px-8 py-2 flex items-center justify-between">
             <span className="text-white/60 text-xs">
               {new Date().toLocaleDateString("en-US", {
                 weekday: "long",
@@ -96,20 +96,23 @@ export default function Navbar() {
         </div>
 
         {/* Main nav bar */}
-        <nav className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between py-4 lg:py-3">
+        <nav className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between py-3 sm:py-4 lg:py-3 gap-3">
             {/* Logo + name */}
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
-              <div className="w-11 h-11 rounded-full bg-white/10 border-2 border-white/40 flex items-center justify-center">
+            <Link
+              href="/"
+              className="flex items-center gap-2.5 sm:gap-3 flex-shrink min-w-0"
+            >
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/10 border-2 border-white/40 flex items-center justify-center flex-shrink-0">
                 <span className="text-white text-base font-extrabold font-heading">
                   R
                 </span>
               </div>
-              <div>
-                <p className="text-white font-bold text-sm leading-tight font-heading">
+              <div className="min-w-0">
+                <p className="text-white font-bold text-[12px] sm:text-sm leading-tight font-heading truncate">
                   Sri Lanka College of Radiologists
                 </p>
-                <p className="text-white/55 text-[11px] font-medium tracking-[0.15em] uppercase">
+                <p className="text-white/55 text-[10px] sm:text-[11px] font-medium tracking-[0.15em] uppercase truncate">
                   To Enlighten &amp; Relieve
                 </p>
               </div>
@@ -193,9 +196,9 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "tween", duration: 0.3 }}
-              className="fixed top-0 left-0 bottom-0 w-80 bg-navy-dark z-50 overflow-y-auto"
+              className="fixed top-0 left-0 bottom-0 w-[85vw] max-w-sm bg-navy-dark z-50 overflow-y-auto overscroll-contain"
             >
-              <div className="p-6">
+              <div className="p-5 sm:p-6">
                 {/* Drawer header */}
                 <div className="flex items-center justify-between mb-8">
                   <div>

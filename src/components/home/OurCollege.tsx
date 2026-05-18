@@ -15,9 +15,9 @@ const VIEWPORT = { once: false, margin: "-80px" } as const;
 
 export default function OurCollege() {
   return (
-    <section className="py-20 bg-surface">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+    <section className="py-14 sm:py-16 lg:py-20 xl:py-24 bg-surface overflow-hidden">
+      <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 xl:gap-16 items-center">
           {/* Text side */}
           <motion.div
             variants={fadeLeft()}
@@ -25,23 +25,24 @@ export default function OurCollege() {
             whileInView="visible"
             viewport={VIEWPORT}
           >
-            <p className="text-navy/50 text-xs font-semibold tracking-[0.2em] uppercase mb-2">
+            <p className="text-navy/50 text-[11px] sm:text-xs font-semibold tracking-[0.2em] uppercase mb-2">
               Who We Are
             </p>
-            <h2 className="font-heading text-4xl md:text-5xl text-navy font-extrabold tracking-tight leading-tight mb-3">
+            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl xl:text-[3.25rem] text-navy font-extrabold tracking-tight leading-tight mb-3">
               Sri Lanka College
-              <br />
+              <br className="hidden sm:block" />
+              <span className="sm:hidden"> </span>
               of Radiologists
             </h2>
             <div className="w-12 h-0.5 bg-gold mb-6" />
 
-            <p className="text-gray-600 leading-relaxed mb-4 text-[15px]">
+            <p className="text-gray-600 leading-relaxed mb-4 text-[15px] sm:text-base">
               The Sri Lanka College of Radiologists, established in January 1980
               and officially renamed in 2004, is a distinguished institution
               dedicated to representing both Clinical Radiology and Radiation
               Oncology.
             </p>
-            <p className="text-gray-600 leading-relaxed mb-8 text-[15px]">
+            <p className="text-gray-600 leading-relaxed mb-8 text-[15px] sm:text-base">
               Aligned with the Postgraduate Institute of Medicine, University of
               Colombo, the college is committed to training competent
               Radiologists and Radiotherapists. With a membership of 331, the
@@ -56,26 +57,28 @@ export default function OurCollege() {
               initial="hidden"
               whileInView="visible"
               viewport={VIEWPORT}
-              className="grid grid-cols-3 gap-4 mb-8"
+              className="grid grid-cols-3 gap-3 sm:gap-4 mb-8"
             >
               {STATS.map((stat) => (
                 <motion.div
                   key={stat.label}
                   variants={fadeUp()}
-                  className="text-center p-4 bg-white rounded-xl shadow-sm border border-gray-100"
+                  className="text-center p-3 sm:p-4 bg-white rounded-xl shadow-sm border border-gray-100"
                 >
                   <stat.icon className="w-5 h-5 text-navy/70 mx-auto mb-2" />
-                  <p className="font-heading text-2xl text-navy font-extrabold">
+                  <p className="font-heading text-xl sm:text-2xl text-navy font-extrabold">
                     {stat.value}
                   </p>
-                  <p className="text-gray-400 text-xs mt-0.5">{stat.label}</p>
+                  <p className="text-gray-400 text-[11px] sm:text-xs mt-0.5">
+                    {stat.label}
+                  </p>
                 </motion.div>
               ))}
             </motion.div>
 
             <Link
               href="#"
-              className="group inline-flex items-center gap-2 px-6 py-3 border-2 border-navy text-navy text-sm font-semibold rounded hover:bg-navy hover:text-white transition-colors"
+              className="group inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 border-2 border-navy text-navy text-sm font-semibold rounded hover:bg-navy hover:text-white transition-colors"
             >
               Read More
             </Link>
@@ -87,21 +90,21 @@ export default function OurCollege() {
             initial="hidden"
             whileInView="visible"
             viewport={VIEWPORT}
-            className="relative"
+            className="relative mt-2 lg:mt-0"
           >
             {/* Decorative offset frame */}
-            <div className="absolute -top-4 -right-4 w-full h-full border-2 border-navy/15 rounded-xl pointer-events-none" />
+            <div className="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 w-full h-full border-2 border-navy/15 rounded-xl pointer-events-none" />
 
-            <div className="relative rounded-xl overflow-hidden shadow-2xl aspect-[4/3] bg-gradient-to-br from-navy-light to-navy flex flex-col items-center justify-center gap-2">
+            <div className="relative rounded-xl overflow-hidden shadow-2xl aspect-[4/3] bg-gradient-to-br from-navy-light to-navy flex flex-col items-center justify-center gap-2 px-4 text-center">
               {/* Placeholder — drop college-building.jpg into /public/images/ to replace */}
-              <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center">
-                <span className="text-white/60 text-xl font-heading font-extrabold">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/10 flex items-center justify-center">
+                <span className="text-white/60 text-lg sm:text-xl font-heading font-extrabold">
                   SLCR
                 </span>
               </div>
-              <p className="text-white/30 text-xs">
+              <p className="text-white/30 text-[11px] sm:text-xs">
                 Add{" "}
-                <code className="text-white/50">
+                <code className="text-white/50 break-all">
                   /public/images/college-building.jpg
                 </code>
               </p>
