@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Calendar } from "lucide-react";
 import { fadeUp, fadeRight } from "@/lib/motion";
 import storiesData from "@/data/stories.json";
@@ -13,11 +14,14 @@ type Story = {
   title: string;
   excerpt: string;
   date: string;
+  image: string;
   featured: boolean;
   href: string;
 };
 
 const stories: Story[] = storiesData;
+const SIDE_COUNT = 3;
+const ROTATION_MS = 15500;
 
 const VIEWPORT = { once: false, margin: "-80px" } as const;
 
@@ -29,18 +33,6 @@ function formatDate(dateStr: string) {
   });
 }
 
-/** Monochrome navy placeholder — single consistent colour for every card */
-function CardPlaceholder({ label }: { label: string }) {
-  return (
-    <div className="relative w-full h-full bg-gradient-to-br from-navy via-navy-light to-navy flex items-center justify-center overflow-hidden">
-      <span className="text-white/[0.06] font-heading font-extrabold text-7xl select-none">
-        {label}
-      </span>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.06),transparent_60%)]" />
-    </div>
-  );
-}
-
 function CategoryBadge({ category }: { category: string }) {
   return (
     <span className="inline-block text-[10px] font-semibold tracking-wider uppercase px-2.5 py-1 rounded-full border border-navy/15 text-navy/70 bg-navy/[0.03]">
@@ -50,22 +42,20 @@ function CategoryBadge({ category }: { category: string }) {
 }
 
 export default function LatestStories() {
-  const featured = stories.find((s) => s.featured);
-  const secondary = stories.filter((s) => !s.featured);
+  const [activeIdx, setActiveIdx] = useState(0);
 
-  // Auto-rotating slideshow for the side column
-  const [rotation, setRotation] = useState(0);
   useEffect(() => {
-    if (secondary.length < 2) return;
-    const id = setInterval(() => setRotation((r) => r + 1), 3800);
+    const id = setInterval(
+      () => setActiveIdx((i) => (i + 1) % stories.length),
+      ROTATION_MS
+    );
     return () => clearInterval(id);
-  }, [secondary.length]);
+  }, []);
 
-  const offset = rotation % secondary.length;
-  const rotated = [
-    ...secondary.slice(offset),
-    ...secondary.slice(0, offset),
-  ];
+  const featured = stories[activeIdx];
+  const sideStories = Array.from({ length: SIDE_COUNT }, (_, i) =>
+    stories[(activeIdx + 1 + i) % stories.length]
+  );
 
   return (
     <section className="py-14 sm:py-16 lg:py-20 xl:py-24 bg-white overflow-hidden">
@@ -98,42 +88,57 @@ export default function LatestStories() {
 
         {/* Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 sm:gap-6">
-          {/* Featured card */}
-          {featured && (
-            <motion.article
-              variants={fadeUp()}
-              initial="hidden"
-              whileInView="visible"
-              viewport={VIEWPORT}
-              className="lg:col-span-3"
-            >
-              <Link
-                href={featured.href}
-                className="group block h-full rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300"
+          {/* Featured card — rotates with activeIdx */}
+          <motion.div
+            variants={fadeUp()}
+            initial="hidden"
+            whileInView="visible"
+            viewport={VIEWPORT}
+            className="lg:col-span-3"
+          >
+            <AnimatePresence mode="wait">
+              <motion.article
+                key={featured.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="h-full"
               >
-                <div className="h-48 sm:h-56 lg:h-60 xl:h-72 overflow-hidden">
-                  <CardPlaceholder label={featured.category} />
-                </div>
-                <div className="p-5 sm:p-6 lg:p-7 border-l-2 border-transparent group-hover:border-gold transition-colors duration-300">
-                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
-                    <CategoryBadge category={featured.category} />
-                    <span className="text-gray-400 text-xs flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      {formatDate(featured.date)}
-                    </span>
+                <Link
+                  href={featured.href}
+                  className="group block h-full rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300"
+                >
+                  <div className="relative h-48 sm:h-56 lg:h-60 xl:h-72 overflow-hidden">
+                    <Image
+                      src={featured.image}
+                      alt={featured.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      sizes="(max-width: 1024px) 100vw, 60vw"
+                    />
                   </div>
-                  <h3 className="font-heading text-xl sm:text-2xl xl:text-3xl text-navy font-bold mb-3 group-hover:text-navy/70 transition-colors leading-snug">
-                    {featured.title}
-                  </h3>
-                  <p className="text-gray-500 text-sm leading-relaxed line-clamp-3">
-                    {featured.excerpt}
-                  </p>
-                </div>
-              </Link>
-            </motion.article>
-          )}
+                  <div className="p-5 sm:p-6 lg:p-7 border-l-2 border-transparent group-hover:border-gold transition-colors duration-300">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
+                      <CategoryBadge category={featured.category} />
+                      <span className="text-gray-400 text-xs flex items-center gap-1">
+                        <Calendar className="w-3 h-3" />
+                        {formatDate(featured.date)}
+                      </span>
+                    </div>
+                    <h3 className="font-heading text-xl sm:text-2xl xl:text-3xl text-navy font-bold mb-3 group-hover:text-navy/70 transition-colors leading-snug">
+                      {featured.title}
+                    </h3>
+                    <p className="text-gray-500 text-sm leading-relaxed line-clamp-3">
+                      {featured.excerpt}
+                    </p>
+                  </div>
+                </Link>
+              </motion.article>
+            </AnimatePresence>
+          </motion.div>
 
-          {/* Side column — auto-rotating slideshow */}
+          {/* Side column — rotates with the same activeIdx */}
           <motion.div
             variants={fadeRight()}
             initial="hidden"
@@ -142,7 +147,7 @@ export default function LatestStories() {
             className="lg:col-span-2 flex flex-col gap-4"
           >
             <AnimatePresence mode="popLayout">
-              {rotated.map((story) => (
+              {sideStories.map((story) => (
                 <motion.article
                   key={story.id}
                   layout
@@ -150,16 +155,22 @@ export default function LatestStories() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{
-                    layout: { duration: 0.7, ease: "easeInOut" },
-                    opacity: { duration: 0.5 },
+                    layout: { duration: 0.6, ease: "easeInOut" },
+                    opacity: { duration: 0.4 },
                   }}
                 >
                   <Link
                     href={story.href}
                     className="group flex rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300"
                   >
-                    <div className="w-20 sm:w-24 flex-shrink-0 min-h-[96px] sm:min-h-[104px]">
-                      <CardPlaceholder label={story.category} />
+                    <div className="relative w-20 sm:w-24 flex-shrink-0 min-h-[96px] sm:min-h-[104px]">
+                      <Image
+                        src={story.image}
+                        alt={story.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        sizes="96px"
+                      />
                     </div>
                     <div className="flex-1 min-w-0 p-3 sm:p-4 border-l-2 border-transparent group-hover:border-gold transition-colors duration-300">
                       <div className="mb-1.5">
@@ -178,13 +189,15 @@ export default function LatestStories() {
               ))}
             </AnimatePresence>
 
-            {/* Slideshow progress dots */}
+            {/* Dots — one per story, tracking unified activeIdx */}
             <div className="flex justify-center gap-1.5 pt-1">
-              {secondary.map((_, i) => (
-                <span
+              {stories.map((_, i) => (
+                <button
                   key={i}
+                  onClick={() => setActiveIdx(i)}
+                  aria-label={`Go to story ${i + 1}`}
                   className={`h-1.5 rounded-full transition-all duration-500 ${
-                    i === offset ? "w-5 bg-gold" : "w-1.5 bg-navy/15"
+                    i === activeIdx ? "w-5 bg-gold" : "w-1.5 bg-navy/15"
                   }`}
                 />
               ))}
