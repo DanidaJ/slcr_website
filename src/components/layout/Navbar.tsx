@@ -6,10 +6,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { Menu, X, ChevronDown } from "lucide-react";
 
+type NavChild = {
+  label: string;
+  href: string;
+};
+
 type NavItem = {
   label: string;
   href: string;
-  children?: string[];
+  children?: NavChild[];
+};
+
+type NavbarProps = {
+  transparentOnTop?: boolean;
 };
 
 const NAV_ITEMS: NavItem[] = [
@@ -17,37 +26,74 @@ const NAV_ITEMS: NavItem[] = [
   {
     label: "THE COLLEGE",
     href: "#",
-    children: ["About Us", "Executive Council", "History", "Objectives"],
+    children: [
+      { label: "PRESIDENT'S MESSAGE", href: "/the-college/president-message" },
+      {
+        label: "PRESIDENT AND COUNCIL",
+        href: "/the-college/president-and-council",
+      },
+      {
+        label: "PAST PRESIDENT'S MESSAGE",
+        href: "/the-college/past-presidents-message",
+      },
+      { label: "PAST PRESIDENTS", href: "/the-college/past-presidents" },
+      { label: "PAST COUNCILS", href: "/the-college/past-councils" },
+      {
+        label: "HISTORY OF THE COLLEGE",
+        href: "/the-college/history-of-the-college",
+      },
+      {
+        label: "COMMITTEES AND SUBCOMMITTEES",
+        href: "/the-college/committees-and-subcommittees",
+      },
+    ],
   },
   {
     label: "ACADEMIC SESSIONS",
     href: "#",
-    children: ["Upcoming Sessions", "Past Sessions", "Registration"],
+    children: [
+      { label: "Upcoming Sessions", href: "#" },
+      { label: "Past Sessions", href: "#" },
+      { label: "Registration", href: "#" },
+    ],
   },
   {
     label: "MEMBERSHIP",
     href: "#",
-    children: ["Become a Member", "Member Benefits", "Member Directory"],
+    children: [
+      { label: "Become a Member", href: "#" },
+      { label: "Member Benefits", href: "#" },
+      { label: "Member Directory", href: "#" },
+    ],
   },
   { label: "NEWS AND EVENTS", href: "#" },
   { label: "TOP STORIES", href: "#" },
   {
     label: "PUBLICATIONS",
     href: "#",
-    children: ["Journal", "Newsletter", "Guidelines & Standards"],
+    children: [
+      { label: "Journal", href: "#" },
+      { label: "Newsletter", href: "#" },
+      { label: "Guidelines & Standards", href: "#" },
+    ],
   },
   {
     label: "EDUCATIONS",
     href: "#",
-    children: ["Postgraduate Training", "CME", "Fellowships"],
+    children: [
+      { label: "Postgraduate Training", href: "#" },
+      { label: "CME", href: "#" },
+      { label: "Fellowships", href: "#" },
+    ],
   },
-  { label: "CONTACT US", href: "#" },
+  { label: "CONTACT US", href: "/contact-us" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ transparentOnTop = true }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const isSolid = !transparentOnTop || scrolled;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -59,15 +105,13 @@ export default function Navbar() {
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-navy shadow-lg shadow-navy-dark/40"
-            : "bg-transparent"
+          isSolid ? "bg-navy shadow-lg shadow-navy-dark/40" : "bg-transparent"
         }`}
       >
         {/* Utility bar */}
         <div
           className={`hidden lg:block border-b transition-colors duration-300 ${
-            scrolled ? "border-navy-light/50" : "border-white/20"
+            isSolid ? "border-navy-light/50" : "border-white/20"
           }`}
         >
           <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-6 lg:px-8 py-2 flex items-center justify-between">
@@ -152,11 +196,11 @@ export default function Navbar() {
                     >
                       {item.children.map((child) => (
                         <Link
-                          key={child}
-                          href="#"
+                          key={child.label}
+                          href={child.href}
                           className="block px-4 py-2 text-white/75 hover:text-white hover:bg-navy-light/50 text-xs transition-colors"
                         >
-                          {child}
+                          {child.label}
                         </Link>
                       ))}
                     </motion.div>
@@ -247,11 +291,11 @@ export default function Navbar() {
                         <div className="pl-4 pb-2 space-y-1">
                           {item.children.map((child) => (
                             <Link
-                              key={child}
-                              href="#"
+                              key={child.label}
+                              href={child.href}
                               className="block py-1 text-white/50 hover:text-white text-xs transition-colors"
                             >
-                              {child}
+                              {child.label}
                             </Link>
                           ))}
                         </div>

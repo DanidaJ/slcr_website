@@ -11,6 +11,9 @@ const QUICK_LINKS = [
   },
 ];
 
+const MAPS_LINK = "https://maps.app.goo.gl/Lg2L8QPTituK7VbF7";
+const FACEBOOK_LINK = "https://www.facebook.com/570661699637887?ref=embed_page";
+
 export default function Footer() {
   return (
     <footer className="bg-navy-dark text-white/75">
@@ -39,7 +42,12 @@ export default function Footer() {
             <div className="space-y-4 text-sm">
               <div className="flex gap-3">
                 <MapPin className="w-4 h-4 text-white/40 flex-shrink-0 mt-0.5" />
-                <p className="text-white/55 leading-relaxed">
+                <a
+                  href={MAPS_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/55 hover:text-white transition-colors leading-relaxed"
+                >
                   Sri Lanka College of Radiologists
                   <br />
                   Wijerama House,
@@ -47,7 +55,7 @@ export default function Footer() {
                   No 6, Wijerama Road,
                   <br />
                   Colombo 7, Sri Lanka
-                </p>
+                </a>
               </div>
               <div className="w-full h-px bg-white/10" />
               <div className="flex items-center gap-3">
@@ -67,6 +75,18 @@ export default function Footer() {
                   className="text-white/55 hover:text-white transition-colors"
                 >
                   lankaradiology@yahoo.com
+                </a>
+              </div>
+              <div className="w-full h-px bg-white/10" />
+              <div className="flex items-center gap-3">
+                <ExternalLink className="w-4 h-4 text-white/40 flex-shrink-0" />
+                <a
+                  href={FACEBOOK_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/55 hover:text-white transition-colors"
+                >
+                  Facebook
                 </a>
               </div>
             </div>

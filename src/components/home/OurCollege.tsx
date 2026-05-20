@@ -78,7 +78,7 @@ export default function OurCollege() {
             </motion.div>
 
             <Link
-              href="#"
+              href="/the-college/history-of-the-college"
               className="group inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 border-2 border-navy text-navy text-sm font-semibold rounded hover:bg-navy hover:text-white transition-colors"
             >
               Read More

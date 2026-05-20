@@ -83,7 +83,7 @@ export default function PresidentMessage() {
             </div>
 
             <Link
-              href="#"
+              href="/the-college/president-message"
               className="inline-block mt-7 sm:mt-8 px-5 sm:px-6 py-2.5 sm:py-3 border border-white/50 text-white text-sm font-semibold rounded hover:bg-white hover:text-navy transition-colors"
             >
               Read More
