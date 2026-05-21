@@ -30,14 +30,14 @@ export default function NotFound() {
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href="/"
-            className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-gold text-navy font-semibold text-sm hover:bg-gold/90 transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-gold text-navy font-semibold text-sm cursor-pointer transition-all duration-300 ease-out hover:bg-gold/90 hover:-translate-y-0.5"
           >
             Back to Home
           </Link>
           <button
             type="button"
             onClick={handleBack}
-            className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white/40 text-white text-sm hover:border-white/70 hover:text-white transition-colors"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white/40 text-white text-sm cursor-pointer transition-all duration-300 ease-out hover:border-white/70 hover:text-white hover:-translate-y-0.5"
           >
             Back
           </button>

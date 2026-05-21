@@ -40,14 +40,14 @@ export default function Footer() {
             </h3>
             <div className="w-8 h-0.5 bg-gold mb-5" />
             <div className="space-y-4 text-sm">
-              <div className="flex gap-3">
-                <MapPin className="w-4 h-4 text-white/40 flex-shrink-0 mt-0.5" />
-                <a
-                  href={MAPS_LINK}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white/55 hover:text-white transition-colors leading-relaxed"
-                >
+              <a
+                href={MAPS_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex gap-3 text-white/55 hover:text-white transition-all duration-300 ease-out"
+              >
+                <MapPin className="w-4 h-4 text-white/40 group-hover:text-white shrink-0 mt-0.5 transition-all duration-300 ease-out" />
+                <span>
                   Sri Lanka College of Radiologists
                   <br />
                   Wijerama House,
@@ -55,40 +55,46 @@ export default function Footer() {
                   No 6, Wijerama Road,
                   <br />
                   Colombo 7, Sri Lanka
-                </a>
-              </div>
+                </span>
+              </a>
               <div className="w-full h-px bg-white/10" />
-              <div className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-white/40 flex-shrink-0" />
-                <a
-                  href="tel:+94112698142"
-                  className="text-white/55 hover:text-white transition-colors"
-                >
+              <a
+                href="tel:+94112698142"
+                className="group flex items-center gap-3 text-white/55 hover:text-white transition-all duration-300 ease-out"
+              >
+                <Phone className="w-4 h-4 text-white/40 group-hover:text-white shrink-0 transition-all duration-300 ease-out" />
+                <span>
                   +94-11-2698142
-                </a>
-              </div>
+                </span>
+              </a>
               <div className="w-full h-px bg-white/10" />
-              <div className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-white/40 flex-shrink-0" />
-                <a
-                  href="mailto:lankaradiology@yahoo.com"
-                  className="text-white/55 hover:text-white transition-colors"
-                >
+              <a
+                href="mailto:lankaradiology@yahoo.com"
+                className="group flex items-center gap-3 text-white/55 hover:text-white transition-all duration-300 ease-out"
+              >
+                <Mail className="w-4 h-4 text-white/40 group-hover:text-white shrink-0 transition-all duration-300 ease-out" />
+                <span>
                   lankaradiology@yahoo.com
-                </a>
-              </div>
+                </span>
+              </a>
               <div className="w-full h-px bg-white/10" />
-              <div className="flex items-center gap-3">
-                <ExternalLink className="w-4 h-4 text-white/40 flex-shrink-0" />
-                <a
-                  href={FACEBOOK_LINK}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white/55 hover:text-white transition-colors"
+              <a
+                href={FACEBOOK_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-3 text-white/55 hover:text-white transition-all duration-300 ease-out"
+              >
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 text-white/40 group-hover:text-white shrink-0 fill-current transition-all duration-300 ease-out"
                 >
+                  <path d="M13.5 22v-8.1h2.7l.4-3.2h-3.1V8.7c0-.9.2-1.5 1.5-1.5H16.7V4.3c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H7.2v3.2H10V22h3.5Z" />
+                </svg>
+                <span>
                   Facebook
-                </a>
-              </div>
+                </span>
+              </a>
             </div>
           </div>
 
@@ -105,9 +111,9 @@ export default function Footer() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-start gap-2 text-white/55 hover:text-white text-sm transition-colors"
+                    className="group flex items-start gap-2 text-white/55 hover:text-white text-sm transition-all duration-300 ease-out hover:translate-x-0.5"
                   >
-                    <ExternalLink className="w-3.5 h-3.5 text-white/30 group-hover:text-white transition-colors flex-shrink-0 mt-0.5" />
+                    <ExternalLink className="w-3.5 h-3.5 text-white/30 group-hover:text-white transition-all duration-300 ease-out shrink-0 mt-0.5" />
                     {link.label}
                   </Link>
                 </li>
@@ -127,7 +133,7 @@ export default function Footer() {
             <Link href="#" className="hover:text-white transition-colors">
               Privacy Policy
             </Link>
-            <Link href="#" className="hover:text-white transition-colors">
+            <Link href="#" className="hover:text-white transition-all duration-300 ease-out">
               Terms of Use
             </Link>
           </div>
