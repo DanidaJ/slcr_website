@@ -1,6 +1,20 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function NotFound() {
+  const router = useRouter();
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+      return;
+    }
+
+    router.push("/");
+  };
+
   return (
     <section className="min-h-screen bg-navy text-white flex items-center">
       <div className="max-w-4xl mx-auto px-6 py-16 text-center">
@@ -20,12 +34,13 @@ export default function NotFound() {
           >
             Back to Home
           </Link>
-          <Link
-            href="/the-college/past-presidents-message"
+          <button
+            type="button"
+            onClick={handleBack}
             className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-white/40 text-white text-sm hover:border-white/70 hover:text-white transition-colors"
           >
-            Past President&apos;s Messages
-          </Link>
+            Back
+          </button>
         </div>
       </div>
     </section>
