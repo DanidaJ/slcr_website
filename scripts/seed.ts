@@ -1,6 +1,6 @@
-import { loadEnvConfig } from "@next/env";
+import { config } from "dotenv";
 
-loadEnvConfig(process.cwd());
+config({ path: ".env.local" });
 
 import { MongoClient } from "mongodb";
 import type {
