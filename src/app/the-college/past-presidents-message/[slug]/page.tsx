@@ -3,9 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PageHeader from "@/components/the-college/PageHeader";
 import {
-  getPastPresidentMessage,
-  pastPresidentMessages,
-} from "@/data/pastPresidentsMessages";
+  getPastPresidentMessageBySlug,
+  getPastPresidentMessageSlugs,
+} from "@/lib/data/presidentMessages";
 
 const PLACEHOLDER_IMAGE = "/images/Profile-Placeholder.png";
 
@@ -15,17 +15,16 @@ type PageProps = {
   }>;
 };
 
-export function generateStaticParams() {
-  return pastPresidentMessages.map((message) => ({
-    slug: message.slug,
-  }));
+export async function generateStaticParams() {
+  const slugs = await getPastPresidentMessageSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export default async function PastPresidentsMessageDetailPage({
   params,
 }: PageProps) {
   const { slug } = await params;
-  const message = getPastPresidentMessage(slug);
+  const message = await getPastPresidentMessageBySlug(slug);
 
   if (!message) {
     notFound();

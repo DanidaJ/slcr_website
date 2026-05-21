@@ -1,17 +1,17 @@
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import PageHeader from "@/components/the-college/PageHeader";
+import { getCurrentPresidentMessage } from "@/lib/data/presidentMessages";
 
-const MESSAGE_PARAGRAPHS = [
-  "It is with great pride and honour that I welcome you to the official website of the Sri Lanka College of Radiologists. As President, I am privileged to represent a professional body that has consistently upheld excellence in radiology practice, education and research within our nation.",
-  "Radiology continues to be at the forefront of modern medicine-guiding diagnosis, influencing therapeutic decisions and shaping the future of patient care. In Sri Lanka, our radiologists remain committed to embracing technical advancements, strengthening subspeciality expertise and maintaining the highest standards of ethical and professional conduct.",
-  "The college remains steadfast in its mission to promote continuous professional development, academic excellence and collaborative engagement both locally and internationally. Through scientific meetings, workshops, training programmes and research initiatives we strive to empower our members including trainees to meet demands of contemporary healthcare.",
-  "This year marks a particularly significant milestone in our journey - the Silver Jubilee Annual Academic Sessions of the college. Celebrating twenty-five years of dedication to academic advancement and professional unity, this land mark event reflects the remarkable growth and achievements of our college since its inception. The Silver Jubilee Meeting will bring together distinguished local and international faculty, showcase cutting-edge developments in diagnostic and interventional radiology, and provide a vibrant platform for knowledge exchange and scientific discourse.",
-  "More importantly this celebration is not only reflection of our past accomplishments but also a reaffirmation of our vision of the future - nurturing the next generation of radiologists strengthening research culture and fostering global partnerships.",
-  "I warmly invite all members and trainees to actively participate in this historic event and contribute to making the Silver Jubilee Academic Sessions a memorable and academically enriching experience which will be held on 18th, 19th and 20th of September 2026 at Cinnamon Grand Colombo, Sri Lanka.",
-  "As we move forward, let us continue to work together with unity, innovation and commitment to excellence in service of our patients and our profession.",
-];
+const PLACEHOLDER_IMAGE = "/images/Profile-Placeholder.png";
 
-export default function PresidentMessagePage() {
+export default async function PresidentMessagePage() {
+  const message = await getCurrentPresidentMessage();
+
+  if (!message) {
+    notFound();
+  }
+
   return (
     <>
       <PageHeader title="President's Message" tone="dark" />
@@ -24,8 +24,8 @@ export default function PresidentMessagePage() {
                 <div className="absolute -inset-4 sm:-inset-6 rounded-2xl border border-white/[0.07]" />
                 <div className="relative w-60 h-80 sm:w-64 sm:h-80 md:w-72 md:h-[22rem] xl:w-80 xl:h-96 rounded-2xl overflow-hidden shadow-2xl shadow-navy-dark/60">
                   <Image
-                    src="/images/president.png"
-                    alt="Dr Nayana Samarasinghe - President, Sri Lanka College of Radiologists"
+                    src={message.image ?? PLACEHOLDER_IMAGE}
+                    alt={`${message.name} - President, Sri Lanka College of Radiologists`}
                     fill
                     className="object-cover object-top"
                     sizes="(max-width: 1024px) 320px, 360px"
@@ -37,7 +37,7 @@ export default function PresidentMessagePage() {
             <div className="text-white">
               <div className="mb-6">
                 <p className="font-bold text-lg text-white font-heading">
-                  Dr Nayana Samarasinghe
+                  {message.name}
                 </p>
                 <p className="text-white/60 text-sm">The President</p>
                 <p className="text-white/60 text-sm">
@@ -46,20 +46,20 @@ export default function PresidentMessagePage() {
               </div>
 
               <div className="space-y-4 text-white/75 leading-relaxed text-[15px] sm:text-base">
-                {MESSAGE_PARAGRAPHS.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
+                {message.body.map((paragraph, index) => (
+                  <p key={`${message.slug}-${index}`}>{paragraph}</p>
                 ))}
               </div>
 
               <div className="mt-8 text-white/75 text-[15px] sm:text-base">
                 <p>With sincere regards,</p>
-                <p className="mt-4 font-semibold text-white">
-                  Dr Nayana Samarasinghe
-                </p>
-                <p className="text-white/65">
-                  President &ndash; Sri Lanka College of Radiologists &ndash;
-                  (2026 &ndash; 2027)
-                </p>
+                <p className="mt-4 font-semibold text-white">{message.name}</p>
+                {message.tenure && (
+                  <p className="text-white/65">
+                    President &ndash; Sri Lanka College of Radiologists &ndash;
+                    ({message.tenure})
+                  </p>
+                )}
               </div>
             </div>
           </div>
