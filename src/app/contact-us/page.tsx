@@ -11,7 +11,7 @@ export default function ContactUsPage() {
     <main>
       <Navbar transparentOnTop={false} />
       <PageHeader title="Contact Us" eyebrow="Get in Touch" tone="dark" />
-      <section className="py-14 sm:py-16 lg:py-20 bg-gradient-to-b from-surface to-white">
+      <section className="py-14 sm:py-16 lg:py-20 bg-linear-to-b from-surface to-white">
         <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
             <div className="space-y-6">
@@ -24,9 +24,16 @@ export default function ContactUsPage() {
                 </h2>
                 <div className="mt-4 w-12 h-0.5 bg-gold" />
                 <div className="mt-4 text-sm sm:text-base text-navy/70 leading-relaxed">
-                  <p>Wijerama House,</p>
-                  <p>No 6, Wijerama Road,</p>
-                  <p>Colombo 7, Sri Lanka</p>
+                  <a
+                    href="https://maps.app.goo.gl/Lg2L8QPTituK7VbF7"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-block hover:text-navy transition-colors"
+                  >
+                    <p>Wijerama House,</p>
+                    <p>No 6, Wijerama Road,</p>
+                    <p>Colombo 7, Sri Lanka</p>
+                  </a>
                 </div>
                 <div className="mt-4 space-y-2 text-sm text-navy/70">
                   <p>
