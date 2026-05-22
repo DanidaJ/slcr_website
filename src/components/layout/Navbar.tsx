@@ -52,9 +52,15 @@ const NAV_ITEMS: NavItem[] = [
     label: "ACADEMIC SESSIONS",
     href: "#",
     children: [
-      { label: "Upcoming Sessions", href: "#" },
+      {
+        label: "Upcoming Sessions",
+        href: "/academic-sessions/upcoming-sessions",
+      },
       { label: "Past Sessions", href: "#" },
-      { label: "Registration", href: "#" },
+      {
+        label: "Registration",
+        href: "/academic-sessions/registration",
+      },
     ],
   },
   {

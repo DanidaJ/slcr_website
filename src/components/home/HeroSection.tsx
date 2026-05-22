@@ -171,27 +171,16 @@ export default function HeroSection() {
           className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mt-8 sm:mt-12 w-full sm:w-auto max-w-xs sm:max-w-none"
         >
           <Link
-            href="#"
+            href="/academic-sessions/upcoming-sessions"
             className="group relative inline-flex items-center justify-between sm:justify-start gap-4 w-full sm:w-auto pl-6 sm:pl-7 pr-2 py-2 rounded-full border border-white/40 overflow-hidden"
           >
             <span className="absolute inset-0 bg-white -translate-x-[101%] group-hover:translate-x-0 transition-transform duration-500 ease-out" />
             <span className="relative z-10 text-sm font-semibold text-white group-hover:text-navy transition-colors duration-300">
-              Upcoming Events
+              Annual Academic Sessions 2026
             </span>
             <span className="relative z-10 flex items-center justify-center w-9 h-9 rounded-full bg-white group-hover:bg-navy transition-colors duration-300">
               <ArrowRight className="w-4 h-4 text-navy group-hover:text-white transition-colors duration-300" />
             </span>
-          </Link>
-
-          <Link
-            href="#"
-            className="group inline-flex items-center gap-2 text-sm font-semibold text-white/90 hover:text-white py-2 transition-colors"
-          >
-            <span className="relative">
-              Become a Member
-              <span className="absolute left-0 -bottom-1 h-px w-full bg-white origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
-            </span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
           </Link>
         </motion.div>
       </motion.div>

@@ -1,0 +1,204 @@
+{
+  "meta": {
+    "organization": "Sri Lanka College of Radiologists",
+    "title": "25th Annual Academic Sessions 2026",
+    "subtitle": "Silver Jubilee Meeting",
+    "tagline": "Advancing Radiology with Excellence, Innovation and Compassion",
+    "daysLabel": "Friday – Monday",
+    "dateRange": "18 – 21 September 2026",
+    "venue": "Cinnamon Grand, Colombo, Sri Lanka",
+    "brochureUrl": "/docs/aas-2026-brochure.pdf",
+    "registrationUrl": "#"
+  },
+  "program": [
+    {
+      "date": "Friday, 18th September 2026",
+      "venue": "Cinnamon Grand, Colombo",
+      "blocks": [
+        {
+          "type": "workshop",
+          "label": "Pre-Congress Workshop",
+          "title": "Paediatric Imaging: Current Practice and Future Trends",
+          "time": "8:30 AM – 1:30 PM",
+          "venue": "Cinnamon Grand, Colombo",
+          "resourcePersons": [
+            "Dr. Katharine Halliday",
+            "Dr. Kristina Prelog",
+            "Dr. Joanna Brown",
+            "Dr. Madhavi Jayachandra",
+            "Dr. Navoda Atapattu",
+            "Dr. Nilushi Hewawasam",
+            "Dr. Jerard Fernando"
+          ],
+          "note": "Detailed programme will be shared in due course."
+        },
+        {
+          "type": "ceremony",
+          "label": "Inauguration Ceremony",
+          "title": "Inauguration Ceremony",
+          "time": "From 6:00 PM",
+          "venue": "Oak Room, Cinnamon Grand",
+          "highlight": "Dr. S N B Talwatte Memorial Oration",
+          "paragraphs": [
+            "The inauguration marks the opening ceremony of the Annual Academic Sessions 2026.",
+            "It boasts the years-old traditions and formalities of the SLCR, with a ceremonial procession, the President's speech, speeches by the Chief Guest and Guest of Honour, and the awarding of gold medals and fellowships.",
+            "Commencing at 6:00 PM, the evening will progress into the night and conclude with a formal dinner for the academic faculty, SLCR council, SLCR members and all distinguished invitees."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "Saturday, 19th September 2026",
+      "venue": "Cinnamon Grand, Colombo",
+      "blocks": [
+        {
+          "type": "schedule",
+          "sessions": [
+            {
+              "name": null,
+              "items": [
+                { "time": "8:00 – 8:25 AM", "title": "Registration" },
+                { "time": "8:25 – 8:30 AM", "title": "Opening Remarks" }
+              ]
+            },
+            {
+              "name": "Session 1 — Paediatric Imaging: Meet the Experts",
+              "items": [
+                { "time": "8:30 – 9:10 AM", "title": "Key Note Address — The Investigation of Suspected Physical Abuse in Babies", "speaker": "Dr. Katharine Halliday" },
+                { "time": "9:10 – 9:30 AM", "title": "Acute Scrotum in Children: Sonographic Pearls and Pitfalls", "speaker": "Dr. Nilushi Hewawasam" },
+                { "time": "9:30 – 9:50 AM", "title": "Paediatric Pelvic Emergencies", "speaker": "Dr. Joanna Brown" },
+                { "time": "9:50 – 10:10 AM", "title": "Imaging Sensorineural Hearing Loss in Children", "speaker": "Dr. Kristina Prelog" },
+                { "time": "10:10 – 10:30 AM", "title": "Imaging Evaluation of Neonatal Lung Diseases for Practicing Radiologists", "speaker": "Prof. Edward Lee" },
+                { "time": "10:30 – 11:00 AM", "title": "Tea Break", "break": true }
+              ]
+            },
+            {
+              "name": "Session 2 — Pearls in Imaging",
+              "items": [
+                { "time": "11:00 – 11:25 AM", "title": "Challenging Cases in Thoracic Imaging", "speaker": "Dr. Ramachandra Chittal" },
+                { "time": "11:25 – 11:50 AM", "title": "Signs That Matter: Classical and Less-Recognized Clues in Gynaecology", "speaker": "Prof. Sathi Sukumar" },
+                { "time": "11:50 AM – 12:15 PM", "title": "Cases for Aces: Hepato-Biliary System", "speaker": "Prof. Kumar Sandrasegaran" },
+                { "time": "12:15 – 12:40 PM", "title": "Seeing the Scars: A Modern Approach to Imaging in Demyelinating Disease", "speaker": "Dr. Amila Chandrakumara" },
+                { "time": "12:40 – 1:40 PM", "title": "Lunch", "break": true }
+              ]
+            },
+            {
+              "name": "Session 3 — Interventional Radiology",
+              "items": [
+                { "time": "1:40 – 2:10 PM", "title": "US Guided Interventions: Upper and Lower Limbs", "speaker": "Dr. Udara Kularatne" },
+                { "time": "2:10 – 2:35 PM", "title": "Abdominal Aortic Aneurysm: Imaging, EVAR and Surveillance", "speaker": "Dr. Sathyaseelan Maniharan" },
+                { "time": "2:35 – 3:00 PM", "title": "Y-90 Radioembolization for Liver Tumours: Shaping the Future of Hepatic Oncology in Sri Lanka", "speaker": "Dr. Praneeth Athukorala" },
+                { "time": "3:00 – 3:25 PM", "title": "Image Guided Lung Biopsies: Hard Learned Lessons Behind the Needle", "speaker": "Dr. Suresh Fernando" },
+                { "time": "3:25 – 3:50 PM", "title": "Tea Break", "break": true }
+              ]
+            },
+            {
+              "name": "Session 4 — Emergency Radiology",
+              "items": [
+                { "time": "3:55 – 4:20 PM", "title": "Approach to Brain Haemorrhage", "speaker": "Dr. Calvin Soh" },
+                { "time": "4:20 – 4:45 PM", "title": "Pneumothorax — Pearls and Pitfalls", "speaker": "Dr. Ramachandra Chittal" },
+                { "time": "4:45 – 5:10 PM", "title": "Small Bowel SOS: Clues on Imaging", "speaker": "Dr. Suresh Fernando" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "Sunday, 20th September 2026",
+      "venue": "Cinnamon Grand, Colombo",
+      "blocks": [
+        {
+          "type": "schedule",
+          "sessions": [
+            {
+              "name": "Sunrise Session — Researchers on Stage",
+              "items": [
+                { "time": "7:30 – 8:30 AM", "title": "Free Paper Presentations" }
+              ]
+            },
+            {
+              "name": "Session 1 — Oncology Imaging",
+              "items": [
+                { "time": "8:30 – 8:55 AM", "title": "Peritoneal Malignancy: Location, Location, Location", "speaker": "Dr. Kyungmin Kim" },
+                { "time": "8:55 – 9:20 AM", "title": "How I Report a Solid Renal Mass", "speaker": "Prof. Kumar Sandrasegaran" },
+                { "time": "9:20 – 9:45 AM", "title": "Pitfalls in Lung Cancer Imaging", "speaker": "Dr. Ramachandra Chittal" },
+                { "time": "9:45 – 10:10 AM", "title": "Approach to Brain Tumours", "speaker": "Dr. Calvin Soh" },
+                { "time": "10:10 – 10:40 AM", "title": "Tea Break", "break": true }
+              ]
+            },
+            {
+              "name": "Session 2 — Post Treatment Imaging",
+              "items": [
+                { "time": "10:40 – 11:05 AM", "title": "Post Operative Spine: Imaging Diagnosis of Complications", "speaker": "Dr. Udara Kularatne" },
+                { "time": "11:05 – 11:30 AM", "title": "Rectal and Anal Cancer after Chemotherapy: Tumour or Treatment Effect", "speaker": "Dr. Kyungmin Kim" },
+                { "time": "11:30 – 11:55 AM", "title": "Mabs and Nibs: What the Radiologist Needs to Know About Newer Biological Agents", "speaker": "Prof. Kumar Sandrasegaran" },
+                { "time": "11:55 AM – 12:20 PM", "title": "Post Operative Complications after Pelvic Surgery", "speaker": "Dr. Nishant Omar" },
+                { "time": "12:20 – 12:55 PM", "title": "Radiology Quiz: Spot the Diagnosis", "speaker": "Dr. Deepthi Jayasinghe" },
+                { "time": "12:55 – 1:50 PM", "title": "Lunch", "break": true }
+              ]
+            },
+            {
+              "name": "Session 3 — Advances in Imaging",
+              "items": [
+                { "time": "1:50 – 2:15 PM", "title": "Multi-Modality Imaging in Adrenal Lesions", "speaker": "Dr. Nishant Omar" },
+                { "time": "2:15 – 2:40 PM", "title": "Spinal Imaging: AP and Lateral Thinking", "speaker": "Dr. Calvin Soh" },
+                { "time": "2:40 – 3:05 PM", "title": "MRI of Upper and Lower Limb: Unusual Suspects", "speaker": "Dr. Udara Kularatne" },
+                { "time": "3:05 – 3:30 PM", "title": "Tea Break", "break": true }
+              ]
+            },
+            {
+              "name": "Session 4 — Pancreatic Imaging: What is New",
+              "items": [
+                { "time": "3:30 – 3:55 PM", "title": "Pancreatic Cysts: Follow Up", "speaker": "Prof. Kumar Sandrasegaran" },
+                { "time": "3:55 – 4:20 PM", "title": "Pancreatic Cancer Imaging — Thinking Like a Surgeon", "speaker": "Dr. Kyungmin Kim" },
+                { "time": "4:20 – 4:45 PM", "title": "New Concepts of Acute Pancreatitis", "speaker": "Prof. Kumar Sandrasegaran" },
+                { "time": "4:45 – 5:00 PM", "title": "Award Ceremony" },
+                { "time": "5:00 PM", "title": "Closing Remarks" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "Monday, 21st September 2026",
+      "venue": "Postgraduate Institute of Medicine",
+      "blocks": [
+        {
+          "type": "workshop",
+          "label": "Post-Congress Workshop",
+          "title": "Mastering the Radiology Viva: Interactive Case-based Exam Preparation",
+          "time": "8:30 AM – 2:00 PM",
+          "venue": "Academic Centre, Postgraduate Institute of Medicine",
+          "resourcePersons": [
+            "Prof. S. Sukumar",
+            "Prof. Kumar Sandrasegaran",
+            "Dr. Suresh Fernando",
+            "Dr. Ramachandran Chittal"
+          ]
+        }
+      ]
+    }
+  ],
+  "registration": {
+    "note": "Early bird closes 15th July 2026 · Regular registration closes 15th August 2026.",
+    "columns": [
+      "Early Bird — Pre-Congress + Congress",
+      "Early Bird — Congress",
+      "Regular — Pre-Congress + Congress",
+      "Regular — Congress"
+    ],
+    "rows": [
+      { "category": "SLCR Life Members", "currency": "LKR", "prices": ["12,000", "10,000", "15,000", "13,000"] },
+      { "category": "SLCR Associate Members", "currency": "LKR", "prices": ["6,000", "5,000", "7,500", "6,500"] },
+      { "category": "Non-SLCR Consultants", "currency": "LKR", "prices": ["18,000", "15,000", "20,000", "18,000"] },
+      { "category": "Non-SLCR Trainees", "currency": "LKR", "prices": ["9,000", "7,500", "10,000", "9,000"] },
+      { "category": "Foreign Delegates", "currency": "USD", "prices": ["150", "120", "200", "150"] }
+    ]
+  },
+  "contact": {
+    "office": "lankaradiology@yahoo.com",
+    "website": "www.radiologists.lk"
+  }
+}
