@@ -145,7 +145,7 @@ export default function HeroSection() {
           variants={fadeUp(0.2)}
           initial="hidden"
           animate="visible"
-          className="font-heading text-[2rem] sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl text-white font-extrabold tracking-tight leading-[1.1] max-w-4xl 2xl:max-w-5xl"
+          className="font-heading text-[1.65rem] sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl text-white font-extrabold tracking-tight leading-[1.1] max-w-4xl 2xl:max-w-5xl"
         >
           Sri Lanka College
           <br className="hidden md:block" /> of Radiologists
@@ -155,7 +155,7 @@ export default function HeroSection() {
           variants={fadeUp(0.45)}
           initial="hidden"
           animate="visible"
-          className="flex items-center gap-3 sm:gap-4 mt-5 sm:mt-6"
+          className="flex items-center gap-3 sm:gap-4 mt-3 sm:mt-4"
         >
           <span className="w-6 sm:w-10 h-px bg-gold/60" />
           <p className="text-white/65 text-[10px] sm:text-[11px] md:text-xs font-medium tracking-[0.25em] sm:tracking-[0.35em] uppercase">
@@ -168,20 +168,52 @@ export default function HeroSection() {
           variants={fadeUp(0.7)}
           initial="hidden"
           animate="visible"
-          className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mt-8 sm:mt-12 w-full sm:w-auto max-w-xs sm:max-w-none"
+          className="mt-6 sm:mt-8 w-full max-w-md"
         >
-          <Link
-            href="/academic-sessions/upcoming-sessions"
-            className="group relative inline-flex items-center justify-between sm:justify-start gap-4 w-full sm:w-auto pl-6 sm:pl-7 pr-2 py-2 rounded-full border border-white/40 overflow-hidden"
-          >
-            <span className="absolute inset-0 bg-white -translate-x-[101%] group-hover:translate-x-0 transition-transform duration-500 ease-out" />
-            <span className="relative z-10 text-sm font-semibold text-white group-hover:text-navy transition-colors duration-300">
+          <div className="bg-navy-dark/80 backdrop-blur-md border-l-2 border-l-gold border border-white/10 rounded-xl px-6 py-4 sm:px-7 sm:py-5">
+            {/* Label */}
+            <p className="text-gold text-[10px] sm:text-[11px] font-semibold tracking-[0.2em] uppercase mb-3">
+              25th Annual · Silver Jubilee Meeting
+            </p>
+
+            {/* Title */}
+            <h2 className="text-white font-bold text-lg sm:text-xl font-heading leading-tight">
               Annual Academic Sessions 2026
-            </span>
-            <span className="relative z-10 flex items-center justify-center w-9 h-9 rounded-full bg-white group-hover:bg-navy transition-colors duration-300">
-              <ArrowRight className="w-4 h-4 text-navy group-hover:text-white transition-colors duration-300" />
-            </span>
-          </Link>
+            </h2>
+
+            {/* Date + venue */}
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-2">
+              <span className="text-white/75 text-sm">18 – 21 September 2026</span>
+              <span className="text-white/30 text-sm">·</span>
+              <span className="text-white/55 text-sm">Cinnamon Grand, Colombo</span>
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-white/10 my-3" />
+
+            {/* Early bird */}
+            <p className="text-white/45 text-xs mb-4">
+              Early Bird Registration closes{" "}
+              <span className="text-gold font-semibold">15 July 2026</span>
+            </p>
+
+            {/* CTAs */}
+            <div className="flex items-center justify-evenly">
+              <Link
+                href="/academic-sessions/registration"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gold hover:bg-gold-light text-navy text-sm font-bold rounded-lg transition-colors duration-200"
+              >
+                Register Now
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <Link
+                href="/academic-sessions/upcoming-sessions"
+                className="text-white/60 hover:text-white text-sm font-medium transition-colors duration-200"
+              >
+                View Programme →
+              </Link>
+            </div>
+          </div>
         </motion.div>
       </motion.div>
 

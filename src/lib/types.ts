@@ -27,3 +27,18 @@ export type PastCouncil = {
   leaders: CouncilEntry[];
   members: CouncilEntry[];
 };
+
+export type Newsletter = {
+  _id?: string;
+  title: string;
+  volume?: number;
+  issue?: number;
+  month?: string;
+  year: number;
+  /** Full URL to the PDF (R2 public URL, or a local /docs path for seeded items) */
+  pdfUrl: string;
+  /** R2 object key — present only for files uploaded to R2 (enables deletion) */
+  pdfKey?: string;
+  publishedAt: string;
+  createdAt: string;
+};

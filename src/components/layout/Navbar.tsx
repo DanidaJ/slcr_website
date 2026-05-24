@@ -79,7 +79,7 @@ const NAV_ITEMS: NavItem[] = [
     href: "#",
     children: [
       { label: "Journal", href: "#" },
-      { label: "Newsletter", href: "#" },
+      { label: "Newsletter", href: "/publications/newsletters" },
       { label: "Guidelines & Standards", href: "#" },
     ],
   },
@@ -157,15 +157,15 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
               <Image
                 src="/images/logo.png"
                 alt="SLCR Logo"
-                width={40}
-                height={40}
+                width={52}
+                height={52}
                 className="flex-shrink-0 object-contain"
               />
               <div>
-                <p className="text-white font-bold text-[12px] sm:text-sm leading-tight font-heading whitespace-nowrap">
+                <p className="text-white font-bold text-[15px] sm:text-base leading-tight font-heading whitespace-nowrap">
                   Sri Lanka College of Radiologists
                 </p>
-                <p className="text-white/55 text-[10px] sm:text-[11px] font-medium tracking-[0.15em] uppercase whitespace-nowrap">
+                <p className="text-white/55 text-xs sm:text-[13px] font-medium tracking-[0.15em] uppercase whitespace-nowrap">
                   To Enlighten &amp; Relieve
                 </p>
               </div>
@@ -184,7 +184,7 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                 >
                   <Link
                     href={item.href}
-                    className="flex items-center gap-0.5 px-2.5 py-2 text-white/85 hover:text-white text-[11px] font-medium tracking-wide transition-colors whitespace-nowrap"
+                    className="flex items-center gap-0.5 px-1.5 py-2 text-white/85 hover:text-white text-[13px] font-medium tracking-wide transition-colors whitespace-nowrap"
                   >
                     {item.label}
                     {item.children && (
