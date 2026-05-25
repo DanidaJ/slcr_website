@@ -42,3 +42,12 @@ export type Newsletter = {
   publishedAt: string;
   createdAt: string;
 };
+
+export type FellowshipDocument = {
+  _id?: string;
+  title: string;
+  description?: string;
+  pdfUrl: string;
+  pdfKey?: string;
+  createdAt: string;
+};
