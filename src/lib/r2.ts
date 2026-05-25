@@ -27,14 +27,22 @@ function getClient(): S3Client {
   });
 }
 
-/** Build the object key for a newsletter PDF from a sanitized filename. */
-export function buildNewsletterKey(filename: string): string {
-  const safe = filename
+function sanitize(filename: string): string {
+  return filename
     .toLowerCase()
     .replace(/[^a-z0-9.-]+/g, "-")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
-  return `newsletters/${Date.now()}-${safe}`;
+}
+
+/** Build the object key for a newsletter PDF from a sanitized filename. */
+export function buildNewsletterKey(filename: string): string {
+  return `newsletters/${Date.now()}-${sanitize(filename)}`;
+}
+
+/** Build the object key for a fellowship document. */
+export function buildFellowshipKey(filename: string): string {
+  return `docs/${Date.now()}-${sanitize(filename)}`;
 }
 
 /** The public URL a stored object will be served from. */

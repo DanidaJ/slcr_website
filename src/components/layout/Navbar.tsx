@@ -67,9 +67,10 @@ const NAV_ITEMS: NavItem[] = [
     label: "MEMBERSHIP",
     href: "#",
     children: [
-      { label: "Become a Member", href: "#" },
-      { label: "Member Benefits", href: "#" },
-      { label: "Member Directory", href: "#" },
+      { label: "DESCRIPTION", href: "/membership/description" },
+      { label: "FELLOWSHIP", href: "/membership/fellowship" },
+      { label: "APPLICATION", href: "/membership/application" },
+      { label: "MEMBER LOGIN", href: "/membership/member-login" },
     ],
   },
   { label: "NEWS AND EVENTS", href: "#" },
@@ -131,13 +132,13 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
             </span>
             <div className="flex items-center gap-2">
               <Link
-                href="#"
+                href="/membership/member-login"
                 className="px-4 py-1.5 text-xs font-medium text-white/90 hover:text-white border border-white/30 hover:border-white/60 rounded transition-colors"
               >
                 MEMBER LOGIN
               </Link>
               <Link
-                href="#"
+                href="/membership/register"
                 className="px-4 py-1.5 text-xs font-semibold bg-gold text-navy rounded hover:bg-gold-light transition-colors"
               >
                 BECOME A MEMBER
@@ -152,20 +153,20 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
             {/* Logo + name */}
             <Link
               href="/"
-              className="flex items-center gap-2.5 sm:gap-3 flex-shrink-0"
+              className="flex items-center gap-2 sm:gap-2.5 flex-shrink-0"
             >
               <Image
                 src="/images/logo.png"
                 alt="SLCR Logo"
-                width={52}
-                height={52}
-                className="flex-shrink-0 object-contain"
+                width={44}
+                height={44}
+                className="flex-shrink-0 object-contain xl:w-10 xl:h-10"
               />
               <div>
-                <p className="text-white font-bold text-[15px] sm:text-base leading-tight font-heading whitespace-nowrap">
+                <p className="text-white font-bold text-sm sm:text-[15px] xl:text-[13px] leading-tight font-heading whitespace-nowrap">
                   Sri Lanka College of Radiologists
                 </p>
-                <p className="text-white/55 text-xs sm:text-[13px] font-medium tracking-[0.15em] uppercase whitespace-nowrap">
+                <p className="text-white/55 text-[10px] sm:text-xs xl:text-[10px] font-medium tracking-[0.15em] uppercase whitespace-nowrap">
                   To Enlighten &amp; Relieve
                 </p>
               </div>
@@ -184,7 +185,7 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                 >
                   <Link
                     href={item.href}
-                    className="flex items-center gap-0.5 px-1.5 py-2 text-white/85 hover:text-white text-[13px] font-medium tracking-wide transition-colors whitespace-nowrap"
+                    className="flex items-center gap-0.5 px-1 xl:px-1.5 2xl:px-2.5 py-2 text-white/85 hover:text-white text-[11px] xl:text-xs font-medium tracking-normal transition-colors whitespace-nowrap"
                   >
                     {item.label}
                     {item.children && (
@@ -313,13 +314,13 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                 {/* Auth buttons */}
                 <div className="mt-8 space-y-2">
                   <Link
-                    href="#"
+                    href="/membership/member-login"
                     className="block text-center py-2.5 border border-white/30 text-white text-sm rounded hover:border-white/60 transition-colors"
                   >
                     MEMBER LOGIN
                   </Link>
                   <Link
-                    href="#"
+                    href="/membership/register"
                     className="block text-center py-2.5 bg-gold text-navy text-sm font-semibold rounded hover:bg-gold-light transition-colors"
                   >
                     BECOME A MEMBER
