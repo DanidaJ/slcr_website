@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -100,6 +101,8 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const isSolid = !transparentOnTop || scrolled;
 
   useEffect(() => {
@@ -115,37 +118,39 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
           isSolid ? "bg-navy shadow-lg shadow-navy-dark/40" : "bg-transparent"
         }`}
       >
-        {/* Utility bar */}
-        <div
-          className={`hidden lg:block border-b transition-colors duration-300 ${
-            isSolid ? "border-navy-light/50" : "border-white/20"
-          }`}
-        >
-          <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-6 lg:px-8 py-2 flex items-center justify-between">
-            <span className="text-white/60 text-xs">
-              {new Date().toLocaleDateString("en-US", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </span>
-            <div className="flex items-center gap-2">
-              <Link
-                href="/membership/member-login"
-                className="px-4 py-1.5 text-xs font-medium text-white/90 hover:text-white border border-white/30 hover:border-white/60 rounded transition-colors"
-              >
-                MEMBER LOGIN
-              </Link>
-              <Link
-                href="/membership/register"
-                className="px-4 py-1.5 text-xs font-semibold bg-gold text-navy rounded hover:bg-gold-light transition-colors"
-              >
-                BECOME A MEMBER
-              </Link>
+        {/* Utility bar — home page only */}
+        {isHome && (
+          <div
+            className={`hidden lg:block border-b transition-colors duration-300 ${
+              isSolid ? "border-navy-light/50" : "border-white/20"
+            }`}
+          >
+            <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-6 lg:px-8 py-2 flex items-center justify-between">
+              <span className="text-white/60 text-xs">
+                {new Date().toLocaleDateString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </span>
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/membership/member-login"
+                  className="px-4 py-1.5 text-xs font-medium text-white/90 hover:text-white border border-white/30 hover:border-white/60 rounded transition-colors"
+                >
+                  MEMBER LOGIN
+                </Link>
+                <Link
+                  href="/membership/register"
+                  className="px-4 py-1.5 text-xs font-semibold bg-gold text-navy rounded hover:bg-gold-light transition-colors"
+                >
+                  BECOME A MEMBER
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Main nav bar */}
         <nav className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">

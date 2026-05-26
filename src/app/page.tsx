@@ -5,6 +5,7 @@ import HeroSection from "@/components/home/HeroSection";
 import LatestStories from "@/components/home/LatestStories";
 import OurCollege from "@/components/home/OurCollege";
 import PresidentMessage from "@/components/home/PresidentMessage";
+import QuickLinksFloat from "@/components/home/QuickLinksFloat";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <PresidentMessage />
       <Footer />
       <BackToTop />
+      <QuickLinksFloat />
     </main>
   );
 }

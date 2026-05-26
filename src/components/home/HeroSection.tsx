@@ -168,52 +168,22 @@ export default function HeroSection() {
           variants={fadeUp(0.7)}
           initial="hidden"
           animate="visible"
-          className="mt-6 sm:mt-8 w-full max-w-md"
+          className="mt-8 sm:mt-10"
         >
-          <div className="bg-navy-dark/80 backdrop-blur-md border-l-2 border-l-gold border border-white/10 rounded-xl px-6 py-4 sm:px-7 sm:py-5">
-            {/* Label */}
-            <p className="text-gold text-[10px] sm:text-[11px] font-semibold tracking-[0.2em] uppercase mb-3">
-              25th Annual · Silver Jubilee Meeting
-            </p>
+          <Link
+            href="/academic-sessions/upcoming-sessions"
+            className="relative inline-flex items-center gap-4 pl-7 pr-3 py-3 rounded-full border border-white/30 bg-white/[0.07] backdrop-blur-sm overflow-hidden group"
+          >
+            {/* Sliding white fill */}
+            <span className="absolute inset-0 bg-white scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-in-out" />
 
-            {/* Title */}
-            <h2 className="text-white font-bold text-lg sm:text-xl font-heading leading-tight">
+            <span className="relative z-10 text-white group-hover:text-navy font-semibold text-base sm:text-lg transition-colors duration-400">
               Annual Academic Sessions 2026
-            </h2>
-
-            {/* Date + venue */}
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-2">
-              <span className="text-white/75 text-sm">18 – 21 September 2026</span>
-              <span className="text-white/30 text-sm">·</span>
-              <span className="text-white/55 text-sm">Cinnamon Grand, Colombo</span>
-            </div>
-
-            {/* Divider */}
-            <div className="border-t border-white/10 my-3" />
-
-            {/* Early bird */}
-            <p className="text-white/45 text-xs mb-4">
-              Early Bird Registration closes{" "}
-              <span className="text-gold font-semibold">15 July 2026</span>
-            </p>
-
-            {/* CTAs */}
-            <div className="flex items-center justify-evenly">
-              <Link
-                href="/academic-sessions/registration"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gold hover:bg-gold-light text-navy text-sm font-bold rounded-lg transition-colors duration-200"
-              >
-                Register Now
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-              <Link
-                href="/academic-sessions/upcoming-sessions"
-                className="text-white/60 hover:text-white text-sm font-medium transition-colors duration-200"
-              >
-                View Programme →
-              </Link>
-            </div>
-          </div>
+            </span>
+            <span className="relative z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white/20 group-hover:bg-navy transition-colors duration-400 flex-shrink-0">
+              <ArrowRight className="w-5 h-5 text-white" />
+            </span>
+          </Link>
         </motion.div>
       </motion.div>
 

@@ -1,31 +1,26 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { fadeUp } from "@/lib/motion";
+import CustomSelect from "@/components/ui/CustomSelect";
+import RadioGroup from "@/components/ui/RadioGroup";
+import DatePicker from "@/components/ui/DatePicker";
 
 const VIEWPORT = { once: true, margin: "-60px" } as const;
 
 const SALUTATIONS = ["Dr.", "Dr (Mrs).", "Dr (Ms).", "Prof."];
 
 const PROVINCES = [
-  "Central",
-  "Eastern",
-  "North Central",
-  "North Western",
-  "Northern",
-  "Sabaragamuwa",
-  "Southern",
-  "Western",
-  "Uva",
+  "Central", "Eastern", "North Central", "North Western",
+  "Northern", "Sabaragamuwa", "Southern", "Western", "Uva",
 ];
 
 const POSTS = [
-  "Non Radiology Consultant",
-  "Radiology Consultant",
-  "Non Radiology Trainee",
-  "Radiology Trainee",
+  "Non Radiology Consultant", "Radiology Consultant",
+  "Non Radiology Trainee", "Radiology Trainee",
 ];
 
 function FormField({
@@ -51,9 +46,6 @@ function FormField({
 const inputClass =
   "w-full rounded-xl border border-white/10 bg-white/[0.07] px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold/40 transition-all backdrop-blur-sm";
 
-const selectClass =
-  "w-full rounded-xl border border-white/10 bg-white/[0.07] px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold/40 transition-all backdrop-blur-sm appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23C9A84C%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:16px] bg-[right_12px_center] bg-no-repeat pr-10";
-
 const textareaClass =
   "w-full rounded-xl border border-white/10 bg-white/[0.07] px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold/40 transition-all backdrop-blur-sm resize-y";
 
@@ -67,6 +59,12 @@ function SectionLegend({ children }: { children: React.ReactNode }) {
 }
 
 export default function RegisterForm() {
+  const [salutation, setSalutation] = useState("");
+  const [province, setProvince] = useState("");
+  const [post, setPost] = useState("");
+  const [gender, setGender] = useState("");
+  const [dob, setDob] = useState("");
+
   return (
     <motion.div
       variants={fadeUp()}
@@ -101,20 +99,12 @@ export default function RegisterForm() {
             <SectionLegend>Personal Information</SectionLegend>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <FormField label="Salutation" required>
-                <select
+                <CustomSelect
                   name="salutation"
-                  className={selectClass}
-                  defaultValue=""
-                >
-                  <option value="" disabled>
-                    -- Select --
-                  </option>
-                  {SALUTATIONS.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ))}
-                </select>
+                  options={SALUTATIONS}
+                  value={salutation}
+                  onChange={setSalutation}
+                />
               </FormField>
 
               <FormField label="Full Name" required>
@@ -147,31 +137,17 @@ export default function RegisterForm() {
               </FormField>
 
               <FormField label="Date of Birth">
-                <input name="dob" type="date" className={inputClass} />
+                <DatePicker name="dob" value={dob} onChange={setDob} />
               </FormField>
 
               <div className="sm:col-span-2">
                 <FormField label="Gender" required>
-                  <div className="flex items-center gap-6 mt-1">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="gender"
-                        value="male"
-                        className="w-4 h-4 accent-gold"
-                      />
-                      <span className="text-sm text-white/70">Male</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="gender"
-                        value="female"
-                        className="w-4 h-4 accent-gold"
-                      />
-                      <span className="text-sm text-white/70">Female</span>
-                    </label>
-                  </div>
+                  <RadioGroup
+                    name="gender"
+                    options={["Male", "Female"]}
+                    value={gender}
+                    onChange={setGender}
+                  />
                 </FormField>
               </div>
             </div>
@@ -222,20 +198,12 @@ export default function RegisterForm() {
               </div>
 
               <FormField label="Province">
-                <select
+                <CustomSelect
                   name="province"
-                  className={selectClass}
-                  defaultValue=""
-                >
-                  <option value="" disabled>
-                    -- Select --
-                  </option>
-                  {PROVINCES.map((p) => (
-                    <option key={p} value={p}>
-                      {p}
-                    </option>
-                  ))}
-                </select>
+                  options={PROVINCES}
+                  value={province}
+                  onChange={setProvince}
+                />
               </FormField>
 
               <FormField label="Hospital / Institute">
@@ -243,16 +211,12 @@ export default function RegisterForm() {
               </FormField>
 
               <FormField label="Post" required>
-                <select name="post" className={selectClass} defaultValue="">
-                  <option value="" disabled>
-                    -- Select --
-                  </option>
-                  {POSTS.map((p) => (
-                    <option key={p} value={p}>
-                      {p}
-                    </option>
-                  ))}
-                </select>
+                <CustomSelect
+                  name="post"
+                  options={POSTS}
+                  value={post}
+                  onChange={setPost}
+                />
               </FormField>
 
               <FormField label="Mobile" required>
