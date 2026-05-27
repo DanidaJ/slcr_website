@@ -21,7 +21,7 @@ export default function CouncilMemberCard({
           alt={name}
           fill
           className="object-cover object-top group-hover:scale-105 transition-transform duration-700"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
         />
       </div>
       <div className="p-4 sm:p-5">

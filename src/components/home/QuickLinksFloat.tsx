@@ -96,7 +96,7 @@ function DesktopPanel({ inHero }: { inHero: boolean }) {
         {/* Collapse tab */}
         <button
           onClick={() => setCollapsed((v) => !v)}
-          className="w-9 flex-shrink-0 flex flex-col items-center justify-center gap-3 py-5 bg-white/[0.03] hover:bg-white/[0.08] border-r border-white/10 text-white/35 hover:text-gold transition-colors min-h-[220px]"
+          className="w-9 flex-shrink-0 flex flex-col items-center justify-center gap-3 py-5 bg-white/[0.03] hover:bg-white/[0.08] border-r border-white/10 text-white/35 hover:text-gold transition-colors min-h-[220px] cursor-pointer"
           aria-label={collapsed ? "Expand quick links" : "Collapse quick links"}
         >
           {collapsed ? (
@@ -143,7 +143,7 @@ function MobilePanel({ inHero }: { inHero: boolean }) {
     : "bg-[#0c1735]/95 backdrop-blur-sm";
 
   return (
-    <div className="lg:hidden fixed bottom-6 right-4 z-40 flex flex-col items-end gap-3">
+    <div className="lg:hidden fixed bottom-20 right-4 z-40 flex flex-col items-end gap-3">
       <AnimatePresence>
         {open && (
           <motion.div
@@ -165,7 +165,7 @@ function MobilePanel({ inHero }: { inHero: boolean }) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.25, delay: 0.6 }}
         onClick={() => setOpen((v) => !v)}
-        className={`${cardBg} flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/15 shadow-xl shadow-black/40 text-white hover:border-gold/50 transition-colors duration-500`}
+        className={`${cardBg} flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/15 shadow-xl shadow-black/40 text-white hover:border-gold/50 transition-colors duration-500 cursor-pointer`}
       >
         <Link2 className="w-4 h-4 text-gold" />
         <span className="text-xs font-semibold tracking-wide">Quick Links</span>

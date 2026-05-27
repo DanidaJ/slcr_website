@@ -48,10 +48,40 @@ export default function SubscriptionCard({
       }`}
     >
       {featured && (
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-gold via-gold-light to-gold" />
+        <>
+          <div className="absolute inset-0 pointer-events-none z-0">
+            <svg
+              className="absolute inset-0 h-full w-full annual-session-border-surface"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <rect
+                className="annual-session-outline"
+                x="1"
+                y="1"
+                width="98"
+                height="98"
+                rx="14"
+                ry="14"
+              />
+              <path
+                className="annual-session-shine annual-session-shine--glow"
+                pathLength="1"
+                d="M 94 6 L 6 94"
+              />
+              <path
+                className="annual-session-shine annual-session-shine--core"
+                pathLength="1"
+                d="M 94 6 L 6 94"
+              />
+            </svg>
+          </div>
+          <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-gold via-gold-light to-gold z-10" />
+        </>
       )}
 
-      <div className="p-6 sm:p-8">
+      <div className="relative z-10 p-6 sm:p-8">
         {subtitle && (
           <p
             className={`text-[11px] sm:text-xs font-semibold tracking-[0.2em] uppercase mb-2 ${

@@ -22,7 +22,7 @@ export default function PastPresidentMessageCard({
           alt={name}
           fill
           className="object-cover object-top"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
       </div>
       <div className="p-5 flex flex-col flex-1">
