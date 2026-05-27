@@ -87,11 +87,14 @@ const NAV_ITEMS: NavItem[] = [
   },
   {
     label: "EDUCATIONS",
-    href: "#",
+    href: "/educations",
     children: [
-      { label: "Postgraduate Training", href: "#" },
-      { label: "CME", href: "#" },
-      { label: "Fellowships", href: "#" },
+      {
+        label: "YOUNG RADIOLOGIST FORUM",
+        href: "/educations/young-radiologist-forum",
+      },
+      { label: "WORKSHOPS", href: "/educations/workshops" },
+      { label: "CPD", href: "/educations/cpd" },
     ],
   },
   { label: "CONTACT US", href: "/contact-us" },
