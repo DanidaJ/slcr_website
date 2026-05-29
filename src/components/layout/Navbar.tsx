@@ -74,8 +74,7 @@ const NAV_ITEMS: NavItem[] = [
       { label: "MEMBER LOGIN", href: "/membership/member-login" },
     ],
   },
-  { label: "NEWS AND EVENTS", href: "#" },
-  { label: "TOP STORIES", href: "#" },
+  { label: "NEWS AND EVENTS", href: "/news-and-events" },
   {
     label: "PUBLICATIONS",
     href: "#",

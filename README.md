@@ -106,8 +106,7 @@ src/
       �� description/
       �� fellowship/
       �� application/          # Subscription plans
-         �� register/        # Subscription registration
-      �� register/            # Membership registration
+      �� register/            # Membership registration (Become a Member)
       �� member-login/
    
    �� publications/
@@ -170,7 +169,7 @@ public/
 - **Home**  Hero video, president's message, latest stories, college overview
 - **The College**  President & council profiles, past presidents, history, committees
 - **Academic Sessions**  Upcoming session schedules, registration info
-- **Membership**  Description (collapsible sections), fellowship docs, subscription plans, member login, registration forms
+- **Membership** — Description (collapsible sections), fellowship docs, subscription plans, member login, and membership registration
 - **Publications**  Newsletter archive with PDF thumbnails and in-browser PDF viewer
 - **Contact Us**  Contact details and location
 

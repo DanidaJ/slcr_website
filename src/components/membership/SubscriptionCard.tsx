@@ -32,7 +32,7 @@ export default function SubscriptionCard({
   tiers,
   features,
   ctaLabel = "Sign Up",
-  ctaHref = "#",
+  ctaHref = "/membership/register",
   delay = 0,
 }: SubscriptionCardProps) {
   return (
@@ -41,47 +41,20 @@ export default function SubscriptionCard({
       initial="hidden"
       whileInView="visible"
       viewport={VIEWPORT}
-      className={`relative rounded-2xl border overflow-hidden transition-shadow duration-300 hover:shadow-xl ${
-        featured
-          ? "border-gold/40 bg-navy shadow-lg"
-          : "border-navy/10 bg-white shadow-sm"
+      className={`relative rounded-2xl transition-shadow duration-300 hover:shadow-xl ${
+        featured ? "shadow-lg" : "border border-navy/10 bg-white shadow-sm overflow-hidden"
       }`}
     >
-      {featured && (
-        <>
-          <div className="absolute inset-0 pointer-events-none z-0">
-            <svg
-              className="absolute inset-0 h-full w-full annual-session-border-surface"
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              aria-hidden="true"
-            >
-              <rect
-                className="annual-session-outline"
-                x="1"
-                y="1"
-                width="98"
-                height="98"
-                rx="14"
-                ry="14"
-              />
-              <path
-                className="annual-session-shine annual-session-shine--glow"
-                pathLength="1"
-                d="M 94 6 L 6 94"
-              />
-              <path
-                className="annual-session-shine annual-session-shine--core"
-                pathLength="1"
-                d="M 94 6 L 6 94"
-              />
-            </svg>
-          </div>
+      <div
+        className={`relative z-10 rounded-2xl p-6 sm:p-8 ${
+          featured
+            ? "bg-navy border border-gold/40 overflow-hidden"
+            : ""
+        }`}
+      >
+        {featured && (
           <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-gold via-gold-light to-gold z-10" />
-        </>
-      )}
-
-      <div className="relative z-10 p-6 sm:p-8">
+        )}
         {subtitle && (
           <p
             className={`text-[11px] sm:text-xs font-semibold tracking-[0.2em] uppercase mb-2 ${
