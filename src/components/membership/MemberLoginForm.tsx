@@ -1,13 +1,23 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import Image from "next/image";
-import { User, Lock, Eye, EyeOff } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { fadeUp } from "@/lib/motion";
 
 const VIEWPORT = { once: true, margin: "-60px" } as const;
+
+/** Maps callback `?error=` codes to member-friendly messages. */
+const ERROR_MESSAGES: Record<string, string> = {
+  unauthorized:
+    "This Google account isn’t authorized. Member accounts are created by the College — please contact us if you believe this is a mistake.",
+  unverified:
+    "Your Google email address isn’t verified. Verify it with Google and try again.",
+  google: "Google sign-in didn’t complete. Please try again.",
+  state: "Your sign-in session expired. Please try again.",
+  invalid: "Your sign-in session expired. Please try again.",
+  expired: "Your sign-in session expired. Please try again.",
+};
 
 function GoogleIcon() {
   return (
@@ -32,8 +42,10 @@ function GoogleIcon() {
   );
 }
 
-export default function MemberLoginForm() {
-  const [showPassword, setShowPassword] = useState(false);
+export default function MemberLoginForm({ errorCode }: { errorCode?: string }) {
+  const error = errorCode
+    ? ERROR_MESSAGES[errorCode] ?? "Sign-in failed. Please try again."
+    : null;
 
   return (
     <motion.div
@@ -68,121 +80,42 @@ export default function MemberLoginForm() {
 
           <div className="text-center mb-8">
             <h2 className="font-heading text-xl sm:text-2xl font-extrabold text-white">
-              Welcome Back
+              Member Sign In
             </h2>
             <p className="mt-2 text-sm text-white/45">
-              Sign in to your member account
+              Use the Google account registered with the College
             </p>
             <div className="mt-3 mx-auto w-10 h-0.5 rounded-full bg-gradient-to-r from-gold/60 via-gold to-gold/60" />
           </div>
 
-          {/* Google button */}
-          <button
-            type="button"
-            className="w-full flex items-center justify-center gap-3 py-3 rounded-xl bg-white text-sm font-medium text-navy/80 hover:bg-white/90 hover:shadow-lg transition-all duration-200"
+          {/* Error banner (from the OAuth callback redirect) */}
+          {error && (
+            <div className="mb-6 flex items-start gap-2.5 rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+              <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+
+          {/* Google sign-in — kicks off the OAuth flow on the server */}
+          <a
+            href="/api/auth/google/login"
+            className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl bg-white text-sm font-semibold text-navy/80 hover:bg-white/90 hover:shadow-lg transition-all duration-200"
           >
             <GoogleIcon />
             Continue with Google
-          </button>
-
-          {/* Divider */}
-          <div className="relative my-7">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/[0.08]" />
-            </div>
-            <div className="relative flex justify-center">
-              <span className="bg-navy px-4 text-[11px] font-medium text-white/30 uppercase tracking-widest">
-                or sign in with email
-              </span>
-            </div>
-          </div>
-
-          {/* Form */}
-          <form className="space-y-5">
-            <div>
-              <label
-                htmlFor="login-username"
-                className="block text-sm font-medium text-white/70 mb-2"
-              >
-                Username or Email
-              </label>
-              <div className="relative group">
-                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/25 group-focus-within:text-gold/60 transition-colors pointer-events-none" />
-                <input
-                  id="login-username"
-                  name="username"
-                  type="text"
-                  placeholder="Enter your username"
-                  className="w-full rounded-xl border border-white/[0.08] bg-white/[0.05] pl-10 pr-4 py-3 text-sm text-white placeholder:text-white/25 focus:outline-none focus:ring-2 focus:ring-gold/25 focus:border-gold/30 focus:bg-white/[0.07] transition-all backdrop-blur-sm"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="login-password"
-                className="block text-sm font-medium text-white/70 mb-2"
-              >
-                Password
-              </label>
-              <div className="relative group">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/25 group-focus-within:text-gold/60 transition-colors pointer-events-none" />
-                <input
-                  id="login-password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  className="w-full rounded-xl border border-white/[0.08] bg-white/[0.05] pl-10 pr-11 py-3 text-sm text-white placeholder:text-white/25 focus:outline-none focus:ring-2 focus:ring-gold/25 focus:border-gold/30 focus:bg-white/[0.07] transition-all backdrop-blur-sm"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/50 transition-colors"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? (
-                    <EyeOff className="w-4 h-4" />
-                  ) : (
-                    <Eye className="w-4 h-4" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="remember"
-                  className="w-4 h-4 rounded border-white/20 accent-gold"
-                />
-                <span className="text-sm text-white/50">Remember Me</span>
-              </label>
-              <Link
-                href="#"
-                className="text-sm font-medium text-gold/80 hover:text-gold transition-colors"
-              >
-                Lost your password?
-              </Link>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-gold to-gold-light text-navy text-sm font-bold uppercase tracking-wide hover:shadow-lg hover:shadow-gold/20 hover:brightness-110 transition-all duration-300"
-            >
-              Log In
-            </button>
-          </form>
+          </a>
 
           <div className="mt-7 text-center">
-            <p className="text-sm text-white/40">
-              Don&apos;t have an account?{" "}
-              <Link
-                href="/membership/application"
-                className="font-semibold text-gold/80 hover:text-gold transition-colors"
+            <p className="text-xs leading-relaxed text-white/35">
+              Member accounts are created by the College. If you don&apos;t have
+              access yet, please{" "}
+              <a
+                href="/contact-us"
+                className="font-semibold text-gold/70 hover:text-gold transition-colors"
               >
-                Sign Up
-              </Link>
+                contact us
+              </a>
+              .
             </p>
           </div>
         </div>

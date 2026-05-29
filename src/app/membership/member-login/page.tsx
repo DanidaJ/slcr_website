@@ -7,7 +7,12 @@ export const metadata: Metadata = {
     "Log in to your Sri Lanka College of Radiologists member account.",
 };
 
-export default function MemberLoginPage() {
+export default async function MemberLoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
   return (
     <main className="min-h-screen bg-[#07102b] flex items-center justify-center relative overflow-hidden">
       {/* Ambient glow layers */}
@@ -28,7 +33,7 @@ export default function MemberLoginPage() {
 
       {/* Form — padded top so it clears the fixed nav */}
       <div className="relative w-full max-w-md mx-auto px-5 sm:px-6 pt-24 pb-16">
-        <MemberLoginForm />
+        <MemberLoginForm errorCode={error} />
       </div>
     </main>
   );

@@ -1,13 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   Upload,
   Loader2,
   Trash2,
   FileText,
-  LogOut,
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
@@ -21,7 +19,6 @@ const MONTHS = [
 type Status = { type: "idle" | "success" | "error"; message?: string };
 
 export default function NewsletterManager() {
-  const router = useRouter();
   const [list, setList] = useState<Newsletter[]>([]);
   const [loadingList, setLoadingList] = useState(true);
 
@@ -50,11 +47,6 @@ export default function NewsletterManager() {
   useEffect(() => {
     loadList();
   }, []);
-
-  async function handleLogout() {
-    await fetch("/api/admin/auth", { method: "DELETE" });
-    router.refresh();
-  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -143,27 +135,13 @@ export default function NewsletterManager() {
   }
 
   return (
-    <div className="min-h-screen bg-surface">
-      {/* Top bar */}
-      <header className="border-b border-navy/10 bg-navy">
-        <div className="max-w-5xl mx-auto px-5 sm:px-6 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="font-heading text-lg font-extrabold text-white">
-              Newsletter Admin
-            </h1>
-            <p className="text-xs text-white/55">Sri Lanka College of Radiologists</p>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-white/25 text-white/85 text-sm hover:bg-white/10 transition-colors"
-          >
-            <LogOut className="w-4 h-4" />
-            Sign Out
-          </button>
-        </div>
-      </header>
+    <div className="min-h-screen bg-surface pt-20">
+      <div className="max-w-5xl mx-auto px-5 sm:px-6 py-6">
+        <h1 className="font-heading text-2xl font-extrabold text-navy">Newsletter Admin</h1>
+        <p className="text-sm text-navy/50">Upload and manage newsletters</p>
+      </div>
 
-      <div className="max-w-5xl mx-auto px-5 sm:px-6 py-8 space-y-8">
+      <div className="max-w-5xl mx-auto px-5 sm:px-6 pb-12 space-y-8">
         {/* Upload form */}
         <section className="rounded-2xl border border-navy/10 bg-card p-6 sm:p-8 shadow-sm">
           <h2 className="font-heading text-xl font-extrabold text-navy">

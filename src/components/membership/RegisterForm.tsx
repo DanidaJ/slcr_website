@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { fadeUp } from "@/lib/motion";
 import CustomSelect from "@/components/ui/CustomSelect";
 import RadioGroup from "@/components/ui/RadioGroup";
@@ -64,6 +65,103 @@ export default function RegisterForm() {
   const [post, setPost] = useState("");
   const [gender, setGender] = useState("");
   const [dob, setDob] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+    const data = new FormData(e.currentTarget);
+
+    const password = data.get("password") as string;
+    const confirmPassword = data.get("confirmPassword") as string;
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/membership/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          salutation,
+          fullName: data.get("fullName"),
+          nameWithInitials: data.get("nameWithInitials"),
+          preferredName: data.get("preferredName"),
+          nic: data.get("nic"),
+          dob,
+          gender,
+          email: data.get("email"),
+          postalAddress: data.get("postalAddress"),
+          workAddress: data.get("workAddress"),
+          province,
+          hospital: data.get("hospital"),
+          post,
+          mobile: data.get("mobile"),
+          office: data.get("office"),
+          residence: data.get("residence"),
+          fax: data.get("fax"),
+          preferredContact: data.get("preferredContact"),
+          medicalDegree: data.get("medicalDegree"),
+          medicalSchool: data.get("medicalSchool"),
+          pgQualifications: data.get("pgQualifications"),
+          specialInterest: data.get("specialInterest"),
+          username: data.get("username"),
+        }),
+      });
+
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(json.error || "Registration failed. Please try again.");
+        return;
+      }
+      setSuccess(true);
+      formRef.current?.reset();
+      setSalutation(""); setProvince(""); setPost(""); setGender(""); setDob("");
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  if (success) {
+    return (
+      <motion.div
+        variants={fadeUp()}
+        initial="hidden"
+        animate="visible"
+        className="rounded-2xl bg-navy border border-navy-light/30 px-6 sm:px-8 lg:px-10 py-16 text-center"
+      >
+        <div className="flex justify-center mb-5">
+          <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center">
+            <CheckCircle2 className="w-8 h-8 text-green-400" />
+          </div>
+        </div>
+        <h2 className="font-heading text-xl sm:text-2xl font-extrabold text-white mb-3">
+          Application Submitted
+        </h2>
+        <p className="text-sm text-white/60 max-w-sm mx-auto leading-relaxed">
+          Your application is pending review by the College. You will be able
+          to sign in once an administrator approves your account.
+        </p>
+        <div className="mt-6 w-12 h-0.5 bg-gold mx-auto" />
+        <p className="mt-6 text-sm text-white/40">
+          Already approved?{" "}
+          <Link
+            href="/membership/member-login"
+            className="font-semibold text-gold hover:text-gold-light transition-colors"
+          >
+            Sign in here
+          </Link>
+        </p>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
@@ -93,7 +191,7 @@ export default function RegisterForm() {
 
       {/* Form body */}
       <div className="rounded-b-2xl bg-navy-dark border border-t-0 border-navy-light/20 px-6 sm:px-8 lg:px-10 py-8 sm:py-10">
-        <form className="space-y-10">
+        <form ref={formRef} onSubmit={handleSubmit} className="space-y-10">
           {/* Personal Information */}
           <fieldset>
             <SectionLegend>Personal Information</SectionLegend>
@@ -333,13 +431,23 @@ export default function RegisterForm() {
             </div>
           </fieldset>
 
+          {/* Error banner */}
+          {error && (
+            <div className="flex items-start gap-2.5 rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+              <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+
           {/* Actions */}
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
             <button
-              type="button"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-10 py-3.5 rounded-xl bg-gold text-navy text-sm font-bold uppercase tracking-wide hover:bg-gold-light transition-colors duration-300"
+              type="submit"
+              disabled={submitting}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-10 py-3.5 rounded-xl bg-gold text-navy text-sm font-bold uppercase tracking-wide hover:bg-gold-light disabled:opacity-60 transition-colors duration-300"
             >
-              Register
+              {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
+              {submitting ? "Submitting…" : "Register"}
             </button>
             <Link
               href="/membership/member-login"

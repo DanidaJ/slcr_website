@@ -10,6 +10,7 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "tsx scripts/seed.ts",
+    "seed:admin": "tsx scripts/seedAdmin.ts",
     "seed:newsletters": "tsx scripts/seedNewsletters.ts",
     "deploy": "vercel --prod"
   },
