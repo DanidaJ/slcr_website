@@ -78,7 +78,7 @@ export default function LatestStories() {
             <div className="mt-3 w-12 h-0.5 bg-gold" />
           </div>
           <Link
-            href="#"
+            href="/news-and-events"
             className="group inline-flex items-center gap-1.5 text-navy hover:text-navy/60 text-sm font-semibold transition-colors self-start sm:self-auto"
           >
             View All

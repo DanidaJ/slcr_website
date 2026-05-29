@@ -51,3 +51,15 @@ export type FellowshipDocument = {
   pdfKey?: string;
   createdAt: string;
 };
+
+export type NewsEvent = {
+  _id?: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  body: string[];
+  imageUrl: string;
+  imageKey?: string;
+  publishedAt: string;
+  createdAt: string;
+};

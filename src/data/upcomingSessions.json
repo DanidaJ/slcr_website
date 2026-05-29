@@ -195,7 +195,20 @@
       { "category": "Non-SLCR Consultants", "currency": "LKR", "prices": ["18,000", "15,000", "20,000", "18,000"] },
       { "category": "Non-SLCR Trainees", "currency": "LKR", "prices": ["9,000", "7,500", "10,000", "9,000"] },
       { "category": "Foreign Delegates", "currency": "USD", "prices": ["150", "120", "200", "150"] }
-    ]
+    ],
+    "bankDetails": {
+      "bank": "Commercial Bank",
+      "accountName": "Sri Lanka College of Radiologists",
+      "branch": "Ward Place",
+      "accountNumber": "8145003002",
+      "bankCode": "7056",
+      "branchCode": "145",
+      "swift": "CCEYLKLX"
+    },
+    "registrationForm": {
+      "url": "https://forms.gle/5kh759Ycn6W4DKrW7",
+      "instruction": "You are kindly requested to visit the link, complete the Google Form, and upload the bank payment slip/online transfer receipt to register."
+    }
   },
   "contact": {
     "office": "lankaradiology@yahoo.com",
