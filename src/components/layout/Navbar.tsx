@@ -5,15 +5,19 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, ChevronDown, LogOut, User, ShieldCheck } from "lucide-react";
+import { Menu, X, ChevronDown, LogOut, User, ShieldCheck, Inbox } from "lucide-react";
 import type { MemberSession } from "@/lib/auth";
 
-/** Admin-only sections, shown in the menu when the member's role is "admin". */
 const ADMIN_LINKS: { label: string; href: string }[] = [
   { label: "Members", href: "/admin/members" },
+  { label: "Messages", href: "/admin/messages" },
   { label: "Newsletters", href: "/admin/newsletters" },
   { label: "News & Events", href: "/admin/news-events" },
   { label: "Fellowship", href: "/admin/fellowship" },
+];
+
+const MEMBER_LINKS: { label: string; href: string }[] = [
+  { label: "Inbox", href: "/member-portal/inbox" },
 ];
 
 type NavChild = {
@@ -192,6 +196,7 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [member, setMember] = useState<MemberSession | null>(null);
+  const [unread, setUnread] = useState(0);
   const pathname = usePathname();
   const router = useRouter();
   const isHome = pathname === "/";
@@ -210,6 +215,14 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
       .catch(() => null);
   }, [pathname]);
 
+  useEffect(() => {
+    if (!member) { setUnread(0); return; }
+    fetch("/api/member/inbox")
+      .then((r) => r.json())
+      .then((d) => setUnread(d.unread ?? 0))
+      .catch(() => null);
+  }, [member]);
+
   async function handleSignOut() {
     await fetch("/api/auth/member", { method: "DELETE" });
     setMember(null);
@@ -223,15 +236,15 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
           isSolid ? "bg-navy shadow-lg shadow-navy-dark/40" : "bg-transparent"
         }`}
       >
-        {/* Utility bar — home page always; all pages when signed in as admin */}
-        {(isHome || member?.role === "admin") && (
+        {/* Utility bar — home page always; all pages when a member is signed in */}
+        {(isHome || member) && (
           <div
             className={`hidden lg:block border-b transition-colors duration-300 ${
               isSolid ? "border-navy-light/50" : "border-white/20"
             }`}
           >
             <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-6 lg:px-8 py-2 flex items-center justify-between">
-              {/* Left: date on home, admin label on other pages */}
+              {/* Left label */}
               {isHome ? (
                 <span className="text-white/60 text-xs">
                   {new Date().toLocaleDateString("en-US", {
@@ -241,15 +254,20 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                     day: "numeric",
                   })}
                 </span>
-              ) : (
+              ) : member?.role === "admin" ? (
                 <span className="flex items-center gap-1.5 text-gold/70 text-xs font-semibold uppercase tracking-widest">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   Admin Panel
                 </span>
+              ) : (
+                <span className="flex items-center gap-1.5 text-white/50 text-xs font-semibold uppercase tracking-widest">
+                  <Inbox className="w-3.5 h-3.5" />
+                  Member Portal
+                </span>
               )}
 
               <div className="flex items-center gap-3">
-                {/* Admin dropdown — utility bar */}
+                {/* Admin dropdown */}
                 {member?.role === "admin" && (
                   <div
                     className="relative"
@@ -275,6 +293,49 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                             className="block px-4 py-2 text-white/75 hover:text-white hover:bg-navy-light/50 text-xs transition-colors"
                           >
                             {link.label}
+                          </Link>
+                        ))}
+                      </motion.div>
+                    )}
+                  </div>
+                )}
+
+                {/* MY PORTAL dropdown — regular members only */}
+                {member?.role === "member" && (
+                  <div
+                    className="relative"
+                    onMouseEnter={() => setActiveDropdown("PORTAL_BAR")}
+                    onMouseLeave={() => setActiveDropdown(null)}
+                  >
+                    <button className="flex items-center gap-1.5 px-3 py-1 rounded text-xs font-bold text-gold border border-gold/40 hover:border-gold hover:bg-gold/10 transition-colors whitespace-nowrap">
+                      MY PORTAL
+                      {unread > 0 && (
+                        <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                          {unread > 99 ? "99+" : unread}
+                        </span>
+                      )}
+                      <ChevronDown className="w-3 h-3" />
+                    </button>
+                    {activeDropdown === "PORTAL_BAR" && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 4 }}
+                        transition={{ duration: 0.12 }}
+                        className="absolute right-0 top-full mt-1.5 bg-navy-dark border border-gold/30 rounded-lg shadow-xl py-1.5 min-w-[150px] z-50"
+                      >
+                        {MEMBER_LINKS.map((link) => (
+                          <Link
+                            key={link.href}
+                            href={link.href}
+                            className="block px-4 py-2 text-white/75 hover:text-white hover:bg-navy-light/50 text-xs transition-colors"
+                          >
+                            {link.label}
+                            {link.href === "/member-portal/inbox" && unread > 0 && (
+                              <span className="ml-2 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                                {unread}
+                              </span>
+                            )}
                           </Link>
                         ))}
                       </motion.div>
@@ -376,13 +437,6 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
 
               {/* Admin nav item — only visible to admin members */}
             </div>
-
-            {/* Member chip — non-home, non-admin only (admins use the utility bar) */}
-            {member && !isHome && member.role !== "admin" && (
-              <div className="hidden xl:flex">
-                <MemberChip member={member} onSignOut={handleSignOut} dark />
-              </div>
-            )}
 
             {/* Mobile hamburger */}
             <button
@@ -486,6 +540,27 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                       </p>
                       <div className="pl-4 pb-2 space-y-1">
                         {ADMIN_LINKS.map((link) => (
+                          <Link
+                            key={link.href}
+                            href={link.href}
+                            onClick={() => setMobileOpen(false)}
+                            className="block py-1 text-white/50 hover:text-white text-xs transition-colors"
+                          >
+                            {link.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {member?.role === "member" && (
+                    <div className="border-b border-gold/30">
+                      <p className="py-3 text-gold/90 font-medium text-sm flex items-center gap-1.5">
+                        <Inbox className="w-3.5 h-3.5" />
+                        MY PORTAL
+                      </p>
+                      <div className="pl-4 pb-2 space-y-1">
+                        {MEMBER_LINKS.map((link) => (
                           <Link
                             key={link.href}
                             href={link.href}

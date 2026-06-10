@@ -103,6 +103,41 @@ export type MemberRegistration = {
   username?: string;
 };
 
+/**
+ * An item delivered to a single member's inbox. A broadcast fans out into one
+ * `member_inbox` document per active member (type "broadcast", text only); a
+ * direct message is a single document (type "message", may carry one file).
+ */
+export type InboxItem = {
+  _id?: string;
+  /** Recipient member's _id (string form). */
+  memberId: string;
+  type: "broadcast" | "message";
+  subject: string;
+  /** Plain-text body. Optional for file-only direct messages. */
+  body?: string;
+  /** Attachment (direct messages only) — R2 public URL, key, and original name. */
+  fileUrl?: string;
+  fileKey?: string;
+  fileName?: string;
+  /** ISO timestamp when the member opened the item; absent while unread. */
+  readAt?: string;
+  sentAt: string;
+  /** Email of the admin who sent it (audit trail). */
+  sentBy: string;
+};
+
+/** A record of one broadcast, for the admin's send history. */
+export type Broadcast = {
+  _id?: string;
+  subject: string;
+  body: string;
+  /** How many member inboxes it was delivered to. */
+  recipientCount: number;
+  sentAt: string;
+  sentBy: string;
+};
+
 export type NewsEvent = {
   _id?: string;
   slug: string;
