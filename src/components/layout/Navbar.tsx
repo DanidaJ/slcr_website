@@ -85,7 +85,6 @@ const NAV_ITEMS: NavItem[] = [
     children: [
       { label: "DESCRIPTION", href: "/membership/description" },
       { label: "FELLOWSHIP", href: "/membership/fellowship" },
-      { label: "APPLICATION", href: "/membership/application" },
       { label: "MEMBER LOGIN", href: "/membership/member-login" },
     ],
   },
@@ -94,7 +93,7 @@ const NAV_ITEMS: NavItem[] = [
     label: "PUBLICATIONS",
     href: "#",
     children: [
-      { label: "Journal", href: "#" },
+      { label: "Journal", href: "/publications/journals" },
       { label: "Newsletter", href: "/publications/newsletters" },
       { label: "Guidelines & Standards", href: "#" },
     ],

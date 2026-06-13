@@ -355,7 +355,7 @@ export default function RegisterForm() {
             <SectionLegend>Professional Qualification</SectionLegend>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div className="sm:col-span-2">
-                <FormField label="Medical Degree (with details)">
+                <FormField label="Medical Degree (with dates)">
                   <textarea
                     name="medicalDegree"
                     rows={2}
@@ -449,12 +449,6 @@ export default function RegisterForm() {
               {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
               {submitting ? "Submitting…" : "Register"}
             </button>
-            <Link
-              href="/membership/member-login"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-10 py-3.5 rounded-xl border border-white/15 text-white/80 text-sm font-semibold uppercase tracking-wide hover:bg-white/[0.05] hover:border-white/30 transition-all duration-300"
-            >
-              Log In
-            </Link>
           </div>
 
           <p className="text-center text-sm text-white/40">
