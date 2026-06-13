@@ -51,12 +51,10 @@ export default function FellowshipContent({
         </p>
         <p>
           Nominees fulfilling the criteria will be awarded FSLCR at the
-          Inauguration ceremony of Annual Academic Sessions to be held on 25th
-          of October, 2024.
+          Inauguration ceremony of Annual Academic Sessions each year.
         </p>
         <p>
-          Members are kindly requested to submit the nominations on or before
-          31st of May 2024.
+          Members are kindly requested to submit the nominations when announced.
         </p>
         <p>
           The application form for nomination with the point chart and
@@ -139,25 +137,6 @@ export default function FellowshipContent({
           </div>
         </motion.div>
       )}
-
-      <motion.div
-        variants={fadeUp(0.25)}
-        initial="hidden"
-        whileInView="visible"
-        viewport={VIEWPORT}
-        className="rounded-2xl border border-navy/10 bg-surface p-5 sm:p-6"
-      >
-        <p className="text-navy/80 text-[15px] sm:text-base leading-relaxed">
-          Thank you,
-        </p>
-        <div className="mt-3">
-          <p className="font-heading font-bold text-navy">Dr. Asanka Perera</p>
-          <p className="text-navy/60 text-sm">Hon. Secretary</p>
-          <p className="text-navy/60 text-sm">
-            Sri Lanka College of Radiologists
-          </p>
-        </div>
-      </motion.div>
 
       <AnimatePresence>
         {activeDoc && (
