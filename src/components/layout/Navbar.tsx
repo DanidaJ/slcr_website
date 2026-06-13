@@ -11,6 +11,7 @@ import type { MemberSession } from "@/lib/auth";
 const ADMIN_LINKS: { label: string; href: string }[] = [
   { label: "Members", href: "/admin/members" },
   { label: "Messages", href: "/admin/messages" },
+  { label: "Correspondence", href: "/admin/correspondence" },
   { label: "Newsletters", href: "/admin/newsletters" },
   { label: "News & Events", href: "/admin/news-events" },
   { label: "Fellowship", href: "/admin/fellowship" },
@@ -18,6 +19,7 @@ const ADMIN_LINKS: { label: string; href: string }[] = [
 
 const MEMBER_LINKS: { label: string; href: string }[] = [
   { label: "Inbox", href: "/member-portal/inbox" },
+  { label: "Correspondence", href: "/member-portal/correspondence" },
 ];
 
 type NavChild = {
@@ -279,12 +281,13 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                       <ChevronDown className="w-3 h-3" />
                     </button>
                     {activeDropdown === "ADMIN_BAR" && (
+                      <div className="absolute right-0 top-full pt-1.5 min-w-[170px] z-50">
                       <motion.div
                         initial={{ opacity: 0, y: 4 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 4 }}
                         transition={{ duration: 0.12 }}
-                        className="absolute right-0 top-full mt-1.5 bg-navy-dark border border-gold/30 rounded-lg shadow-xl py-1.5 min-w-[170px] z-50"
+                        className="bg-navy-dark border border-gold/30 rounded-lg shadow-xl py-1.5"
                       >
                         {ADMIN_LINKS.map((link) => (
                           <Link
@@ -296,6 +299,7 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                           </Link>
                         ))}
                       </motion.div>
+                      </div>
                     )}
                   </div>
                 )}
@@ -317,12 +321,13 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                       <ChevronDown className="w-3 h-3" />
                     </button>
                     {activeDropdown === "PORTAL_BAR" && (
+                      <div className="absolute right-0 top-full pt-1.5 min-w-[150px] z-50">
                       <motion.div
                         initial={{ opacity: 0, y: 4 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 4 }}
                         transition={{ duration: 0.12 }}
-                        className="absolute right-0 top-full mt-1.5 bg-navy-dark border border-gold/30 rounded-lg shadow-xl py-1.5 min-w-[150px] z-50"
+                        className="bg-navy-dark border border-gold/30 rounded-lg shadow-xl py-1.5"
                       >
                         {MEMBER_LINKS.map((link) => (
                           <Link
@@ -339,6 +344,7 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                           </Link>
                         ))}
                       </motion.div>
+                      </div>
                     )}
                   </div>
                 )}

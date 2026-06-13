@@ -6,13 +6,18 @@ import LatestStories from "@/components/home/LatestStories";
 import OurCollege from "@/components/home/OurCollege";
 import PresidentMessage from "@/components/home/PresidentMessage";
 import QuickLinksFloat from "@/components/home/QuickLinksFloat";
+import { getNewsEvents } from "@/lib/data/newsEvents";
 
-export default function Home() {
+export default async function Home() {
+  const newsItems = await getNewsEvents()
+    .then((items) => items.slice(0, 4))
+    .catch(() => []);
+
   return (
     <main>
       <Navbar />
       <HeroSection />
-      <LatestStories />
+      <LatestStories newsItems={newsItems} />
       <OurCollege />
       <PresidentMessage />
       <Footer />

@@ -127,6 +127,22 @@ export type InboxItem = {
   sentBy: string;
 };
 
+/** A message sent from a member to the admin team (correspondence). */
+export type Correspondence = {
+  _id?: string;
+  memberId: string;
+  memberName: string;
+  memberEmail: string;
+  subject: string;
+  body?: string;
+  fileUrl?: string;
+  fileKey?: string;
+  fileName?: string;
+  /** ISO timestamp when an admin first opened the item. */
+  readAt?: string;
+  sentAt: string;
+};
+
 /** A record of one broadcast, for the admin's send history. */
 export type Broadcast = {
   _id?: string;

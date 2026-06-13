@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Calendar } from "lucide-react";
 import PageHeader from "@/components/the-college/PageHeader";
-import NewsEventImage from "@/components/news-events/NewsEventImage";
+import NewsEventLightbox from "@/components/news-events/NewsEventLightbox";
 import { getNewsEventBySlug } from "@/lib/data/newsEvents";
 
 type PageProps = {
@@ -44,6 +44,8 @@ export default async function NewsEventDetailPage({ params }: PageProps) {
     <>
       <PageHeader title="News and Events" eyebrow="Updates" />
       <section className="py-10 sm:py-14 lg:py-16 bg-white border-t border-gray-100">
+
+        {/* Header — narrow */}
         <div className="max-w-3xl mx-auto px-5 sm:px-6 lg:px-8">
           <Link
             href="/news-and-events"
@@ -61,16 +63,12 @@ export default async function NewsEventDetailPage({ params }: PageProps) {
             {item.title}
           </h1>
           <div className="mt-4 w-12 h-0.5 bg-gold" />
+        </div>
 
-          <div className="relative mt-8 aspect-[16/9] rounded-2xl overflow-hidden border border-navy/10 shadow-sm">
-            <NewsEventImage
-              src={item.imageUrl}
-              alt={item.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 768px"
-              priority
-            />
+        {/* Image + body — narrow, same column as title */}
+        <div className="max-w-3xl mx-auto px-5 sm:px-6 lg:px-8">
+          <div className="mt-8">
+            <NewsEventLightbox src={item.imageUrl} alt={item.title} />
           </div>
 
           <div className="mt-8 space-y-4 text-navy/70 text-[15px] sm:text-base leading-relaxed">
@@ -79,6 +77,7 @@ export default async function NewsEventDetailPage({ params }: PageProps) {
             ))}
           </div>
         </div>
+
       </section>
     </>
   );

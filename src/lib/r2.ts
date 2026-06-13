@@ -50,6 +50,11 @@ export function buildMemberFileKey(memberId: string, filename: string): string {
   return `member-files/${memberId}/${Date.now()}-${sanitize(filename)}`;
 }
 
+/** Build the object key for a file a member sends to admin (correspondence). */
+export function buildCorrespondenceKey(memberId: string, filename: string): string {
+  return `correspondence/${memberId}/${Date.now()}-${sanitize(filename)}`;
+}
+
 /** Build the object key for a news & events thumbnail image. */
 export function buildNewsEventImageKey(filename: string): string {
   return `news-events/${Date.now()}-${sanitize(filename)}`;

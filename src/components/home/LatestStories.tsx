@@ -6,24 +6,32 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Calendar } from "lucide-react";
 import { fadeUp, fadeRight } from "@/lib/motion";
-import storiesData from "@/data/stories.json";
+import type { NewsEvent } from "@/lib/types";
 
 type Story = {
-  id: number;
+  id: string | number;
   category: string;
   title: string;
   excerpt: string;
   date: string;
   image: string;
-  featured: boolean;
   href: string;
 };
 
-const stories: Story[] = storiesData;
-const SIDE_COUNT = 3;
 const ROTATION_MS = 15500;
-
 const VIEWPORT = { once: false, margin: "-80px" } as const;
+
+function toStory(item: NewsEvent, i: number): Story {
+  return {
+    id: item._id ?? i,
+    category: "NEWS & EVENTS",
+    title: item.title,
+    excerpt: item.excerpt,
+    date: item.publishedAt,
+    image: item.imageUrl,
+    href: `/news-and-events/${item.slug}`,
+  };
+}
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-GB", {
@@ -41,20 +49,27 @@ function CategoryBadge({ category }: { category: string }) {
   );
 }
 
-export default function LatestStories() {
+export default function LatestStories({ newsItems = [] }: { newsItems?: NewsEvent[] }) {
+  const stories: Story[] = newsItems.slice(0, 4).map(toStory);
+
+  const sideCount = Math.min(3, stories.length - 1);
   const [activeIdx, setActiveIdx] = useState(0);
 
   useEffect(() => {
+    if (stories.length <= 1) return;
     const id = setInterval(
       () => setActiveIdx((i) => (i + 1) % stories.length),
       ROTATION_MS
     );
     return () => clearInterval(id);
-  }, []);
+  }, [stories.length]);
 
-  const featured = stories[activeIdx];
-  const sideStories = Array.from({ length: SIDE_COUNT }, (_, i) =>
-    stories[(activeIdx + 1 + i) % stories.length]
+  const safeIdx = Math.min(activeIdx, stories.length - 1);
+
+  if (stories.length === 0) return null;
+  const featured = stories[safeIdx];
+  const sideStories = Array.from({ length: sideCount }, (_, i) =>
+    stories[(safeIdx + 1 + i) % stories.length]
   );
 
   return (
@@ -88,7 +103,7 @@ export default function LatestStories() {
 
         {/* Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 sm:gap-6">
-          {/* Featured card — rotates with activeIdx */}
+          {/* Featured card */}
           <motion.div
             variants={fadeUp()}
             initial="hidden"
@@ -138,7 +153,7 @@ export default function LatestStories() {
             </AnimatePresence>
           </motion.div>
 
-          {/* Side column — rotates with the same activeIdx */}
+          {/* Side column */}
           <motion.div
             variants={fadeRight()}
             initial="hidden"
@@ -189,7 +204,7 @@ export default function LatestStories() {
               ))}
             </AnimatePresence>
 
-            {/* Dots — one per story, tracking unified activeIdx */}
+            {/* Dots */}
             <div className="flex justify-center gap-1.5 pt-1">
               {stories.map((_, i) => (
                 <button
@@ -197,7 +212,7 @@ export default function LatestStories() {
                   onClick={() => setActiveIdx(i)}
                   aria-label={`Go to story ${i + 1}`}
                   className={`h-1.5 rounded-full transition-all duration-500 ${
-                    i === activeIdx ? "w-5 bg-gold" : "w-1.5 bg-navy/15"
+                    i === safeIdx ? "w-5 bg-gold" : "w-1.5 bg-navy/15"
                   }`}
                 />
               ))}
