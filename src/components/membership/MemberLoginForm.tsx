@@ -1,11 +1,16 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Eye, EyeOff, Loader2 } from "lucide-react";
 import { fadeUp } from "@/lib/motion";
 
 const VIEWPORT = { once: true, margin: "-60px" } as const;
+
+const inputClass =
+  "w-full rounded-xl border border-white/10 bg-white/[0.07] px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold/40 transition-all backdrop-blur-sm";
 
 /** Maps callback `?error=` codes to member-friendly messages. */
 const ERROR_MESSAGES: Record<string, string> = {
@@ -43,9 +48,40 @@ function GoogleIcon() {
 }
 
 export default function MemberLoginForm({ errorCode }: { errorCode?: string }) {
-  const error = errorCode
+  const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const oauthError = errorCode
     ? ERROR_MESSAGES[errorCode] ?? "Sign-in failed. Please try again."
     : null;
+
+  async function handleCredentialLogin(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setFormError(null);
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/auth/member/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setFormError(data.error || "Sign-in failed. Please try again.");
+        return;
+      }
+      router.push("/?loggedIn=1");
+      router.refresh();
+    } catch {
+      setFormError("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <motion.div
@@ -55,17 +91,12 @@ export default function MemberLoginForm({ errorCode }: { errorCode?: string }) {
       viewport={VIEWPORT}
       className="relative overflow-hidden"
     >
-      {/* Background card with gradient border effect */}
       <div className="relative rounded-2xl bg-gradient-to-br from-navy via-navy-dark to-navy overflow-hidden shadow-2xl shadow-navy/20">
-        {/* Decorative glow spots */}
         <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-gold/[0.07] blur-3xl pointer-events-none" />
         <div className="absolute -bottom-20 -left-20 w-60 h-60 rounded-full bg-blue-500/[0.06] blur-3xl pointer-events-none" />
-
-        {/* Gold top accent line */}
         <div className="h-1 bg-gradient-to-r from-transparent via-gold to-transparent" />
 
         <div className="relative z-10 p-7 sm:p-9">
-          {/* Logo & heading */}
           <div className="flex justify-center mb-5">
             <div className="p-3 rounded-2xl bg-white/[0.08] ring-1 ring-white/[0.08] backdrop-blur-sm">
               <Image
@@ -83,20 +114,98 @@ export default function MemberLoginForm({ errorCode }: { errorCode?: string }) {
               Member Sign In
             </h2>
             <p className="mt-2 text-sm text-white/45">
-              Use the Google account registered with the College
+              Sign in with your member email and password, or continue with Google
             </p>
             <div className="mt-3 mx-auto w-10 h-0.5 rounded-full bg-gradient-to-r from-gold/60 via-gold to-gold/60" />
           </div>
 
-          {/* Error banner (from the OAuth callback redirect) */}
-          {error && (
+          {(oauthError || formError) && (
             <div className="mb-6 flex items-start gap-2.5 rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-              <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-              <span>{error}</span>
+              <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+              <span>{formError ?? oauthError}</span>
             </div>
           )}
 
-          {/* Google sign-in — kicks off the OAuth flow on the server */}
+          <form
+            onSubmit={handleCredentialLogin}
+            autoComplete="on"
+            className="space-y-4"
+          >
+            <div>
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-white/80 mb-1.5"
+              >
+                Username / Email
+              </label>
+              <input
+                id="username"
+                name="username"
+                type="email"
+                autoComplete="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="you@example.com"
+                required
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="current-password"
+                className="block text-sm font-medium text-white/80 mb-1.5"
+              >
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  id="current-password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  className={`${inputClass} pr-11`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={submitting || !username || !password}
+              className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gold text-navy text-sm font-bold uppercase tracking-wide hover:bg-gold-light disabled:opacity-60 transition-colors duration-300"
+            >
+              {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
+              {submitting ? "Signing in…" : "Sign In"}
+            </button>
+          </form>
+
+          <div className="relative my-7">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-white/10" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-navy-dark px-3 text-xs text-white/35 uppercase tracking-wider">
+                or
+              </span>
+            </div>
+          </div>
+
           <a
             href="/api/auth/google/login"
             className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl bg-white text-sm font-semibold text-navy/80 hover:bg-white/90 hover:shadow-lg transition-all duration-200"
@@ -105,7 +214,7 @@ export default function MemberLoginForm({ errorCode }: { errorCode?: string }) {
             Continue with Google
           </a>
 
-          <div className="mt-7 text-center">
+          <div className="mt-7 text-center space-y-3">
             <p className="text-xs leading-relaxed text-white/35">
               Member accounts are created by the College. If you don&apos;t have
               access yet, please{" "}
@@ -116,6 +225,15 @@ export default function MemberLoginForm({ errorCode }: { errorCode?: string }) {
                 contact us
               </a>
               .
+            </p>
+            <p className="text-xs text-white/35">
+              Not a member yet?{" "}
+              <a
+                href="/membership/register"
+                className="font-semibold text-gold/70 hover:text-gold transition-colors"
+              >
+                Register here
+              </a>
             </p>
           </div>
         </div>
