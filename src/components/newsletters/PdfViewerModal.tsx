@@ -26,9 +26,14 @@ type PdfViewerModalProps = {
   onClose: () => void;
 };
 
-const MIN_SCALE = 0.6;
-const MAX_SCALE = 2.4;
-const SCALE_STEP = 0.2;
+const MIN_ZOOM = 0.75;
+const MAX_ZOOM = 2.4;
+const ZOOM_STEP = 0.15;
+
+function horizontalInset(viewportWidth: number) {
+  // Leave room for side nav arrows without clipping the page.
+  return viewportWidth < 640 ? 56 : viewportWidth < 1024 ? 120 : 160;
+}
 
 export default function PdfViewerModal({
   url,
@@ -37,13 +42,34 @@ export default function PdfViewerModal({
 }: PdfViewerModalProps) {
   const [numPages, setNumPages] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
-  const [scale, setScale] = useState(1);
+  const [fitWidth, setFitWidth] = useState<number | null>(null);
+  const [zoom, setZoom] = useState(1);
   const [error, setError] = useState(false);
   const [direction, setDirection] = useState(0);
   const [mounted, setMounted] = useState(false);
   const pageWrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => setMounted(true), []);
+
+  // Fit each page to the available viewer width (mobile-first).
+  useEffect(() => {
+    const el = pageWrapRef.current;
+    if (!el) return;
+
+    function updateFitWidth() {
+      const inset = horizontalInset(window.innerWidth);
+      setFitWidth(Math.max(240, el!.clientWidth - inset));
+    }
+
+    updateFitWidth();
+    const ro = new ResizeObserver(updateFitWidth);
+    ro.observe(el);
+    window.addEventListener("resize", updateFitWidth);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", updateFitWidth);
+    };
+  }, []);
 
   // Lock body scroll while open.
   useEffect(() => {
@@ -65,13 +91,15 @@ export default function PdfViewerModal({
   }, [numPages]);
 
   const zoomIn = useCallback(
-    () => setScale((s) => Math.min(MAX_SCALE, +(s + SCALE_STEP).toFixed(2))),
+    () => setZoom((z) => Math.min(MAX_ZOOM, +(z + ZOOM_STEP).toFixed(2))),
     []
   );
   const zoomOut = useCallback(
-    () => setScale((s) => Math.max(MIN_SCALE, +(s - SCALE_STEP).toFixed(2))),
+    () => setZoom((z) => Math.max(MIN_ZOOM, +(z - ZOOM_STEP).toFixed(2))),
     []
   );
+
+  const pageWidth = fitWidth ? Math.round(fitWidth * zoom) : undefined;
 
   // Keyboard controls.
   useEffect(() => {
@@ -134,18 +162,18 @@ export default function PdfViewerModal({
           {/* Zoom */}
           <button
             onClick={zoomOut}
-            disabled={scale <= MIN_SCALE}
+            disabled={zoom <= MIN_ZOOM}
             className="p-2 rounded-lg text-white/80 hover:bg-white/10 disabled:opacity-30 transition-colors"
             aria-label="Zoom out"
           >
             <ZoomOut className="w-5 h-5" />
           </button>
           <span className="hidden sm:inline text-white/60 text-xs tabular-nums w-10 text-center">
-            {Math.round(scale * 100)}%
+            {Math.round(zoom * 100)}%
           </span>
           <button
             onClick={zoomIn}
-            disabled={scale >= MAX_SCALE}
+            disabled={zoom >= MAX_ZOOM}
             className="p-2 rounded-lg text-white/80 hover:bg-white/10 disabled:opacity-30 transition-colors"
             aria-label="Zoom in"
           >
@@ -178,8 +206,29 @@ export default function PdfViewerModal({
       {/* Document area */}
       <div
         ref={pageWrapRef}
-        className="relative flex-1 overflow-auto overscroll-contain flex items-start justify-center py-6 px-3 sm:px-6"
+        className="relative flex-1 overflow-auto overscroll-contain flex items-start justify-center py-4 sm:py-6 px-2 sm:px-6"
       >
+        {!error && numPages > 0 && (
+          <>
+            <button
+              onClick={goPrev}
+              disabled={pageNumber <= 1}
+              className="absolute left-1 sm:left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-9 h-14 sm:w-14 sm:h-24 rounded-lg sm:rounded-xl bg-navy/35 sm:bg-navy/50 hover:bg-navy/70 active:bg-navy/80 text-white/60 hover:text-white sm:text-white/70 disabled:opacity-20 disabled:hover:bg-navy/35 transition-all backdrop-blur-sm border border-white/5 sm:border-white/10 touch-manipulation"
+              aria-label="Previous page"
+            >
+              <ChevronLeft className="w-6 h-6 sm:w-10 sm:h-10" strokeWidth={2.5} />
+            </button>
+            <button
+              onClick={goNext}
+              disabled={pageNumber >= numPages}
+              className="absolute right-1 sm:right-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-9 h-14 sm:w-14 sm:h-24 rounded-lg sm:rounded-xl bg-navy/35 sm:bg-navy/50 hover:bg-navy/70 active:bg-navy/80 text-white/60 hover:text-white sm:text-white/70 disabled:opacity-20 disabled:hover:bg-navy/35 transition-all backdrop-blur-sm border border-white/5 sm:border-white/10 touch-manipulation"
+              aria-label="Next page"
+            >
+              <ChevronRight className="w-6 h-6 sm:w-10 sm:h-10" strokeWidth={2.5} />
+            </button>
+          </>
+        )}
+
         {error ? (
           <div className="m-auto text-center text-white/70">
             <p className="text-sm">This PDF could not be displayed.</p>
@@ -218,7 +267,7 @@ export default function PdfViewerModal({
               >
                 <Page
                   pageNumber={pageNumber}
-                  scale={scale}
+                  width={pageWidth}
                   renderTextLayer
                   renderAnnotationLayer
                 />

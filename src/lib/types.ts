@@ -64,6 +64,8 @@ export type Member = {
   /** Full name, from the registration form. */
   name: string;
   username?: string;
+  /** Scrypt hash for email/password sign-in (set during registration). */
+  passwordHash?: string;
   /** Membership/registration number, assigned by admin after approval. */
   memberNumber?: string;
   /** Access level. Defaults to "member" when absent. Seeded manually for admins. */

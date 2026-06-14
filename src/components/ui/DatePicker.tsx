@@ -9,11 +9,17 @@ const MONTHS = [
 ];
 const DAY_LABELS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
+function defaultViewYear() {
+  return new Date().getFullYear() - 30;
+}
+
 interface DatePickerProps {
   value: string;
   onChange: (value: string) => void;
   name?: string;
   placeholder?: string;
+  minYear?: number;
+  maxYear?: number;
 }
 
 export default function DatePicker({
@@ -21,16 +27,22 @@ export default function DatePicker({
   onChange,
   name,
   placeholder = "dd / mm / yyyy",
+  minYear = 1920,
+  maxYear = new Date().getFullYear(),
 }: DatePickerProps) {
-  const today = new Date();
   const [open, setOpen] = useState(false);
   const [viewYear, setViewYear] = useState(
-    value ? parseInt(value.split("-")[0]) : today.getFullYear()
+    value ? parseInt(value.split("-")[0]) : defaultViewYear()
   );
   const [viewMonth, setViewMonth] = useState(
-    value ? parseInt(value.split("-")[1]) - 1 : today.getMonth()
+    value ? parseInt(value.split("-")[1]) - 1 : 0
   );
   const ref = useRef<HTMLDivElement>(null);
+
+  const yearOptions = Array.from(
+    { length: maxYear - minYear + 1 },
+    (_, i) => maxYear - i
+  );
 
   useEffect(() => {
     function handleOutside(e: MouseEvent) {
@@ -64,13 +76,6 @@ export default function DatePicker({
     else setViewMonth((m) => m + 1);
   }
 
-  function setToday() {
-    const m = String(today.getMonth() + 1).padStart(2, "0");
-    const d = String(today.getDate()).padStart(2, "0");
-    onChange(`${today.getFullYear()}-${m}-${d}`);
-    setOpen(false);
-  }
-
   const selectedDate = value ? new Date(value + "T00:00:00") : null;
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
   const firstDay = new Date(viewYear, viewMonth, 1).getDay();
@@ -80,11 +85,6 @@ export default function DatePicker({
     selectedDate.getFullYear() === viewYear &&
     selectedDate.getMonth() === viewMonth &&
     selectedDate.getDate() === day;
-
-  const isToday = (day: number) =>
-    today.getFullYear() === viewYear &&
-    today.getMonth() === viewMonth &&
-    today.getDate() === day;
 
   const cells: (number | null)[] = [
     ...Array(firstDay).fill(null),
@@ -106,22 +106,42 @@ export default function DatePicker({
 
       {open && (
         <div className="absolute z-50 mt-1.5 left-0 rounded-2xl border border-white/10 bg-[#0c1735] shadow-2xl p-4 w-72">
-          {/* Month / Year nav */}
+          {/* Year select */}
+          <div className="mb-3">
+            <label className="block text-[11px] font-medium text-white/40 mb-1.5">
+              Year
+            </label>
+            <select
+              value={viewYear}
+              onChange={(e) => setViewYear(Number(e.target.value))}
+              className="w-full rounded-lg border border-white/10 bg-white/[0.07] px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold/40 transition-all"
+            >
+              {yearOptions.map((year) => (
+                <option key={year} value={year} className="bg-[#0c1735] text-white">
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Month nav */}
           <div className="flex items-center justify-between mb-4">
             <button
               type="button"
               onClick={prevMonth}
               className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/[0.08] text-white/50 hover:text-white transition-colors"
+              aria-label="Previous month"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <span className="text-sm font-semibold text-white">
-              {MONTHS[viewMonth]} {viewYear}
+              {MONTHS[viewMonth]}
             </span>
             <button
               type="button"
               onClick={nextMonth}
               className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/[0.08] text-white/50 hover:text-white transition-colors"
+              aria-label="Next month"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -150,8 +170,6 @@ export default function DatePicker({
                     className={`w-9 h-9 rounded-lg text-sm font-medium transition-all ${
                       isSelected(day)
                         ? "bg-gold text-navy font-bold"
-                        : isToday(day)
-                        ? "border border-gold/50 text-gold"
                         : "text-white/70 hover:bg-white/[0.08] hover:text-white"
                     }`}
                   >
@@ -163,20 +181,13 @@ export default function DatePicker({
           </div>
 
           {/* Footer */}
-          <div className="flex justify-between mt-3 pt-3 border-t border-white/[0.07]">
+          <div className="flex justify-end mt-3 pt-3 border-t border-white/[0.07]">
             <button
               type="button"
               onClick={() => { onChange(""); setOpen(false); }}
               className="text-xs text-white/40 hover:text-white/70 transition-colors"
             >
               Clear
-            </button>
-            <button
-              type="button"
-              onClick={setToday}
-              className="text-xs text-gold/70 hover:text-gold transition-colors font-medium"
-            >
-              Today
             </button>
           </div>
         </div>
