@@ -215,7 +215,7 @@ export default function MemberLoginForm({ errorCode }: { errorCode?: string }) {
           </a>
 
           <div className="mt-7 text-center space-y-3">
-            <p className="text-xs leading-relaxed text-white/35">
+            {/* <p className="text-xs leading-relaxed text-white/35">
               Member accounts are created by the College. If you don&apos;t have
               access yet, please{" "}
               <a
@@ -225,7 +225,7 @@ export default function MemberLoginForm({ errorCode }: { errorCode?: string }) {
                 contact us
               </a>
               .
-            </p>
+            </p> */}
             <p className="text-xs text-white/35">
               Not a member yet?{" "}
               <a

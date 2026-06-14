@@ -2,6 +2,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import BackToTop from "@/components/layout/BackToTop";
 import PageHeader from "@/components/the-college/PageHeader";
+import ContactForm from "@/components/contact/ContactForm";
 
 const MAP_EMBED_URL =
   "https://www.google.com/maps?q=Sri%20Lanka%20College%20of%20Radiologists%2C%20Colombo%207&output=embed";
@@ -94,74 +95,7 @@ export default function ContactUsPage() {
               </p>
               <div className="mt-4 w-12 h-0.5 bg-gold" />
 
-              <form className="mt-6 space-y-4">
-                <div>
-                  <label
-                    htmlFor="fullName"
-                    className="block text-sm font-medium text-navy"
-                  >
-                    Full Name
-                  </label>
-                  <input
-                    id="fullName"
-                    name="fullName"
-                    type="text"
-                    placeholder="Enter your full name"
-                    className="mt-2 w-full rounded-lg border border-navy/10 px-3.5 py-2.5 text-sm text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy/40"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-navy"
-                  >
-                    Email Address
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="Enter your email address"
-                    className="mt-2 w-full rounded-lg border border-navy/10 px-3.5 py-2.5 text-sm text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy/40"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="subject"
-                    className="block text-sm font-medium text-navy"
-                  >
-                    Subject
-                  </label>
-                  <input
-                    id="subject"
-                    name="subject"
-                    type="text"
-                    placeholder="Enter your subject"
-                    className="mt-2 w-full rounded-lg border border-navy/10 px-3.5 py-2.5 text-sm text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy/40"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="block text-sm font-medium text-navy"
-                  >
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={5}
-                    placeholder="Write your message here"
-                    className="mt-2 w-full rounded-lg border border-navy/10 px-3.5 py-2.5 text-sm text-navy placeholder:text-navy/40 focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy/40"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-full bg-navy text-white text-sm font-semibold hover:bg-navy-dark transition-colors"
-                >
-                  Send Message
-                </button>
-              </form>
+              <ContactForm />
             </div>
           </div>
         </div>

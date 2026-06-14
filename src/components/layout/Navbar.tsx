@@ -11,6 +11,7 @@ import type { MemberSession } from "@/lib/auth";
 const ADMIN_LINKS: { label: string; href: string }[] = [
   { label: "Members", href: "/admin/members" },
   { label: "Messages", href: "/admin/messages" },
+  { label: "Public Messages", href: "/admin/public-messages" },
   { label: "Correspondence", href: "/admin/correspondence" },
   { label: "Newsletters", href: "/admin/newsletters" },
   { label: "News & Events", href: "/admin/news-events" },
@@ -95,7 +96,6 @@ const NAV_ITEMS: NavItem[] = [
     children: [
       { label: "Journal", href: "/publications/journals" },
       { label: "Newsletter", href: "/publications/newsletters" },
-      { label: "Guidelines & Standards", href: "#" },
     ],
   },
   {

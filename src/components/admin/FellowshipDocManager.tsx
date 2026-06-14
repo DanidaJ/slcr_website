@@ -120,7 +120,7 @@ export default function FellowshipDocManager() {
   }
 
   return (
-    <div className="min-h-screen bg-surface pt-20">
+    <div className="min-h-screen bg-surface pt-28">
       <div className="max-w-5xl mx-auto px-5 sm:px-6 py-6">
         <h1 className="font-heading text-2xl font-extrabold text-navy">Fellowship Documents Admin</h1>
         <p className="text-sm text-navy/50">Manage fellowship documents</p>
