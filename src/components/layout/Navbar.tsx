@@ -70,12 +70,12 @@ const NAV_ITEMS: NavItem[] = [
     href: "#",
     children: [
       {
-        label: "Upcoming Sessions",
+        label: "UPCOMING SESSIONS",
         href: "/academic-sessions/upcoming-sessions",
       },
-      { label: "Past Sessions", href: "#" },
+      { label: "PAST SESSIONS", href: "#" },
       {
-        label: "Registration",
+        label: "REGISTRATION",
         href: "/academic-sessions/registration",
       },
     ],
@@ -94,8 +94,8 @@ const NAV_ITEMS: NavItem[] = [
     label: "PUBLICATIONS",
     href: "#",
     children: [
-      { label: "Journal", href: "/publications/journals" },
-      { label: "Newsletter", href: "/publications/newsletters" },
+      { label: "JOURNAL", href: "/publications/journals" },
+      { label: "NEWSLETTER", href: "/publications/newsletters" },
     ],
   },
   {
@@ -235,6 +235,23 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
     router.refresh();
   }
 
+  // Utility bar: home page (all sizes) or signed-in users (desktop only on inner pages).
+  const showUtilityBar = isHome || !!member;
+
+  const isChildActive = (href: string) =>
+    href !== "#" && (pathname === href || pathname.startsWith(`${href}/`));
+
+  const isItemActive = (item: NavItem) => {
+    if (item.href === "/") return pathname === "/";
+    if (
+      item.href !== "#" &&
+      (pathname === item.href || pathname.startsWith(`${item.href}/`))
+    ) {
+      return true;
+    }
+    return item.children?.some((c) => isChildActive(c.href)) ?? false;
+  };
+
   return (
     <>
       <header
@@ -242,37 +259,39 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
           isSolid ? "bg-navy shadow-lg shadow-navy-dark/40" : "bg-transparent"
         }`}
       >
-        {/* Utility bar — home page always; all pages when a member is signed in */}
-        {(isHome || member) && (
+        {/* Utility bar — home page (all sizes); signed-in users on inner pages (lg+ only) */}
+        {showUtilityBar && (
           <div
-            className={`hidden lg:block border-b transition-colors duration-300 ${
+            className={`${isHome ? "" : "hidden lg:block"} border-b transition-colors duration-300 ${
               isSolid ? "border-navy-light/50" : "border-white/20"
             }`}
           >
-            <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-6 lg:px-8 py-2 flex items-center justify-between">
-              {/* Left label */}
-              {isHome ? (
-                <span className="text-white/60 text-xs">
-                  {new Date().toLocaleDateString("en-US", {
-                    weekday: "long",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </span>
-              ) : member?.role === "admin" ? (
-                <span className="flex items-center gap-1.5 text-gold/70 text-xs font-semibold uppercase tracking-widest">
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  Admin Panel
-                </span>
-              ) : (
-                <span className="flex items-center gap-1.5 text-white/50 text-xs font-semibold uppercase tracking-widest">
-                  <Inbox className="w-3.5 h-3.5" />
-                  Member Portal
-                </span>
-              )}
+            <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-1.5 sm:py-2 flex items-center justify-end lg:justify-between gap-2">
+              {/* Left label — desktop only */}
+              <div className="hidden lg:block min-w-0">
+                {isHome ? (
+                  <span className="text-white/60 text-xs">
+                    {new Date().toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                ) : member?.role === "admin" ? (
+                  <span className="flex items-center gap-1.5 text-gold/70 text-xs font-semibold uppercase tracking-widest">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    Admin Panel
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1.5 text-white/50 text-xs font-semibold uppercase tracking-widest">
+                    <Inbox className="w-3.5 h-3.5" />
+                    Member Portal
+                  </span>
+                )}
+              </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                 {/* Admin dropdown */}
                 {member?.role === "admin" && (
                   <div
@@ -360,13 +379,13 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                   <>
                     <Link
                       href="/membership/member-login"
-                      className="px-4 py-1.5 text-xs font-medium text-white/90 hover:text-white border border-white/30 hover:border-white/60 rounded transition-colors"
+                      className="px-2.5 sm:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs font-medium text-white/90 hover:text-white border border-white/30 hover:border-white/60 rounded transition-colors whitespace-nowrap"
                     >
                       MEMBER LOGIN
                     </Link>
                     <Link
                       href="/membership/register"
-                      className="px-4 py-1.5 text-xs font-semibold bg-gold text-navy rounded hover:bg-gold-light transition-colors"
+                      className="px-2.5 sm:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold bg-gold text-navy rounded hover:bg-gold-light transition-colors whitespace-nowrap"
                     >
                       BECOME A MEMBER
                     </Link>
@@ -390,65 +409,81 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                 alt="SLCR Logo"
                 width={44}
                 height={44}
-                className="flex-shrink-0 object-contain xl:w-10 xl:h-10"
+                className="flex-shrink-0 object-contain lg:w-9 lg:h-9 xl:w-10 xl:h-10"
               />
               <div>
-                <p className="text-white font-bold text-sm sm:text-[15px] xl:text-[13px] leading-tight font-heading whitespace-nowrap">
+                <p className="text-white font-bold text-sm sm:text-[15px] lg:text-[12px] xl:text-[13px] leading-tight font-heading whitespace-nowrap">
                   Sri Lanka College of Radiologists
                 </p>
-                <p className="text-white/55 text-[10px] sm:text-xs xl:text-[10px] font-medium tracking-[0.15em] uppercase whitespace-nowrap">
+                <p className="text-white/55 text-[10px] sm:text-xs lg:text-[9px] xl:text-[10px] font-medium tracking-[0.15em] uppercase whitespace-nowrap">
                   To Enlighten &amp; Relieve
                 </p>
               </div>
             </Link>
 
-            {/* Desktop nav links */}
+            {/* Desktop nav links — xl+ only; tablets use hamburger to avoid overflow */}
             <div className="hidden xl:flex items-center">
-              {NAV_ITEMS.map((item) => (
-                <div
-                  key={item.label}
-                  className="relative group"
-                  onMouseEnter={() =>
-                    item.children && setActiveDropdown(item.label)
-                  }
-                  onMouseLeave={() => setActiveDropdown(null)}
-                >
-                  <Link
-                    href={item.href}
-                    className="flex items-center gap-0.5 px-1 xl:px-1.5 2xl:px-2.5 py-2 text-white/85 hover:text-white text-[11px] xl:text-xs font-medium tracking-normal transition-colors whitespace-nowrap"
+              {NAV_ITEMS.map((item) => {
+                const active = isItemActive(item);
+                return (
+                  <div
+                    key={item.label}
+                    className="relative group"
+                    onMouseEnter={() =>
+                      item.children && setActiveDropdown(item.label)
+                    }
+                    onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    {item.label}
-                    {item.children && (
-                      <ChevronDown className="w-3 h-3 opacity-70" />
-                    )}
-                  </Link>
-
-                  {item.children && activeDropdown === item.label && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 6 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute top-full left-0 bg-navy-dark border border-navy-light/60 rounded-lg shadow-xl py-1.5 min-w-[190px] z-50"
+                    <Link
+                      href={item.href}
+                      className={`flex items-center gap-0.5 px-1 lg:px-1 xl:px-1.5 2xl:px-2.5 py-2 text-[11px] xl:text-xs font-medium tracking-normal transition-colors whitespace-nowrap ${
+                        active ? "text-white" : "text-white/80 hover:text-white"
+                      }`}
                     >
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.label}
-                          href={child.href}
-                          className="block px-4 py-2 text-white/75 hover:text-white hover:bg-navy-light/50 text-xs transition-colors"
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
-                    </motion.div>
-                  )}
-                </div>
-              ))}
+                      {item.label}
+                      {item.children && (
+                        <ChevronDown
+                          className={`w-3 h-3 ${active ? "opacity-90" : "opacity-70"}`}
+                        />
+                      )}
+                    </Link>
 
-              {/* Admin nav item — only visible to admin members */}
+                    {/* Active underline indicator */}
+                    <span
+                      className={`pointer-events-none absolute left-1 right-1 -bottom-0.5 h-0.5 rounded-full bg-gold transition-opacity duration-200 ${
+                        active ? "opacity-100" : "opacity-0"
+                      }`}
+                    />
+
+                    {item.children && activeDropdown === item.label && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 6 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute top-full left-0 bg-navy-dark border border-navy-light/60 rounded-lg shadow-xl py-1.5 min-w-[190px] z-50"
+                      >
+                        {item.children.map((child) => (
+                          <Link
+                            key={child.label}
+                            href={child.href}
+                            className={`block px-4 py-2 text-xs transition-colors ${
+                              isChildActive(child.href)
+                                ? "text-gold bg-navy-light/30"
+                                : "text-white/75 hover:text-white hover:bg-navy-light/50"
+                            }`}
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
+                      </motion.div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
-            {/* Mobile hamburger */}
+            {/* Hamburger — below xl (tablets + mobile) */}
             <button
               className="xl:hidden text-white p-2 -mr-2"
               onClick={() => setMobileOpen(true)}
@@ -514,16 +549,23 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
 
                 {/* Nav items */}
                 <nav className="space-y-0.5">
-                  {NAV_ITEMS.map((item) => (
+                  {NAV_ITEMS.map((item) => {
+                    const active = isItemActive(item);
+                    return (
                     <div
                       key={item.label}
                       className="border-b border-navy-light/40"
                     >
                       <Link
                         href={item.href}
-                        className="block py-3 text-white/85 hover:text-white font-medium text-sm transition-colors"
+                        className={`flex items-center gap-2 py-3 font-medium text-sm transition-colors ${
+                          active ? "text-gold" : "text-white/85 hover:text-white"
+                        }`}
                         onClick={() => setMobileOpen(false)}
                       >
+                        {active && (
+                          <span className="h-4 w-0.5 rounded-full bg-gold" />
+                        )}
                         {item.label}
                       </Link>
                       {item.children && (
@@ -532,7 +574,12 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                             <Link
                               key={child.label}
                               href={child.href}
-                              className="block py-1 text-white/50 hover:text-white text-xs transition-colors"
+                              onClick={() => setMobileOpen(false)}
+                              className={`block py-1 text-xs transition-colors ${
+                                isChildActive(child.href)
+                                  ? "text-gold"
+                                  : "text-white/50 hover:text-white"
+                              }`}
                             >
                               {child.label}
                             </Link>
@@ -540,7 +587,8 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                         </div>
                       )}
                     </div>
-                  ))}
+                    );
+                  })}
 
                   {member?.role === "admin" && (
                     <div className="border-b border-gold/30">
