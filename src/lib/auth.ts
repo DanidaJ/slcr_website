@@ -19,6 +19,8 @@ export type MemberSession = {
   memberId: string;
   email: string;
   name?: string;
+  /** Membership number assigned by the admin at approval. */
+  memberNumber?: string;
   /** "admin" members (seeded manually) unlock the admin sections. */
   role: "member" | "admin";
 };
@@ -143,12 +145,13 @@ export async function getMemberSession(): Promise<MemberSession | null> {
   const store = await cookies();
   const data = verifyAndDecode(store.get(MEMBER_COOKIE)?.value);
   if (data?.role !== "member" && data?.role !== "admin") return null;
-  const { memberId, email, name, role } = data as Record<string, unknown>;
+  const { memberId, email, name, memberNumber, role } = data as Record<string, unknown>;
   if (typeof memberId !== "string" || typeof email !== "string") return null;
   return {
     memberId,
     email,
     name: typeof name === "string" ? name : undefined,
+    memberNumber: typeof memberNumber === "string" ? memberNumber : undefined,
     role: role === "admin" ? "admin" : "member",
   };
 }

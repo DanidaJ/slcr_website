@@ -176,6 +176,11 @@ function MemberChip({
             <div className="px-4 py-2 border-b border-navy-light/30">
               <p className="text-white text-xs font-semibold truncate">{member.name}</p>
               <p className="text-white/45 text-[11px] truncate">{member.email}</p>
+              {member.memberNumber && (
+                <p className="mt-0.5 text-gold/80 text-[11px] font-medium truncate">
+                  Membership No: {member.memberNumber}
+                </p>
+              )}
             </div>
 
             <button
@@ -591,6 +596,11 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                         <div className="min-w-0">
                           <p className="text-white text-sm font-semibold truncate">{member.name}</p>
                           <p className="text-white/45 text-xs truncate">{member.email}</p>
+                          {member.memberNumber && (
+                            <p className="text-gold/80 text-xs font-medium truncate">
+                              Membership No: {member.memberNumber}
+                            </p>
+                          )}
                         </div>
                       </div>
 

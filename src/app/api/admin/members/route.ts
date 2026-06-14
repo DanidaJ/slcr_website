@@ -41,9 +41,16 @@ export async function POST(request: NextRequest) {
 
   const email = body.email?.trim().toLowerCase();
   const name = body.name?.trim();
+  const memberNumber = body.memberNumber?.trim();
   if (!email || !name) {
     return Response.json(
       { error: "name and email are required" },
+      { status: 400 }
+    );
+  }
+  if (!memberNumber) {
+    return Response.json(
+      { error: "A membership number is required" },
       { status: 400 }
     );
   }
@@ -65,7 +72,7 @@ export async function POST(request: NextRequest) {
   const doc: Omit<Member, "_id"> = {
     email,
     name,
-    memberNumber: body.memberNumber?.trim() || undefined,
+    memberNumber,
     status: "active",
     createdAt: new Date().toISOString(),
   };

@@ -29,6 +29,10 @@ export default function MemberManager() {
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState<Status>({ type: "idle" });
 
+  // Membership number entered per pending application, keyed by member _id.
+  const [approveNumbers, setApproveNumbers] = useState<Record<string, string>>({});
+  const [approveError, setApproveError] = useState<Record<string, string>>({});
+
   async function loadList() {
     setLoadingList(true);
     try {
@@ -77,7 +81,7 @@ export default function MemberManager() {
   }
 
   async function toggleStatus(member: Member) {
-    // pending → active (approve), active → suspended, suspended → active
+    // active → suspended, suspended → active (approval has its own handler)
     const next = member.status === "active" ? "suspended" : "active";
     const res = await fetch(`/api/admin/members/${member._id}`, {
       method: "PATCH",
@@ -90,6 +94,38 @@ export default function MemberManager() {
       );
     } else {
       alert("Failed to update member.");
+    }
+  }
+
+  /** Approve a pending application — a membership number must be assigned first. */
+  async function approveMember(member: Member) {
+    const id = member._id;
+    if (!id) return;
+    const number = (approveNumbers[id] ?? "").trim();
+    if (!number) {
+      setApproveError((prev) => ({
+        ...prev,
+        [id]: "Assign a membership number before approving.",
+      }));
+      return;
+    }
+    const res = await fetch(`/api/admin/members/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: "active", memberNumber: number }),
+    });
+    if (res.ok) {
+      setList((prev) =>
+        prev.map((m) =>
+          m._id === id ? { ...m, status: "active", memberNumber: number } : m
+        )
+      );
+    } else {
+      const d = await res.json().catch(() => ({}));
+      setApproveError((prev) => ({
+        ...prev,
+        [id]: d.error || "Failed to approve member.",
+      }));
     }
   }
 
@@ -157,11 +193,12 @@ export default function MemberManager() {
 
             <div className="sm:max-w-xs">
               <label className="block text-sm font-medium text-navy/70 mb-1.5">
-                Member Number <span className="text-navy/40">(optional)</span>
+                Membership Number <span className="text-red-500">*</span>
               </label>
               <input
                 value={memberNumber}
                 onChange={(e) => setMemberNumber(e.target.value)}
+                required
                 className="w-full rounded-lg border border-navy/15 px-4 py-2.5 text-navy outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 transition"
                 placeholder="SLCR-0042"
               />
@@ -184,7 +221,7 @@ export default function MemberManager() {
 
             <button
               type="submit"
-              disabled={submitting || !name || !email}
+              disabled={submitting || !name || !email || !memberNumber.trim()}
               className="inline-flex items-center gap-2 rounded-lg bg-navy px-6 py-2.5 text-white font-semibold hover:bg-navy-light disabled:opacity-50 transition-colors"
             >
               {submitting ? (
@@ -253,23 +290,40 @@ export default function MemberManager() {
                             </div>
                           )}
                         </div>
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          <button
-                            onClick={() => toggleStatus(m)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-50 text-green-700 text-xs font-semibold hover:bg-green-100 transition-colors"
-                            title="Approve"
-                          >
-                            <Check className="w-3.5 h-3.5" />
-                            Approve
-                          </button>
-                          <button
-                            onClick={() => m._id && handleDelete(m._id, m.email)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-xs font-semibold hover:bg-red-100 transition-colors"
-                            title="Reject"
-                          >
-                            <X className="w-3.5 h-3.5" />
-                            Reject
-                          </button>
+                        <div className="flex flex-col items-stretch gap-1.5 flex-shrink-0 w-full sm:w-52">
+                          <input
+                            value={m._id ? approveNumbers[m._id] ?? "" : ""}
+                            onChange={(e) => {
+                              if (!m._id) return;
+                              const id = m._id;
+                              setApproveNumbers((prev) => ({ ...prev, [id]: e.target.value }));
+                              setApproveError((prev) => ({ ...prev, [id]: "" }));
+                            }}
+                            placeholder="Membership No. *"
+                            className="w-full rounded-lg border border-navy/15 px-3 py-1.5 text-sm text-navy outline-none focus:border-gold focus:ring-2 focus:ring-gold/30 transition"
+                          />
+                          {m._id && approveError[m._id] && (
+                            <p className="text-[11px] text-red-600">{approveError[m._id]}</p>
+                          )}
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => approveMember(m)}
+                              disabled={!m._id || !(approveNumbers[m._id] ?? "").trim()}
+                              className="inline-flex flex-1 items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-50 text-green-700 text-xs font-semibold hover:bg-green-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                              title="Approve"
+                            >
+                              <Check className="w-3.5 h-3.5" />
+                              Approve
+                            </button>
+                            <button
+                              onClick={() => m._id && handleDelete(m._id, m.email)}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-xs font-semibold hover:bg-red-100 transition-colors"
+                              title="Reject"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                              Reject
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </li>
