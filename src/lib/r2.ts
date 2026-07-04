@@ -60,10 +60,34 @@ export function buildNewsEventImageKey(filename: string): string {
   return `news-events/${Date.now()}-${sanitize(filename)}`;
 }
 
+/** Gender-based profile placeholders stored in R2. */
+export const PLACEHOLDER_IMAGE_KEYS = {
+  male: "images/placeholders/Profile-Placeholder-male.png",
+  female: "images/placeholders/Profile-Placeholder-female.png",
+} as const;
+
+/** Build the R2 key for a council member portrait (filename = display name). */
+export function buildCouncilMemberImageKey(
+  displayName: string,
+  termSlug = "26-27"
+): string {
+  return `images/the-college/president-and-council-${termSlug}/${displayName}.jpg`;
+}
+
 /** The public URL a stored object will be served from. */
 export function publicUrlForKey(key: string): string {
   const base = process.env.R2_PUBLIC_BASE_URL!.replace(/\/$/, "");
-  return `${base}/${key}`;
+  const encodedKey = key
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
+  return `${base}/${encodedKey}`;
+}
+
+export function placeholderUrlForGender(
+  gender: keyof typeof PLACEHOLDER_IMAGE_KEYS
+): string {
+  return publicUrlForKey(PLACEHOLDER_IMAGE_KEYS[gender]);
 }
 
 /**

@@ -1,34 +1,33 @@
-import Image from "next/image";
+import CouncilMemberImage from "@/components/the-college/CouncilMemberImage";
+import type { CouncilMemberPublic } from "@/lib/types";
 
-type CouncilMemberCardProps = {
-  name: string;
-  role?: string;
-  email?: string;
-  image: string;
-};
+type CouncilMemberCardProps = Pick<
+  CouncilMemberPublic,
+  "id" | "name" | "position" | "email" | "imageUrl" | "placeholderUrl"
+>;
 
 export default function CouncilMemberCard({
   name,
-  role,
+  position,
   email,
-  image,
+  imageUrl,
+  placeholderUrl,
 }: CouncilMemberCardProps) {
   return (
     <article className="group rounded-xl overflow-hidden border border-gray-100 bg-white shadow-sm hover:shadow-lg transition-all duration-300">
       <div className="relative w-full aspect-[3/4] bg-surface overflow-hidden">
-        <Image
-          src={image}
-          alt={name}
-          fill
-          className="object-cover object-top group-hover:scale-105 transition-transform duration-700"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+        <CouncilMemberImage
+          name={name}
+          position={position}
+          imageUrl={imageUrl}
+          placeholderUrl={placeholderUrl}
         />
       </div>
       <div className="p-4 sm:p-5">
         <h3 className="font-heading text-lg text-navy font-bold leading-snug">
           {name}
         </h3>
-        {role && <p className="text-sm text-navy/60 mt-1">{role}</p>}
+        {position && <p className="text-sm text-navy/60 mt-1">{position}</p>}
         {email && (
           <a
             href={`mailto:${email}`}

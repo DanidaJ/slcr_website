@@ -156,6 +156,36 @@ export type Broadcast = {
   sentBy: string;
 };
 
+export type CouncilMemberGender = "male" | "female";
+
+/** Current or historical council member — stored in MongoDB. */
+export type CouncilMember = {
+  _id?: string;
+  name: string;
+  gender: CouncilMemberGender;
+  email?: string;
+  /** e.g. "The President", "Hon. Secretary" */
+  position?: string;
+  displayOrder: number;
+  /** R2 object key, e.g. images/the-college/president-and-council-26-27/Dr Nayana Samarasinghe.jpg */
+  imageKey?: string;
+  /** Council term label, e.g. "2026-2027" */
+  term: string;
+  createdAt: string;
+};
+
+/** Council member as returned to the frontend (image URL resolved server-side). */
+export type CouncilMemberPublic = {
+  id: string;
+  name: string;
+  gender: CouncilMemberGender;
+  email?: string;
+  position?: string;
+  displayOrder: number;
+  imageUrl: string | null;
+  placeholderUrl: string;
+};
+
 export type NewsEvent = {
   _id?: string;
   slug: string;
