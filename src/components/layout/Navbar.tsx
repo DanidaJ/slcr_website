@@ -86,7 +86,7 @@ const NAV_ITEMS: NavItem[] = [
     href: "#",
     children: [
       { label: "DESCRIPTION", href: "/membership/description" },
-      { label: "FELLOWSHIP", href: "/membership/fellowship" },
+      { label: "FELLOWSHIP APPLICATION", href: "/membership/fellowship" },
       { label: "MEMBER LOGIN", href: "/membership/member-login" },
     ],
   },
@@ -109,6 +109,9 @@ const NAV_ITEMS: NavItem[] = [
       },
       { label: "WORKSHOPS", href: "/educations/workshops" },
       { label: "CPD", href: "/educations/cpd" },
+      { label: "FELLOWSHIP HOLDERS", href: "/educations/fellowship-holders" },
+      { label: "GOLD MEDALISTS", href: "/educations/gold-medalists" },
+      { label: "ORATORS", href: "/educations/orators" },
     ],
   },
   { label: "CONTACT US", href: "/contact-us" },

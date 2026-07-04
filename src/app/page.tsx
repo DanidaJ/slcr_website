@@ -8,6 +8,8 @@ import PresidentMessage from "@/components/home/PresidentMessage";
 import QuickLinksFloat from "@/components/home/QuickLinksFloat";
 import { getNewsEvents } from "@/lib/data/newsEvents";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const newsItems = await getNewsEvents()
     .then((items) => items.slice(0, 4))
