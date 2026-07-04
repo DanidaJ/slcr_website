@@ -4,10 +4,159 @@ config({ path: ".env.local" });
 
 import { MongoClient } from "mongodb";
 import type {
+  CouncilMember,
   PastCouncil,
   PastPresident,
   PresidentMessage,
 } from "../src/lib/types";
+import { buildCouncilMemberImageKey } from "../src/lib/r2";
+
+const CURRENT_COUNCIL_TERM = "2026-2027";
+
+const COUNCIL_MEMBERS: Omit<CouncilMember, "_id" | "createdAt">[] = [
+  {
+    name: "Dr Nayana Samarasinghe",
+    gender: "female",
+    position: "The President",
+    displayOrder: 1,
+    imageKey: buildCouncilMemberImageKey("Dr Nayana Samarasinghe"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr Udaya Wanigasiri",
+    gender: "male",
+    email: "wanigasiri@yahoo.com",
+    position: "President Elect",
+    displayOrder: 2,
+    imageKey: buildCouncilMemberImageKey("Dr Udaya Wanigasiri"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr Geethika Perera",
+    gender: "female",
+    position: "Hon. Secretary",
+    displayOrder: 3,
+    imageKey: buildCouncilMemberImageKey("Dr Geethika Perera"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr Eranga Ganewatte",
+    gender: "male",
+    email: "erangaganewatte@ymail.com",
+    position: "Ass. Secretary (Academic)",
+    displayOrder: 4,
+    imageKey: buildCouncilMemberImageKey("Dr Eranga Ganewatte"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr Uditha Kodithuwakku",
+    gender: "female",
+    position: "Ass. Secretary (Social)",
+    displayOrder: 5,
+    imageKey: buildCouncilMemberImageKey("Dr Uditha Kodithuwakku"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr Wasantha Sathkorala",
+    gender: "male",
+    email: "wasanthawk@yahoo.com",
+    position: "Hon. Treasurer",
+    displayOrder: 6,
+    imageKey: buildCouncilMemberImageKey("Dr Wasantha Sathkorala"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr W Meegoda",
+    gender: "male",
+    email: "wmeegoda@gmail.com",
+    position: "Asst. Treasurer",
+    displayOrder: 7,
+    imageKey: buildCouncilMemberImageKey("Dr W Meegoda"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr Sheahan Waas",
+    gender: "male",
+    position: "Immediate Past President",
+    displayOrder: 8,
+    imageKey: buildCouncilMemberImageKey("Dr Sheahan Waas"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr Sumedha Kumanayake",
+    gender: "female",
+    email: "sumedha_kumanayake@yahoo.com",
+    displayOrder: 9,
+    imageKey: buildCouncilMemberImageKey("Dr Sumedha Kumanayake"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr R K J S Rajapakse",
+    gender: "male",
+    email: "sathrajapakse@yahoo.com",
+    displayOrder: 10,
+    imageKey: buildCouncilMemberImageKey("Dr R K J S Rajapakse"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr Udaya Jayakodi",
+    gender: "male",
+    email: "udaya.jayakody@gmail.com",
+    displayOrder: 11,
+    imageKey: buildCouncilMemberImageKey("Dr Udaya Jayakodi"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr K M R Kannangara",
+    gender: "female",
+    email: "rupakannangara@ymail.com",
+    displayOrder: 12,
+    imageKey: buildCouncilMemberImageKey("Dr K M R Kannangara"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr Pavithra Rubasinghe",
+    gender: "female",
+    displayOrder: 13,
+    imageKey: buildCouncilMemberImageKey("Dr Pavithra Rubasinghe"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr Amali Saratchandra",
+    gender: "female",
+    displayOrder: 14,
+    imageKey: buildCouncilMemberImageKey("Dr Amali Saratchandra"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr Buddhi Abeywickrama",
+    gender: "female",
+    displayOrder: 15,
+    imageKey: buildCouncilMemberImageKey("Dr Buddhi Abeywickrama"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr M C Wettasinghe",
+    gender: "female",
+    displayOrder: 16,
+    imageKey: buildCouncilMemberImageKey("Dr M C Wettasinghe"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr Sashika Alahakoon",
+    gender: "female",
+    displayOrder: 17,
+    imageKey: buildCouncilMemberImageKey("Dr Sashika Alahakoon"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+  {
+    name: "Dr Anton Jenil",
+    gender: "male",
+    displayOrder: 18,
+    imageKey: buildCouncilMemberImageKey("Dr Anton Jenil"),
+    term: CURRENT_COUNCIL_TERM,
+  },
+];
 
 const CURRENT_PRESIDENT: PresidentMessage = {
   slug: "dr-nayana-samarasinghe",
@@ -611,6 +760,18 @@ async function seed() {
     await councils.insertMany(PAST_COUNCILS);
     await councils.createIndex({ year: -1 }, { unique: true });
     console.log(`Seeded pastCouncils: ${PAST_COUNCILS.length} documents`);
+
+    const councilMembers = db.collection<CouncilMember>("councilMembers");
+    await councilMembers.deleteMany({ term: CURRENT_COUNCIL_TERM });
+    const now = new Date().toISOString();
+    await councilMembers.insertMany(
+      COUNCIL_MEMBERS.map((member) => ({ ...member, createdAt: now }))
+    );
+    await councilMembers.createIndex(
+      { term: 1, displayOrder: 1 },
+      { unique: true }
+    );
+    console.log(`Seeded councilMembers: ${COUNCIL_MEMBERS.length} documents`);
 
     console.log("Seed complete.");
   } finally {
