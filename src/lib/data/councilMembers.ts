@@ -1,4 +1,5 @@
 import { cache } from "react";
+// import { getDb } from "@/lib/mongodb";
 import { getDb } from "@/lib/mongodb";
 import {
   isR2Configured,
@@ -40,3 +41,15 @@ export const getCouncilMembers = cache(
     return docs.map(toPublic);
   }
 );
+
+// export async function getCouncilMembers(
+//   term = "2026-2027"
+// ): Promise<CouncilMemberPublic[]> {
+//   const db = await getDb();
+//   const docs = await db
+//     .collection<CouncilMemberDoc>(COLLECTION)
+//     .find({ term })
+//     .sort({ displayOrder: 1 })
+//     .toArray();
+//   return docs.map(toPublic);
+// }

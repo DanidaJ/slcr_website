@@ -127,6 +127,8 @@ export type InboxItem = {
   sentAt: string;
   /** Email of the admin who sent it (audit trail). */
   sentBy: string;
+  /** Set when an admin marks a direct message as a certificate delivery. */
+  isCertificate?: boolean;
 };
 
 /** A message sent from a member to the admin team (correspondence). */
@@ -196,6 +198,18 @@ export type CouncilMemberPublic = {
   displayOrder: number;
   imageUrl: string | null;
   placeholderUrl: string;
+};
+
+/** A time-limited message shown on the home page hero (e.g. under AAS 2026). */
+export type HomeAnnouncement = {
+  _id?: string;
+  /** Fixed slot on the page — only one active message per placement. */
+  placement: "hero-aas-2026";
+  message: string;
+  /** Last day the message is visible (YYYY-MM-DD, inclusive). */
+  expiresAt: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type NewsEvent = {

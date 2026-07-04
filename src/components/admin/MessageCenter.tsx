@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Megaphone,
   Send,
@@ -9,12 +9,19 @@ import {
   AlertCircle,
   Paperclip,
   X,
+  Search,
+  Award,
 } from "lucide-react";
 import type { Member } from "@/lib/types";
 
 type Status = { type: "idle" | "success" | "error"; message?: string };
 
 const ACCEPT = ".pdf,.png,.jpg,.jpeg,.webp";
+
+function memberLabel(member: Member): string {
+  const number = member.memberNumber ? ` · ${member.memberNumber}` : "";
+  return `${member.name} (${member.email}${number})`;
+}
 
 export default function MessageCenter() {
   const [members, setMembers] = useState<Member[]>([]);
@@ -27,9 +34,11 @@ export default function MessageCenter() {
 
   // Direct message composer
   const [memberId, setMemberId] = useState("");
+  const [memberQuery, setMemberQuery] = useState("");
   const [dSubject, setDSubject] = useState("");
   const [dMessage, setDMessage] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [isCertificate, setIsCertificate] = useState(false);
   const [dSending, setDSending] = useState(false);
   const [dStatus, setDStatus] = useState<Status>({ type: "idle" });
 
@@ -43,6 +52,39 @@ export default function MessageCenter() {
       )
       .catch(() => setMembers([]));
   }, []);
+
+  const selectedMember = useMemo(
+    () => members.find((member) => member._id === memberId) ?? null,
+    [members, memberId]
+  );
+
+  const filteredMembers = useMemo(() => {
+    const query = memberQuery.trim().toLowerCase();
+    if (!query) return members.slice(0, 12);
+
+    return members
+      .filter((member) => {
+        const haystack = [
+          member.name,
+          member.email,
+          member.memberNumber ?? "",
+        ]
+          .join(" ")
+          .toLowerCase();
+        return haystack.includes(query);
+      })
+      .slice(0, 12);
+  }, [members, memberQuery]);
+
+  function selectMember(member: Member) {
+    setMemberId(member._id ?? "");
+    setMemberQuery(memberLabel(member));
+  }
+
+  function clearMember() {
+    setMemberId("");
+    setMemberQuery("");
+  }
 
   async function sendBroadcast(e: React.FormEvent) {
     e.preventDefault();
@@ -81,7 +123,6 @@ export default function MessageCenter() {
     try {
       let fileMeta: { fileUrl?: string; fileKey?: string; fileName?: string } = {};
 
-      // 1. If a file is attached, presign + upload it straight to R2 first.
       if (file) {
         const presign = await fetch("/api/admin/messages/upload", {
           method: "POST",
@@ -105,7 +146,6 @@ export default function MessageCenter() {
         fileMeta = { fileUrl: pd.publicUrl, fileKey: pd.key, fileName: file.name };
       }
 
-      // 2. Record the delivery (this also fires the email notification).
       const res = await fetch("/api/admin/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -113,6 +153,7 @@ export default function MessageCenter() {
           memberId,
           subject: dSubject,
           message: dMessage,
+          isCertificate,
           ...fileMeta,
         }),
       });
@@ -123,6 +164,8 @@ export default function MessageCenter() {
       setDSubject("");
       setDMessage("");
       setFile(null);
+      setIsCertificate(false);
+      clearMember();
     } catch (err) {
       setDStatus({
         type: "error",
@@ -237,19 +280,63 @@ export default function MessageCenter() {
               <label className="mb-1.5 block text-sm font-medium text-navy/70">
                 Recipient
               </label>
-              <select
-                value={memberId}
-                onChange={(e) => setMemberId(e.target.value)}
-                required
-                className={inputCls}
-              >
-                <option value="">Select a member…</option>
-                {members.map((m) => (
-                  <option key={m._id} value={m._id}>
-                    {m.name} ({m.email})
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-navy/35" />
+                <input
+                  value={memberQuery}
+                  onChange={(e) => {
+                    setMemberQuery(e.target.value);
+                    if (selectedMember && e.target.value !== memberLabel(selectedMember)) {
+                      setMemberId("");
+                    }
+                  }}
+                  className={`${inputCls} pl-10 pr-10`}
+                  placeholder="Search by name, email, or membership number…"
+                  autoComplete="off"
+                />
+                {memberQuery && (
+                  <button
+                    type="button"
+                    onClick={clearMember}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-navy/35 hover:text-navy"
+                    aria-label="Clear recipient"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+
+              {!memberId && memberQuery.trim() && filteredMembers.length > 0 && (
+                <ul className="mt-2 overflow-hidden rounded-lg border border-navy/10 bg-white shadow-sm">
+                  {filteredMembers.map((member) => (
+                    <li key={member._id}>
+                      <button
+                        type="button"
+                        onClick={() => selectMember(member)}
+                        className="w-full px-4 py-2.5 text-left text-sm text-navy hover:bg-navy/5 transition-colors cursor-pointer"
+                      >
+                        <span className="font-medium">{member.name}</span>
+                        <span className="block text-xs text-navy/50 truncate">
+                          {member.email}
+                          {member.memberNumber ? ` · ${member.memberNumber}` : ""}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {!memberId && memberQuery.trim() && filteredMembers.length === 0 && (
+                <p className="mt-2 text-xs text-navy/45">
+                  No matching members. Try a different name or email.
+                </p>
+              )}
+
+              {selectedMember && (
+                <p className="mt-2 text-xs text-emerald-700">
+                  Selected: {selectedMember.name}
+                </p>
+              )}
             </div>
 
             <div>
@@ -285,7 +372,7 @@ export default function MessageCenter() {
               {file ? (
                 <div className="flex items-center justify-between rounded-lg border border-navy/15 px-4 py-2.5">
                   <span className="flex items-center gap-2 truncate text-sm text-navy">
-                    <Paperclip className="h-4 w-4 flex-shrink-0 text-navy/50" />
+                    <Paperclip className="h-4 w-4 shrink-0 text-navy/50" />
                     <span className="truncate">{file.name}</span>
                   </span>
                   <button
@@ -310,6 +397,25 @@ export default function MessageCenter() {
                 </label>
               )}
             </div>
+
+            <label className="flex items-start gap-3 rounded-lg border border-navy/10 bg-navy/[0.02] px-4 py-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={isCertificate}
+                onChange={(e) => setIsCertificate(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-navy/25 text-gold focus:ring-gold/40"
+              />
+              <span>
+                <span className="flex items-center gap-1.5 text-sm font-medium text-navy">
+                  <Award className="h-4 w-4 text-gold-dark" />
+                  This is a certificate
+                </span>
+                <span className="mt-0.5 block text-xs text-navy/50">
+                  The member will see this in their inbox under Certificates and
+                  can filter for it.
+                </span>
+              </span>
+            </label>
 
             {dStatus.type !== "idle" && (
               <div

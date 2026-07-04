@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
     fileUrl?: string;
     fileKey?: string;
     fileName?: string;
+    isCertificate?: boolean;
   };
   try {
     body = await request.json();
@@ -67,6 +68,7 @@ export async function POST(request: NextRequest) {
     fileUrl: fileUrl || undefined,
     fileKey: body.fileKey?.trim() || undefined,
     fileName: body.fileName?.trim() || undefined,
+    isCertificate: body.isCertificate === true,
     sentAt: new Date().toISOString(),
     sentBy,
   };

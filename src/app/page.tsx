@@ -7,18 +7,31 @@ import OurCollege from "@/components/home/OurCollege";
 import PresidentMessage from "@/components/home/PresidentMessage";
 import QuickLinksFloat from "@/components/home/QuickLinksFloat";
 import { getNewsEvents } from "@/lib/data/newsEvents";
+import { getActiveHomeAnnouncement } from "@/lib/data/homeAnnouncement";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const newsItems = await getNewsEvents()
-    .then((items) => items.slice(0, 4))
-    .catch(() => []);
+  const [newsItems, announcement] = await Promise.all([
+    getNewsEvents()
+      .then((items) => items.slice(0, 4))
+      .catch(() => []),
+    getActiveHomeAnnouncement().catch(() => null),
+  ]);
 
   return (
     <main>
       <Navbar />
-      <HeroSection />
+      <HeroSection
+        announcement={
+          announcement
+            ? {
+                message: announcement.message,
+                expiresAt: announcement.expiresAt,
+              }
+            : null
+        }
+      />
       <LatestStories newsItems={newsItems} />
       <OurCollege />
       <PresidentMessage />

@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { fadeUp } from "@/lib/motion";
+import HeroAnnouncement from "@/components/home/HeroAnnouncement";
 
 const DESKTOP_SRCS = [
   { webm: "/videos/background1.webm", mp4: "/videos/background1.mp4" },
@@ -16,7 +17,11 @@ const MOBILE_SRCS = [
   { mp4: "/videos/background_video_mobile2.mp4" },
 ];
 
-export default function HeroSection() {
+type HeroSectionProps = {
+  announcement?: { message: string; expiresAt: string } | null;
+};
+
+export default function HeroSection({ announcement = null }: HeroSectionProps) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [secondLoaded, setSecondLoaded] = useState(false);
   // null = device type not yet determined (avoids loading wrong sources on first render)
@@ -184,6 +189,10 @@ export default function HeroSection() {
               <ArrowRight className="w-5 h-5 text-white" />
             </span>
           </Link>
+
+          {announcement && (
+            <HeroAnnouncement message={announcement.message} />
+          )}
         </motion.div>
       </motion.div>
 
