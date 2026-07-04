@@ -60,6 +60,11 @@ export function buildNewsEventImageKey(filename: string): string {
   return `news-events/${Date.now()}-${sanitize(filename)}`;
 }
 
+/** Build the object key for a past academic session image attachment. */
+export function buildPastSessionImageKey(filename: string): string {
+  return `past-sessions/${Date.now()}-${sanitize(filename)}`;
+}
+
 /** The public URL a stored object will be served from. */
 export function publicUrlForKey(key: string): string {
   const base = process.env.R2_PUBLIC_BASE_URL!.replace(/\/$/, "");

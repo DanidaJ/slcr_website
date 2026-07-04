@@ -15,6 +15,7 @@ const ADMIN_LINKS: { label: string; href: string }[] = [
   { label: "Correspondence", href: "/admin/correspondence" },
   { label: "Newsletters", href: "/admin/newsletters" },
   { label: "News & Events", href: "/admin/news-events" },
+  { label: "Past Sessions", href: "/admin/past-sessions" },
   { label: "Fellowship", href: "/admin/fellowship" },
 ];
 
@@ -73,7 +74,7 @@ const NAV_ITEMS: NavItem[] = [
         label: "UPCOMING SESSIONS",
         href: "/academic-sessions/upcoming-sessions",
       },
-      { label: "PAST SESSIONS", href: "#" },
+      { label: "PAST SESSIONS", href: "/academic-sessions/past-sessions" },
       {
         label: "REGISTRATION",
         href: "/academic-sessions/registration",

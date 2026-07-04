@@ -179,3 +179,18 @@ export type NewsEvent = {
   publishedAt: string;
   createdAt: string;
 };
+
+export type PastSessionAttachment = {
+  url: string;
+  key?: string;
+  filename?: string;
+};
+
+export type PastSession = {
+  _id?: string;
+  title: string;
+  description: string;
+  attachments: PastSessionAttachment[];
+  publishedAt: string;
+  createdAt: string;
+};
