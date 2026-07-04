@@ -9,6 +9,7 @@ import {
   AlertCircle,
   ImagePlus,
   X,
+  Pencil,
 } from "lucide-react";
 import type { PastSession, PastSessionAttachment } from "@/lib/types";
 
@@ -40,12 +41,19 @@ export default function PastSessionManager() {
   const [list, setList] = useState<PastSession[]>([]);
   const [loadingList, setLoadingList] = useState(true);
 
+  const [editTarget, setEditTarget] = useState<PastSession | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [existingAttachments, setExistingAttachments] = useState<
+    PastSessionAttachment[]
+  >([]);
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState<Status>({ type: "idle" });
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const formTopRef = useRef<HTMLDivElement>(null);
+
+  const isEditing = editTarget !== null;
 
   async function loadList() {
     setLoadingList(true);
@@ -61,6 +69,27 @@ export default function PastSessionManager() {
   useEffect(() => {
     loadList();
   }, []);
+
+  function resetForm() {
+    setEditTarget(null);
+    setTitle("");
+    setDescription("");
+    setExistingAttachments([]);
+    setPendingFiles([]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    setStatus({ type: "idle" });
+  }
+
+  function startEdit(item: PastSession) {
+    setEditTarget(item);
+    setTitle(item.title);
+    setDescription(item.description);
+    setExistingAttachments(item.attachments ?? []);
+    setPendingFiles([]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    setStatus({ type: "idle" });
+    formTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   function addFiles(files: FileList | null) {
     if (!files?.length) return;
@@ -93,6 +122,10 @@ export default function PastSessionManager() {
     setPendingFiles((prev) => prev.filter((_, i) => i !== index));
   }
 
+  function removeExistingAttachment(index: number) {
+    setExistingAttachments((prev) => prev.filter((_, i) => i !== index));
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus({ type: "idle" });
@@ -105,19 +138,52 @@ export default function PastSessionManager() {
       setStatus({ type: "error", message: "Description is required." });
       return;
     }
-    if (pendingFiles.length === 0) {
+
+    const totalImages = existingAttachments.length + pendingFiles.length;
+    if (totalImages === 0) {
       setStatus({
         type: "error",
-        message: "Please add at least one image attachment.",
+        message: "Please keep or add at least one image attachment.",
       });
       return;
     }
 
     setSubmitting(true);
     try {
-      const attachments: PastSessionAttachment[] = [];
+      const newAttachments: PastSessionAttachment[] = [];
       for (const file of pendingFiles) {
-        attachments.push(await uploadImage(file));
+        newAttachments.push(await uploadImage(file));
+      }
+
+      const attachments = [...existingAttachments, ...newAttachments];
+
+      if (isEditing && editTarget?._id) {
+        const res = await fetch(`/api/past-sessions/${editTarget._id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: title.trim(),
+            description: description.trim(),
+            attachments,
+          }),
+        });
+        if (!res.ok) {
+          const d = await res.json().catch(() => ({}));
+          throw new Error(d.error || "Could not save changes.");
+        }
+
+        setStatus({ type: "success", message: "Past session updated." });
+        await loadList();
+        resetForm();
+        return;
+      }
+
+      if (pendingFiles.length === 0) {
+        setStatus({
+          type: "error",
+          message: "Please add at least one image attachment.",
+        });
+        return;
       }
 
       const create = await fetch("/api/past-sessions", {
@@ -135,10 +201,7 @@ export default function PastSessionManager() {
       }
 
       setStatus({ type: "success", message: "Past session published." });
-      setTitle("");
-      setDescription("");
-      setPendingFiles([]);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      resetForm();
       await loadList();
     } catch (err) {
       setStatus({
@@ -152,6 +215,7 @@ export default function PastSessionManager() {
 
   async function handleDelete(id: string) {
     if (!confirm("Delete this past session? This cannot be undone.")) return;
+    if (editTarget?._id === id) resetForm();
     const res = await fetch(`/api/past-sessions/${id}`, { method: "DELETE" });
     if (res.ok) {
       setList((prev) => prev.filter((item) => item._id !== id));
@@ -172,14 +236,34 @@ export default function PastSessionManager() {
       </div>
 
       <div className="max-w-5xl mx-auto px-5 sm:px-6 pb-12 space-y-8">
-        <section className="rounded-2xl border border-navy/10 bg-card p-6 sm:p-8 shadow-sm">
-          <h2 className="font-heading text-xl font-extrabold text-navy">
-            Add a Past Session
-          </h2>
-          <p className="mt-1 text-sm text-navy/55">
-            Enter the session details and attach as many images as you need.
-            They appear on the public page instantly.
-          </p>
+        <section
+          ref={formTopRef}
+          className={`rounded-2xl border bg-card p-6 sm:p-8 shadow-sm ${
+            isEditing ? "border-gold/40" : "border-navy/10"
+          }`}
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="font-heading text-xl font-extrabold text-navy">
+                {isEditing ? "Edit Past Session" : "Add a Past Session"}
+              </h2>
+              <p className="mt-1 text-sm text-navy/55">
+                {isEditing
+                  ? `Editing: ${editTarget.title}`
+                  : "Enter the session details and attach as many images as you need. They appear on the public page instantly."}
+              </p>
+            </div>
+            {isEditing && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="flex items-center gap-1.5 text-sm text-navy/60 hover:text-navy transition-colors flex-shrink-0"
+              >
+                <X className="w-4 h-4" />
+                Cancel
+              </button>
+            )}
+          </div>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-5">
             <div>
@@ -211,13 +295,50 @@ export default function PastSessionManager() {
               <label className="block text-sm font-medium text-navy/70 mb-1.5">
                 Image Attachments
               </label>
+
+              {isEditing && existingAttachments.length > 0 && (
+                <div className="mb-4">
+                  <p className="text-xs text-navy/50 mb-2">Current images</p>
+                  <ul className="space-y-2">
+                    {existingAttachments.map((attachment, index) => (
+                      <li
+                        key={`${attachment.url}-${index}`}
+                        className="flex items-center gap-3 rounded-lg border border-navy/10 bg-surface px-3 py-2"
+                      >
+                        <div className="relative w-10 h-10 rounded overflow-hidden border border-navy/10 shrink-0">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={attachment.url}
+                            alt={attachment.filename ?? `Image ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <span className="text-sm text-navy/75 truncate flex-1">
+                          {attachment.filename ?? `Image ${index + 1}`}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => removeExistingAttachment(index)}
+                          className="p-1.5 rounded-md text-navy/45 hover:text-red-500 hover:bg-red-50 transition-colors"
+                          aria-label="Remove image"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               <label
                 htmlFor="past-session-images"
                 className="flex items-center gap-3 cursor-pointer rounded-lg border border-dashed border-navy/25 px-4 py-3 hover:border-gold transition-colors"
               >
                 <ImagePlus className="w-5 h-5 text-navy/50" />
                 <span className="text-sm text-navy/70">
-                  Choose one or more images (JPEG, PNG, WebP, GIF)
+                  {isEditing
+                    ? "Add more images (JPEG, PNG, WebP, GIF)"
+                    : "Choose one or more images (JPEG, PNG, WebP, GIF)"}
                 </span>
               </label>
               <input
@@ -281,18 +402,37 @@ export default function PastSessionManager() {
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={submitting}
-              className="inline-flex items-center gap-2 rounded-lg bg-navy px-6 py-2.5 text-white font-semibold hover:bg-navy-light disabled:opacity-50 transition-colors"
-            >
-              {submitting ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Upload className="w-4 h-4" />
+            <div className="flex items-center gap-3">
+              <button
+                type="submit"
+                disabled={submitting}
+                className="inline-flex items-center gap-2 rounded-lg bg-navy px-6 py-2.5 text-white font-semibold hover:bg-navy-light disabled:opacity-50 transition-colors"
+              >
+                {submitting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : isEditing ? (
+                  <CheckCircle2 className="w-4 h-4" />
+                ) : (
+                  <Upload className="w-4 h-4" />
+                )}
+                {submitting
+                  ? isEditing
+                    ? "Saving…"
+                    : "Publishing…"
+                  : isEditing
+                    ? "Save Changes"
+                    : "Publish Session"}
+              </button>
+              {isEditing && (
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="inline-flex items-center gap-2 rounded-lg border border-navy/20 px-6 py-2.5 text-navy/70 font-semibold hover:bg-navy/5 transition-colors"
+                >
+                  Cancel
+                </button>
               )}
-              {submitting ? "Publishing…" : "Publish Session"}
-            </button>
+            </div>
           </form>
         </section>
 
@@ -313,7 +453,11 @@ export default function PastSessionManager() {
               {list.map((item) => (
                 <li
                   key={item._id}
-                  className="flex items-center gap-4 py-3.5"
+                  className={`flex items-center gap-4 py-3.5 ${
+                    editTarget?._id === item._id
+                      ? "bg-gold/5 -mx-2 px-2 rounded-lg"
+                      : ""
+                  }`}
                 >
                   <div className="min-w-0 flex-1">
                     <p className="text-navy font-medium truncate">
@@ -325,9 +469,18 @@ export default function PastSessionManager() {
                     </p>
                   </div>
                   <button
+                    onClick={() => startEdit(item)}
+                    className="p-2 rounded-lg text-navy/50 hover:text-gold hover:bg-gold/10 transition-colors"
+                    aria-label="Edit past session"
+                    title="Edit"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                  <button
                     onClick={() => item._id && handleDelete(item._id)}
                     className="p-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors"
                     aria-label="Delete past session"
+                    title="Delete"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
