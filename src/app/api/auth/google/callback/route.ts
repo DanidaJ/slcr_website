@@ -65,6 +65,7 @@ export async function GET(request: NextRequest) {
     memberId: member._id.toString(),
     email: member.email,
     name: member.name,
+    memberNumber: member.memberNumber,
     role: member.role === "admin" ? "admin" : "member",
   });
 

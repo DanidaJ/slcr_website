@@ -145,6 +145,18 @@ export type Correspondence = {
   sentAt: string;
 };
 
+/** A message sent from the public Contact Us form. */
+export type PublicMessage = {
+  _id?: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  sentAt: string;
+  /** ISO timestamp when an admin first opened the message. */
+  readAt?: string;
+};
+
 /** A record of one broadcast, for the admin's send history. */
 export type Broadcast = {
   _id?: string;
@@ -194,6 +206,21 @@ export type NewsEvent = {
   body: string[];
   imageUrl: string;
   imageKey?: string;
+  publishedAt: string;
+  createdAt: string;
+};
+
+export type PastSessionAttachment = {
+  url: string;
+  key?: string;
+  filename?: string;
+};
+
+export type PastSession = {
+  _id?: string;
+  title: string;
+  description: string;
+  attachments: PastSessionAttachment[];
   publishedAt: string;
   createdAt: string;
 };

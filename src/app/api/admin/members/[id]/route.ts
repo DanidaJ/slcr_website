@@ -20,7 +20,7 @@ export async function PATCH(
     return Response.json({ error: "Invalid id" }, { status: 400 });
   }
 
-  let body: { status?: string };
+  let body: { status?: string; memberNumber?: string };
   try {
     body = await request.json();
   } catch {
@@ -35,13 +35,32 @@ export async function PATCH(
   }
 
   const db = await getDb();
-  const result = await db
+  const existing = await db
     .collection(COLLECTION)
-    .updateOne({ _id: new ObjectId(id) }, { $set: { status: body.status } });
+    .findOne({ _id: new ObjectId(id) });
 
-  if (result.matchedCount === 0) {
+  if (!existing) {
     return Response.json({ error: "Not found" }, { status: 404 });
   }
+
+  const memberNumber = body.memberNumber?.trim();
+
+  // Approving a pending application requires a membership number — the admin
+  // must assign one before the member can sign in.
+  const isApproval = existing.status === "pending" && body.status === "active";
+  if (isApproval && !memberNumber && !existing.memberNumber) {
+    return Response.json(
+      { error: "A membership number is required to approve a member." },
+      { status: 400 }
+    );
+  }
+
+  const update: Record<string, unknown> = { status: body.status };
+  if (memberNumber) update.memberNumber = memberNumber;
+
+  await db
+    .collection(COLLECTION)
+    .updateOne({ _id: new ObjectId(id) }, { $set: update });
 
   return Response.json({ ok: true });
 }
