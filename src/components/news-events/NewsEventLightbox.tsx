@@ -30,14 +30,15 @@ export default function NewsEventLightbox({ src, alt }: Props) {
     <>
       {/* Image with expand button */}
       <div
-        className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden border border-navy/10 shadow-sm group cursor-zoom-in"
+        className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden border border-navy/10 shadow-sm group cursor-zoom-in bg-navy/5"
         onClick={() => setOpen(true)}
       >
         <NewsEventImage
           src={src}
           alt={alt}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+          letterbox
+          className="transition-transform duration-500 group-hover:scale-[1.02]"
           sizes="100vw"
           priority
         />

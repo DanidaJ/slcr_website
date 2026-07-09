@@ -46,13 +46,14 @@ export default function NewsEventList({ items }: NewsEventListProps) {
           <article className="flex flex-col sm:flex-row gap-5 sm:gap-8">
             <Link
               href={`/news-and-events/${item.slug}`}
-              className="group relative block w-full sm:w-52 md:w-60 lg:w-64 aspect-[16/10] sm:aspect-[4/3] flex-shrink-0 rounded-xl overflow-hidden border border-navy/10 shadow-sm hover:shadow-md transition-shadow"
+              className="group relative block w-full sm:w-52 md:w-60 lg:w-64 aspect-[16/10] sm:aspect-[4/3] flex-shrink-0 rounded-xl overflow-hidden border border-navy/10 shadow-sm hover:shadow-md transition-shadow bg-navy/5"
             >
               <NewsEventImage
                 src={item.imageUrl}
                 alt={item.title}
                 fill
-                className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                letterbox
+                className="group-hover:scale-[1.03] transition-transform duration-500"
               />
             </Link>
 

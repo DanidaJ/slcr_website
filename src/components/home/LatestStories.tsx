@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight, Calendar } from "lucide-react";
+import LetterboxImage from "@/components/ui/LetterboxImage";
 import { fadeUp, fadeRight } from "@/lib/motion";
 import type { NewsEvent } from "@/lib/types";
 
@@ -124,13 +124,12 @@ export default function LatestStories({ newsItems = [] }: { newsItems?: NewsEven
                   href={featured.href}
                   className="group block h-full rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300"
                 >
-                  <div className="relative h-48 sm:h-56 lg:h-60 xl:h-72 overflow-hidden">
-                    <Image
+                  <div className="relative h-48 sm:h-56 lg:h-60 xl:h-72 overflow-hidden bg-navy/5">
+                    <LetterboxImage
                       src={featured.image}
                       alt={featured.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-700"
                       sizes="(max-width: 1024px) 100vw, 60vw"
+                      imageClassName="group-hover:scale-105 transition-transform duration-700"
                     />
                   </div>
                   <div className="p-5 sm:p-6 lg:p-7 border-l-2 border-transparent group-hover:border-gold transition-colors duration-300">
@@ -178,13 +177,12 @@ export default function LatestStories({ newsItems = [] }: { newsItems?: NewsEven
                     href={story.href}
                     className="group flex rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300"
                   >
-                    <div className="relative w-20 sm:w-24 flex-shrink-0 min-h-[96px] sm:min-h-[104px]">
-                      <Image
+                    <div className="relative w-20 sm:w-24 flex-shrink-0 min-h-[96px] sm:min-h-[104px] overflow-hidden bg-navy/5">
+                      <LetterboxImage
                         src={story.image}
                         alt={story.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                         sizes="96px"
+                        imageClassName="group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
                     <div className="flex-1 min-w-0 p-3 sm:p-4 border-l-2 border-transparent group-hover:border-gold transition-colors duration-300">
