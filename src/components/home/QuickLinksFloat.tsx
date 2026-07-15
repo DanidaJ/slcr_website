@@ -3,30 +3,31 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Link2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { QUICK_LINK_LOGOS } from "@/lib/media";
 
 const LINKS = [
   {
     full: "Ministry of Health",
     href: "https://www.health.gov.lk/home/",
-    logo: "/images/gov-logo.png",
+    logo: QUICK_LINK_LOGOS.gov,
     logoSize: "w-8 h-8",
   },
   {
     full: "HRMIS",
     href: "https://hrmis-sm.health.gov.lk/login",
-    logo: "/images/gov-logo.png",
+    logo: QUICK_LINK_LOGOS.gov,
     logoSize: "w-8 h-8",
   },
   {
     full: "SLAERC",
     href: "https://www.aerc.gov.lk/Home/index.php?lang=en",
-    logo: "/images/slaerc-logo.png",
+    logo: QUICK_LINK_LOGOS.slaerc,
     logoSize: "w-7 h-7",
   },
   {
     full: "PGIM",
     href: "https://pgim.cmb.ac.lk/",
-    logo: "/images/pgim-logo.png",
+    logo: QUICK_LINK_LOGOS.pgim,
     logoSize: "w-8 h-8",
   },
   {

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { isAdmin } from "@/lib/auth";
-import AdminLogin from "@/components/admin/AdminLogin";
+import AdminAccessRestricted from "@/components/admin/AdminAccessRestricted";
 import PublicMessageViewer from "@/components/admin/PublicMessageViewer";
 
 export const metadata: Metadata = {
@@ -12,5 +12,5 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminPublicMessagesPage() {
   const authed = await isAdmin();
-  return authed ? <PublicMessageViewer /> : <AdminLogin />;
+  return authed ? <PublicMessageViewer /> : <AdminAccessRestricted />;
 }

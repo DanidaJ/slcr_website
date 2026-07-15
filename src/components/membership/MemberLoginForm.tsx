@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { AlertCircle, Eye, EyeOff, Loader2 } from "lucide-react";
 import { fadeUp } from "@/lib/motion";
+import {
+  getLastLoginUsername,
+  saveLastLoginUsername,
+} from "@/lib/memberLogin";
 
 const VIEWPORT = { once: true, margin: "-60px" } as const;
 
@@ -49,11 +53,14 @@ function GoogleIcon() {
 
 export default function MemberLoginForm({ errorCode }: { errorCode?: string }) {
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [savedUsername, setSavedUsername] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    setSavedUsername(getLastLoginUsername());
+  }, []);
 
   const oauthError = errorCode
     ? ERROR_MESSAGES[errorCode] ?? "Sign-in failed. Please try again."
@@ -63,17 +70,24 @@ export default function MemberLoginForm({ errorCode }: { errorCode?: string }) {
     e.preventDefault();
     setFormError(null);
     setSubmitting(true);
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const username = String(data.get("username") ?? "").trim();
+    const password = String(data.get("password") ?? "");
+
     try {
       const res = await fetch("/api/auth/member/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
-      const data = await res.json().catch(() => ({}));
+      const body = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setFormError(data.error || "Sign-in failed. Please try again.");
+        setFormError(body.error || "Sign-in failed. Please try again.");
         return;
       }
+      saveLastLoginUsername(username);
       router.push("/?loggedIn=1");
       router.refresh();
     } catch {
@@ -143,8 +157,8 @@ export default function MemberLoginForm({ errorCode }: { errorCode?: string }) {
                 name="username"
                 type="email"
                 autoComplete="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                key={savedUsername || "empty"}
+                defaultValue={savedUsername}
                 placeholder="you@example.com"
                 required
                 className={inputClass}
@@ -164,8 +178,6 @@ export default function MemberLoginForm({ errorCode }: { errorCode?: string }) {
                   name="password"
                   type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
                   className={`${inputClass} pr-11`}
@@ -187,7 +199,7 @@ export default function MemberLoginForm({ errorCode }: { errorCode?: string }) {
 
             <button
               type="submit"
-              disabled={submitting || !username || !password}
+              disabled={submitting}
               className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gold text-navy text-sm font-bold uppercase tracking-wide hover:bg-gold-light disabled:opacity-60 transition-colors duration-300"
             >
               {submitting && <Loader2 className="w-4 h-4 animate-spin" />}

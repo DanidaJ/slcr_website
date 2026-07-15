@@ -1,6 +1,7 @@
 import Image from "next/image";
+import { COLLEGE_BUILDING_IMAGE } from "@/lib/media";
 
-const FALLBACK = "/images/college-building.jpg";
+const FALLBACK = COLLEGE_BUILDING_IMAGE;
 
 type NewsEventImageProps = {
   src: string;

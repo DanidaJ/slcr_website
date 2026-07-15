@@ -235,8 +235,12 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
   }, [member]);
 
   async function handleSignOut() {
-    await fetch("/api/auth/member", { method: "DELETE" });
+    await Promise.all([
+      fetch("/api/auth/member", { method: "DELETE" }),
+      fetch("/api/admin/auth", { method: "DELETE" }),
+    ]);
     setMember(null);
+    router.push("/");
     router.refresh();
   }
 

@@ -20,7 +20,15 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
-      ...(r2Pattern ? [r2Pattern] : []),
+      // Always allow the public R2 bucket (hardcoded assets + env override).
+      {
+        protocol: "https",
+        hostname: "pub-1f63d7069b2c4b658a5586f25ed04bb5.r2.dev",
+      },
+      ...(r2Pattern &&
+      r2Pattern.hostname !== "pub-1f63d7069b2c4b658a5586f25ed04bb5.r2.dev"
+        ? [r2Pattern]
+        : []),
     ],
   },
 };

@@ -1,5 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
+import PortraitImage from "@/components/ui/PortraitImage";
+import { resolvePresidentImage } from "@/lib/presidentImages";
 
 type PastPresidentMessageCardProps = {
   name: string;
@@ -14,18 +15,18 @@ export default function PastPresidentMessageCard({
   href,
   image,
 }: PastPresidentMessageCardProps) {
+  const src = resolvePresidentImage(image);
+
   return (
     <article className="rounded-xl overflow-hidden border border-gray-100 bg-white shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col">
       <div className="relative w-full aspect-[4/3] bg-surface">
-        <Image
-          src={image}
+        <PortraitImage
+          src={src}
           alt={name}
-          fill
-          className="object-cover object-top"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
       </div>
-      <div className="p-5 flex flex-col flex-1">
+      <div className="p-5 flex flex-col flex-1 bg-white">
         <h3 className="font-heading text-lg text-navy font-bold leading-snug">
           {name}
         </h3>

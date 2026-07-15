@@ -1,5 +1,6 @@
 import Image from "next/image";
 import PageHeader from "@/components/the-college/PageHeader";
+import { COLLEGE_BUILDING_IMAGE } from "@/lib/media";
 
 export default function HistoryOfTheCollegePage() {
   return (
@@ -10,7 +11,7 @@ export default function HistoryOfTheCollegePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[4/3]">
               <Image
-                src="/images/college-building.jpg"
+                src={COLLEGE_BUILDING_IMAGE}
                 alt="Sri Lanka College of Radiologists Building"
                 fill
                 className="object-cover"

@@ -1,11 +1,12 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import PageHeader from "@/components/the-college/PageHeader";
+import PortraitImage from "@/components/ui/PortraitImage";
 import {
   getPastPresidentMessageBySlug,
   getPastPresidentMessageSlugs,
 } from "@/lib/data/presidentMessages";
+import { resolvePresidentImage } from "@/lib/presidentImages";
 
 const PLACEHOLDER_IMAGE = "/images/Profile-Placeholder.png";
 
@@ -30,6 +31,8 @@ export default async function PastPresidentsMessageDetailPage({
     notFound();
   }
 
+  const imageSrc = resolvePresidentImage(message.image ?? PLACEHOLDER_IMAGE);
+
   return (
     <>
       <PageHeader title="Past President's Message" subtitle={message.name} />
@@ -45,12 +48,10 @@ export default async function PastPresidentsMessageDetailPage({
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12">
             <div className="lg:col-span-1 flex justify-center lg:justify-start">
-              <div className="relative w-56 h-72 sm:w-64 sm:h-80 md:w-72 md:h-[22rem] xl:w-80 xl:h-96 rounded-2xl overflow-hidden shadow-xl">
-                <Image
-                  src={message.image ?? PLACEHOLDER_IMAGE}
+              <div className="relative w-56 h-72 sm:w-64 sm:h-80 md:w-72 md:h-[22rem] xl:w-80 xl:h-96 rounded-2xl overflow-hidden shadow-xl bg-surface">
+                <PortraitImage
+                  src={imageSrc}
                   alt={message.name}
-                  fill
-                  className="object-cover object-top"
                   sizes="(max-width: 1024px) 320px, 360px"
                 />
               </div>

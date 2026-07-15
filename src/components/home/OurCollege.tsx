@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Users, CalendarDays, Stethoscope } from "lucide-react";
 import { fadeLeft, fadeRight, fadeUp, staggerContainer } from "@/lib/motion";
+import { COLLEGE_BUILDING_IMAGE } from "@/lib/media";
 
 const STATS = [
   { icon: Users, label: "Members", value: "331+" },
@@ -98,7 +99,7 @@ export default function OurCollege() {
 
             <div className="relative rounded-xl overflow-hidden shadow-2xl aspect-[4/3]">
               <Image
-                src="/images/college-building.jpg"
+                src={COLLEGE_BUILDING_IMAGE}
                 alt="Sri Lanka College of Radiologists Building"
                 fill
                 className="object-cover"
