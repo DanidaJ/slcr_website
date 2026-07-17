@@ -23,6 +23,7 @@ const ADMIN_LINKS: { label: string; href: string }[] = [
 const MEMBER_LINKS: { label: string; href: string }[] = [
   { label: "Inbox", href: "/member-portal/inbox" },
   { label: "Correspondence", href: "/member-portal/correspondence" },
+  { label: "My Profile", href: "/member-portal/profile" },
 ];
 
 type NavChild = {
@@ -187,6 +188,17 @@ function MemberChip({
                 </p>
               )}
             </div>
+
+            {member.role === "member" && (
+              <Link
+                href="/member-portal/profile"
+                onClick={() => setOpen(false)}
+                className="w-full flex items-center gap-2.5 px-4 py-2.5 text-white/70 hover:text-white hover:bg-white/5 text-xs transition-colors"
+              >
+                <User className="w-3.5 h-3.5" />
+                My Profile
+              </Link>
+            )}
 
             <button
               onClick={() => { setOpen(false); onSignOut(); }}
