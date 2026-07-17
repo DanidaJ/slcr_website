@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { requireMember } from "@/lib/auth";
+import { notifyCorrespondenceCreated } from "@/lib/email";
 import type { Correspondence } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -62,9 +63,23 @@ export async function POST(request: NextRequest) {
   };
 
   const result = await db.collection(COLLECTION).insertOne(doc);
+  const id = result.insertedId.toString();
+
+  // Best-effort email to ADMIN_NOTIFY_EMAIL — never fail the request on email problems.
+  const notifyTo = process.env.ADMIN_NOTIFY_EMAIL?.trim();
+  if (notifyTo) {
+    await notifyCorrespondenceCreated(notifyTo, {
+      id,
+      memberName: doc.memberName,
+      memberEmail: doc.memberEmail,
+      subject: doc.subject,
+      body: doc.body,
+      hasFile: Boolean(doc.fileUrl),
+    });
+  }
 
   return Response.json(
-    { ok: true, item: { _id: result.insertedId.toString(), ...doc } },
+    { ok: true, item: { _id: id, ...doc } },
     { status: 201 }
   );
 }

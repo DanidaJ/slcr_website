@@ -71,12 +71,18 @@ export function buildCouncilMemberImageKey(
   displayName: string,
   termSlug = "26-27"
 ): string {
-  return `images/the-college/president-and-council-${termSlug}/${displayName}.jpg`;
+  return (
+    "images/the-college/president-and-council-" +
+    termSlug +
+    "/" +
+    displayName +
+    ".jpg"
+  );
 }
 
 /** Build the object key for a past academic session image attachment. */
 export function buildPastSessionImageKey(filename: string): string {
-  return `past-sessions/${Date.now()}-${sanitize(filename)}`;
+  return "past-sessions/" + Date.now() + "-" + sanitize(filename);
 }
 
 /** The public URL a stored object will be served from. */
