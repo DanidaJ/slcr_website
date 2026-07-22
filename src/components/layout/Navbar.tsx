@@ -10,6 +10,7 @@ import type { MemberSession } from "@/lib/auth";
 
 const ADMIN_LINKS: { label: string; href: string }[] = [
   { label: "Members", href: "/admin/members" },
+  { label: "Member Directory", href: "/member-portal/members" },
   { label: "Messages", href: "/admin/messages" },
   { label: "Public Messages", href: "/admin/public-messages" },
   { label: "Correspondence", href: "/admin/correspondence" },
@@ -21,6 +22,7 @@ const ADMIN_LINKS: { label: string; href: string }[] = [
 ];
 
 const MEMBER_LINKS: { label: string; href: string }[] = [
+  { label: "Members", href: "/member-portal/members" },
   { label: "Inbox", href: "/member-portal/inbox" },
   { label: "Correspondence", href: "/member-portal/correspondence" },
   { label: "My Profile", href: "/member-portal/profile" },
