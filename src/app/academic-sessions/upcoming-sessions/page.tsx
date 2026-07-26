@@ -9,6 +9,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import PageHeader from "@/components/the-college/PageHeader";
+import SessionsVideoSection from "@/components/academic-sessions/SessionsVideoSection";
 import sessionsData from "@/data/upcomingSessions.json";
 
 type ScheduleItem = {
@@ -287,6 +288,11 @@ export default function UpcomingSessionsPage() {
           </div>
         </div>
       </section>
+
+      <SessionsVideoSection
+        title={meta.title}
+        subtitle={`${meta.subtitle} · ${meta.dateRange} · ${meta.venue}`}
+      />
 
       {/* Program */}
       <section className="py-14 sm:py-16 lg:py-20 bg-surface">

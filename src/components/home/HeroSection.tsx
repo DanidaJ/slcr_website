@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { fadeUp } from "@/lib/motion";
 import HeroAnnouncement from "@/components/home/HeroAnnouncement";
+import { SESSIONS_VIDEO_AUTOPLAY_KEY } from "@/lib/sessionsVideo";
 
 const DESKTOP_SRCS = [
   { webm: "/videos/background1.webm", mp4: "/videos/background1.mp4" },
@@ -177,6 +178,13 @@ export default function HeroSection({ announcement = null }: HeroSectionProps) {
         >
           <Link
             href="/academic-sessions/upcoming-sessions"
+            onClick={() => {
+              try {
+                sessionStorage.setItem(SESSIONS_VIDEO_AUTOPLAY_KEY, "1");
+              } catch {
+                /* private mode — the page simply opens without the video */
+              }
+            }}
             className="relative inline-flex items-center gap-4 pl-7 pr-3 py-3 rounded-full border border-white/30 bg-white/[0.07] backdrop-blur-sm overflow-hidden group"
           >
             {/* Sliding white fill */}
