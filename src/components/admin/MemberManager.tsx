@@ -13,8 +13,10 @@ import {
   ClipboardList,
   Check,
   X,
+  Eye,
 } from "lucide-react";
 import type { Member } from "@/lib/types";
+import MemberApplicationModal from "@/components/admin/MemberApplicationModal";
 
 type Status = { type: "idle" | "success" | "error"; message?: string };
 
@@ -32,6 +34,7 @@ export default function MemberManager() {
   // Membership number entered per pending application, keyed by member _id.
   const [approveNumbers, setApproveNumbers] = useState<Record<string, string>>({});
   const [approveError, setApproveError] = useState<Record<string, string>>({});
+  const [viewMember, setViewMember] = useState<Member | null>(null);
 
   async function loadList() {
     setLoadingList(true);
@@ -324,6 +327,15 @@ export default function MemberManager() {
                               Reject
                             </button>
                           </div>
+                          <button
+                            type="button"
+                            onClick={() => setViewMember(m)}
+                            className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-navy/5 text-navy/70 text-xs font-semibold hover:bg-navy/10 hover:text-navy transition-colors"
+                            title="View full application"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                            View more
+                          </button>
                         </div>
                       </div>
                     </li>
@@ -333,6 +345,12 @@ export default function MemberManager() {
             </section>
           );
         })()}
+
+        <MemberApplicationModal
+          open={!!viewMember}
+          member={viewMember}
+          onClose={() => setViewMember(null)}
+        />
 
         {/* Active / suspended members */}
         <section className="rounded-2xl border border-navy/10 bg-card p-6 sm:p-8 shadow-sm">
