@@ -6,6 +6,7 @@ import LatestStories from "@/components/home/LatestStories";
 import OurCollege from "@/components/home/OurCollege";
 import PresidentMessage from "@/components/home/PresidentMessage";
 import QuickLinksFloat from "@/components/home/QuickLinksFloat";
+import XrayGameFloat from "@/components/game/XrayGameFloat";
 import { getNewsEvents } from "@/lib/data/newsEvents";
 import { getActiveHomeAnnouncement } from "@/lib/data/homeAnnouncement";
 
@@ -38,6 +39,7 @@ export default async function Home() {
       <Footer />
       <BackToTop />
       <QuickLinksFloat />
+      <XrayGameFloat />
     </main>
   );
 }

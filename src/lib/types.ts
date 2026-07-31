@@ -238,3 +238,12 @@ export type PastSession = {
   publishedAt: string;
   createdAt: string;
 };
+
+/** A completed run of the chest X-ray puzzle, shown on the public leaderboard. */
+export type XrayScore = {
+  _id?: string;
+  name: string;
+  seconds: number;
+  moves: number;
+  createdAt: string;
+};
