@@ -121,7 +121,13 @@ export default function MessageCenter() {
     setDStatus({ type: "idle" });
     setDSending(true);
     try {
-      let fileMeta: { fileUrl?: string; fileKey?: string; fileName?: string } = {};
+      let fileMeta: {
+        fileUrl?: string;
+        fileKey?: string;
+        fileName?: string;
+        fileSize?: number;
+        fileContentType?: string;
+      } = {};
 
       if (file) {
         const presign = await fetch("/api/admin/messages/upload", {
@@ -143,7 +149,13 @@ export default function MessageCenter() {
         });
         if (!put.ok) throw new Error("Upload to storage failed.");
 
-        fileMeta = { fileUrl: pd.publicUrl, fileKey: pd.key, fileName: file.name };
+        fileMeta = {
+          fileUrl: pd.publicUrl,
+          fileKey: pd.key,
+          fileName: file.name,
+          fileSize: file.size,
+          fileContentType: file.type || undefined,
+        };
       }
 
       const res = await fetch("/api/admin/messages", {

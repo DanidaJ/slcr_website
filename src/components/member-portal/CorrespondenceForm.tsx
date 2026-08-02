@@ -47,7 +47,13 @@ export default function CorrespondenceForm({
     setSending(true);
 
     try {
-      let fileMeta: { fileUrl?: string; fileKey?: string; fileName?: string } = {};
+      let fileMeta: {
+        fileUrl?: string;
+        fileKey?: string;
+        fileName?: string;
+        fileSize?: number;
+        fileContentType?: string;
+      } = {};
 
       if (file) {
         const presign = await fetch("/api/member/correspondence/upload", {
@@ -65,7 +71,13 @@ export default function CorrespondenceForm({
         });
         if (!put.ok) throw new Error("Upload to storage failed.");
 
-        fileMeta = { fileUrl: pd.publicUrl, fileKey: pd.key, fileName: file.name };
+        fileMeta = {
+          fileUrl: pd.publicUrl,
+          fileKey: pd.key,
+          fileName: file.name,
+          fileSize: file.size,
+          fileContentType: file.type || undefined,
+        };
       }
 
       const res = await fetch("/api/member/correspondence", {

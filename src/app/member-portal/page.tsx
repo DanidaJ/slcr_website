@@ -24,7 +24,11 @@ export default async function MemberPortalPage() {
     const db = await getDb();
     unread = await db
       .collection("member_inbox")
-      .countDocuments({ memberId: session.memberId, readAt: { $exists: false } });
+      .countDocuments({
+        memberId: session.memberId,
+        readAt: { $exists: false },
+        archivedAt: { $exists: false },
+      });
   }
 
   return (

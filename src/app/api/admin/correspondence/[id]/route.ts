@@ -3,10 +3,28 @@ import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { requireAdmin } from "@/lib/auth";
 import type { Correspondence } from "@/lib/types";
+import {
+  isValidMessageAction,
+  mongoUpdateForAction,
+  type MessageAction,
+} from "@/lib/message-query";
 
 export const dynamic = "force-dynamic";
 
 const COLLECTION = "correspondence";
+
+async function parseAction(req: NextRequest): Promise<MessageAction | Response> {
+  try {
+    const body = await req.json();
+    if (body?.action == null) return "read";
+    if (!isValidMessageAction(body.action)) {
+      return Response.json({ error: "Invalid action" }, { status: 400 });
+    }
+    return body.action;
+  } catch {
+    return "read";
+  }
+}
 
 /** Admin — fetch a single correspondence item. */
 export async function GET(
@@ -35,9 +53,9 @@ export async function GET(
   return Response.json({ item });
 }
 
-/** Admin — mark a correspondence item as read. */
+/** Admin — mark read / unread / archive / unarchive one item. */
 export async function PATCH(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const unauthorized = await requireAdmin();
@@ -48,16 +66,16 @@ export async function PATCH(
     return Response.json({ error: "Invalid id" }, { status: 400 });
   }
 
+  const actionOrErr = await parseAction(req);
+  if (actionOrErr instanceof Response) return actionOrErr;
+
   const db = await getDb();
   const result = await db
     .collection(COLLECTION)
-    .updateOne(
-      { _id: new ObjectId(id), readAt: { $exists: false } },
-      { $set: { readAt: new Date().toISOString() } }
-    );
+    .updateOne({ _id: new ObjectId(id) }, mongoUpdateForAction(actionOrErr));
 
   if (result.matchedCount === 0) {
-    return Response.json({ ok: true });
+    return Response.json({ error: "Not found" }, { status: 404 });
   }
   return Response.json({ ok: true });
 }

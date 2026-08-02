@@ -2,12 +2,30 @@ import { ObjectId } from "mongodb";
 import type { NextRequest } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { requireAdmin } from "@/lib/auth";
+import {
+  isValidMessageAction,
+  mongoUpdateForAction,
+  type MessageAction,
+} from "@/lib/message-query";
 
 export const dynamic = "force-dynamic";
 
-/** Admin — mark a public message as read. */
+async function parseAction(req: NextRequest): Promise<MessageAction | Response> {
+  try {
+    const body = await req.json();
+    if (body?.action == null) return "read";
+    if (!isValidMessageAction(body.action)) {
+      return Response.json({ error: "Invalid action" }, { status: 400 });
+    }
+    return body.action;
+  } catch {
+    return "read";
+  }
+}
+
+/** Admin — mark read / unread / archive / unarchive one public message. */
 export async function PATCH(
-  _request: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const unauthorized = await requireAdmin();
@@ -18,17 +36,16 @@ export async function PATCH(
     return Response.json({ error: "Invalid id" }, { status: 400 });
   }
 
+  const actionOrErr = await parseAction(req);
+  if (actionOrErr instanceof Response) return actionOrErr;
+
   const db = await getDb();
   const result = await db
     .collection("public_messages")
-    .updateOne(
-      { _id: new ObjectId(id), readAt: { $exists: false } },
-      { $set: { readAt: new Date().toISOString() } }
-    );
+    .updateOne({ _id: new ObjectId(id) }, mongoUpdateForAction(actionOrErr));
 
   if (result.matchedCount === 0) {
-    // Already read or not found — not an error from the UI's perspective.
-    return Response.json({ ok: true });
+    return Response.json({ error: "Not found" }, { status: 404 });
   }
 
   return Response.json({ ok: true });

@@ -122,8 +122,14 @@ export type InboxItem = {
   fileUrl?: string;
   fileKey?: string;
   fileName?: string;
+  /** Attachment size in bytes (when known). */
+  fileSize?: number;
+  /** MIME type from the upload (when known). */
+  fileContentType?: string;
   /** ISO timestamp when the member opened the item; absent while unread. */
   readAt?: string;
+  /** ISO timestamp when archived; absent while in the active inbox. */
+  archivedAt?: string;
   sentAt: string;
   /** Email of the admin who sent it (audit trail). */
   sentBy: string;
@@ -142,8 +148,14 @@ export type Correspondence = {
   fileUrl?: string;
   fileKey?: string;
   fileName?: string;
+  /** Attachment size in bytes (when known). */
+  fileSize?: number;
+  /** MIME type from the upload (when known). */
+  fileContentType?: string;
   /** ISO timestamp when an admin first opened the item. */
   readAt?: string;
+  /** ISO timestamp when archived; absent while in the active inbox. */
+  archivedAt?: string;
   sentAt: string;
 };
 
@@ -157,6 +169,8 @@ export type PublicMessage = {
   sentAt: string;
   /** ISO timestamp when an admin first opened the message. */
   readAt?: string;
+  /** ISO timestamp when archived; absent while in the active inbox. */
+  archivedAt?: string;
 };
 
 /** A record of one broadcast, for the admin's send history. */

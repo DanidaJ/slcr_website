@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Menu, X, ChevronDown, LogOut, User, ShieldCheck, Inbox } from "lucide-react";
 import type { MemberSession } from "@/lib/auth";
+import { onUnreadChanged } from "@/lib/unread-events";
 
 const ADMIN_LINKS: { label: string; href: string }[] = [
   { label: "Members", href: "/admin/members" },
@@ -222,10 +223,16 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [member, setMember] = useState<MemberSession | null>(null);
   const [unread, setUnread] = useState(0);
+  const [adminUnread, setAdminUnread] = useState({
+    correspondence: 0,
+    publicMessages: 0,
+  });
   const pathname = usePathname();
   const router = useRouter();
   const isHome = pathname === "/";
   const isSolid = !transparentOnTop || scrolled;
+  const adminUnreadTotal =
+    adminUnread.correspondence + adminUnread.publicMessages;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -241,12 +248,43 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
   }, [pathname]);
 
   useEffect(() => {
-    if (!member) { setUnread(0); return; }
-    fetch("/api/member/inbox")
-      .then((r) => r.json())
-      .then((d) => setUnread(d.unread ?? 0))
-      .catch(() => null);
-  }, [member]);
+    if (!member) {
+      setUnread(0);
+      setAdminUnread({ correspondence: 0, publicMessages: 0 });
+      return;
+    }
+
+    function refreshUnread() {
+      if (!member) return;
+
+      if (member.role === "member") {
+        fetch("/api/member/inbox?page=1&limit=1")
+          .then((r) => r.json())
+          .then((d) => setUnread(d.unread ?? 0))
+          .catch(() => null);
+        return;
+      }
+
+      if (member.role === "admin") {
+        Promise.all([
+          fetch("/api/admin/correspondence?page=1&limit=1")
+            .then((r) => r.json())
+            .catch(() => ({})),
+          fetch("/api/admin/public-messages?page=1&limit=1")
+            .then((r) => r.json())
+            .catch(() => ({})),
+        ]).then(([corr, pub]) => {
+          setAdminUnread({
+            correspondence: corr.unread ?? 0,
+            publicMessages: pub.unread ?? 0,
+          });
+        });
+      }
+    }
+
+    refreshUnread();
+    return onUnreadChanged(refreshUnread);
+  }, [member, pathname]);
 
   async function handleSignOut() {
     await Promise.all([
@@ -322,12 +360,17 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                     onMouseEnter={() => setActiveDropdown("ADMIN_BAR")}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <button className="flex items-center gap-1 px-3 py-1 rounded text-xs font-bold text-gold border border-gold/40 hover:border-gold hover:bg-gold/10 transition-colors whitespace-nowrap">
+                    <button className="flex items-center gap-1.5 px-3 py-1 rounded text-xs font-bold text-gold border border-gold/40 hover:border-gold hover:bg-gold/10 transition-colors whitespace-nowrap">
                       ADMIN
+                      {adminUnreadTotal > 0 && (
+                        <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                          {adminUnreadTotal > 99 ? "99+" : adminUnreadTotal}
+                        </span>
+                      )}
                       <ChevronDown className="w-3 h-3" />
                     </button>
                     {activeDropdown === "ADMIN_BAR" && (
-                      <div className="absolute right-0 top-full pt-1.5 min-w-[170px] z-50">
+                      <div className="absolute right-0 top-full pt-1.5 min-w-[190px] z-50">
                       <motion.div
                         initial={{ opacity: 0, y: 4 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -335,15 +378,28 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                         transition={{ duration: 0.12 }}
                         className="bg-navy-dark border border-gold/30 rounded-lg shadow-xl py-1.5"
                       >
-                        {ADMIN_LINKS.map((link) => (
-                          <Link
-                            key={link.href}
-                            href={link.href}
-                            className="block px-4 py-2 text-white/75 hover:text-white hover:bg-navy-light/50 text-xs transition-colors"
-                          >
-                            {link.label}
-                          </Link>
-                        ))}
+                        {ADMIN_LINKS.map((link) => {
+                          const badge =
+                            link.href === "/admin/correspondence"
+                              ? adminUnread.correspondence
+                              : link.href === "/admin/public-messages"
+                                ? adminUnread.publicMessages
+                                : 0;
+                          return (
+                            <Link
+                              key={link.href}
+                              href={link.href}
+                              className="flex items-center justify-between gap-3 px-4 py-2 text-white/75 hover:text-white hover:bg-navy-light/50 text-xs transition-colors"
+                            >
+                              <span>{link.label}</span>
+                              {badge > 0 && (
+                                <span className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                                  {badge > 99 ? "99+" : badge}
+                                </span>
+                              )}
+                            </Link>
+                          );
+                        })}
                       </motion.div>
                       </div>
                     )}
@@ -618,18 +674,36 @@ export default function Navbar({ transparentOnTop = true }: NavbarProps) {
                       <p className="py-3 text-gold/90 font-medium text-sm flex items-center gap-1.5">
                         <ShieldCheck className="w-3.5 h-3.5" />
                         ADMIN
+                        {adminUnreadTotal > 0 && (
+                          <span className="ml-1 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                            {adminUnreadTotal > 99 ? "99+" : adminUnreadTotal}
+                          </span>
+                        )}
                       </p>
                       <div className="pl-4 pb-2 space-y-1">
-                        {ADMIN_LINKS.map((link) => (
-                          <Link
-                            key={link.href}
-                            href={link.href}
-                            onClick={() => setMobileOpen(false)}
-                            className="block py-1 text-white/50 hover:text-white text-xs transition-colors"
-                          >
-                            {link.label}
-                          </Link>
-                        ))}
+                        {ADMIN_LINKS.map((link) => {
+                          const badge =
+                            link.href === "/admin/correspondence"
+                              ? adminUnread.correspondence
+                              : link.href === "/admin/public-messages"
+                                ? adminUnread.publicMessages
+                                : 0;
+                          return (
+                            <Link
+                              key={link.href}
+                              href={link.href}
+                              onClick={() => setMobileOpen(false)}
+                              className="flex items-center justify-between gap-2 py-1 text-white/50 hover:text-white text-xs transition-colors"
+                            >
+                              <span>{link.label}</span>
+                              {badge > 0 && (
+                                <span className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                                  {badge > 99 ? "99+" : badge}
+                                </span>
+                              )}
+                            </Link>
+                          );
+                        })}
                       </div>
                     </div>
                   )}

@@ -19,6 +19,8 @@ export async function POST(request: NextRequest) {
     fileUrl?: string;
     fileKey?: string;
     fileName?: string;
+    fileSize?: number;
+    fileContentType?: string;
   };
   try {
     body = await request.json();
@@ -59,6 +61,11 @@ export async function POST(request: NextRequest) {
     fileUrl: fileUrl || undefined,
     fileKey: body.fileKey?.trim() || undefined,
     fileName: body.fileName?.trim() || undefined,
+    fileSize:
+      typeof body.fileSize === "number" && body.fileSize >= 0
+        ? body.fileSize
+        : undefined,
+    fileContentType: body.fileContentType?.trim() || undefined,
     sentAt: new Date().toISOString(),
   };
 
