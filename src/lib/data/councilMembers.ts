@@ -10,6 +10,12 @@ import type { CouncilMember, CouncilMemberPublic } from "@/lib/types";
 
 const COLLECTION = "councilMembers";
 
+/** Same-key renames after replacing a portrait (e.g. jpg → png on R2). */
+const IMAGE_KEY_ALIASES: Record<string, string> = {
+  "images/the-college/president-and-council-26-27/Dr Geethika Perera.jpg":
+    "images/the-college/president-and-council-26-27/Dr Geethika Perera.png",
+};
+
 type CouncilMemberDoc = Omit<CouncilMember, "_id"> & {
   _id: import("mongodb").ObjectId;
 };
@@ -17,8 +23,11 @@ type CouncilMemberDoc = Omit<CouncilMember, "_id"> & {
 function toPublic(doc: CouncilMemberDoc): CouncilMemberPublic {
   const { _id, imageKey, gender, ...rest } = doc;
   const placeholderUrl = placeholderUrlForGender(gender);
+  const resolvedKey = imageKey
+    ? (IMAGE_KEY_ALIASES[imageKey] ?? imageKey)
+    : undefined;
   const imageUrl =
-    imageKey && isR2Configured() ? publicUrlForKey(imageKey) : null;
+    resolvedKey && isR2Configured() ? publicUrlForKey(resolvedKey) : null;
 
   return {
     id: _id.toString(),

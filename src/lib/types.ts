@@ -195,7 +195,7 @@ export type CouncilMember = {
   /** e.g. "The President", "Hon. Secretary" */
   position?: string;
   displayOrder: number;
-  /** R2 object key, e.g. images/the-college/president-and-council-26-27/Dr Nayana Samarasinghe.jpg */
+  /** R2 object key, e.g. images/the-college/president-and-council-26-27/Dr Nayana Samarasinghe.jpg (or .png) */
   imageKey?: string;
   /** Council term label, e.g. "2026-2027" */
   term: string;

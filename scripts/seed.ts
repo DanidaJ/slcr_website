@@ -36,7 +36,7 @@ const COUNCIL_MEMBERS: Omit<CouncilMember, "_id" | "createdAt">[] = [
     gender: "female",
     position: "Hon. Secretary",
     displayOrder: 3,
-    imageKey: buildCouncilMemberImageKey("Dr Geethika Perera"),
+    imageKey: buildCouncilMemberImageKey("Dr Geethika Perera", "26-27", "png"),
     term: CURRENT_COUNCIL_TERM,
   },
   {

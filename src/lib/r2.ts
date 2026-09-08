@@ -66,17 +66,23 @@ export const PLACEHOLDER_IMAGE_KEYS = {
   female: "images/placeholders/Profile-Placeholder-female.png",
 } as const;
 
+/** Bump when replacing an R2 image at the same key so Next/browser caches miss. */
+const R2_IMAGE_CACHE_VERSION =
+  process.env.NEXT_PUBLIC_R2_IMAGE_VERSION ?? "3";
+
 /** Build the R2 key for a council member portrait (filename = display name). */
 export function buildCouncilMemberImageKey(
   displayName: string,
-  termSlug = "26-27"
+  termSlug = "26-27",
+  extension: "jpg" | "jpeg" | "png" | "webp" = "jpg"
 ): string {
   return (
     "images/the-college/president-and-council-" +
     termSlug +
     "/" +
     displayName +
-    ".jpg"
+    "." +
+    extension
   );
 }
 
@@ -92,7 +98,13 @@ export function publicUrlForKey(key: string): string {
     .split("/")
     .map((segment) => encodeURIComponent(segment))
     .join("/");
-  return `${base}/${encodedKey}`;
+  const url = `${base}/${encodedKey}`;
+  // Same-key replacements (e.g. council portraits) need a version query so
+  // Next.js image optimization and browsers do not keep serving the old file.
+  if (key.startsWith("images/")) {
+    return `${url}?v=${R2_IMAGE_CACHE_VERSION}`;
+  }
+  return url;
 }
 
 export function placeholderUrlForGender(

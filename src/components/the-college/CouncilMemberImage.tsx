@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 type CouncilMemberImageProps = {
@@ -17,6 +17,11 @@ export default function CouncilMemberImage({
   placeholderUrl,
 }: CouncilMemberImageProps) {
   const [src, setSrc] = useState(imageUrl ?? placeholderUrl);
+
+  useEffect(() => {
+    setSrc(imageUrl ?? placeholderUrl);
+  }, [imageUrl, placeholderUrl]);
+
   const alt = position
     ? `${name} — ${position}, Sri Lanka College of Radiologists`
     : `${name} — Council Member, Sri Lanka College of Radiologists`;

@@ -4,8 +4,8 @@ import { getCouncilMembers } from "@/lib/data/councilMembers";
 
 const CURRENT_TERM = "2026-2027";
 
-// /** Fetch council members on every request so DB edits appear without redeploying. */
-// export const dynamic = "force-dynamic";
+/** Fetch council members on every request so DB/image edits appear without redeploying. */
+export const dynamic = "force-dynamic";
 
 export default async function PresidentAndCouncilPage() {
   const members = await getCouncilMembers(CURRENT_TERM);
