@@ -268,13 +268,7 @@ export default function UpcomingSessionsPage() {
               </span>
             </div>
             <div className="flex flex-wrap gap-3">
-              <a
-                href="/academic-sessions/registration"
-                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold bg-gold text-navy rounded-lg hover:bg-gold-light transition-colors"
-              >
-                Register Now
-                <ArrowRight className="w-4 h-4" />
-              </a>
+           
               <a
                 href={meta.brochureUrl}
                 target="_blank"
@@ -325,13 +319,7 @@ export default function UpcomingSessionsPage() {
             <p className="mt-1 text-sm text-navy/60">{registration.note}</p>
           </div>
           <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <a
-              href="/academic-sessions/registration"
-              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold bg-gold text-navy rounded-lg hover:bg-gold-light transition-colors"
-            >
-              Register Now
-              <ArrowRight className="w-4 h-4" />
-            </a>
+            
             <p className="text-sm text-navy/55">
               Queries? Contact the College office at{" "}
               <a
