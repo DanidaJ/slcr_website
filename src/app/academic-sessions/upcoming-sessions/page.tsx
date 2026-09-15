@@ -293,15 +293,28 @@ export default function UpcomingSessionsPage() {
         <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8 space-y-12">
           {program.map((day) => (
             <div key={day.date}>
-              <div className="mb-6">
-                <h2 className="font-heading text-2xl sm:text-3xl text-navy font-extrabold tracking-tight">
-                  {day.date}
-                </h2>
-                <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-navy/55">
-                  <MapPin className="w-4 h-4 text-gold" />
-                  {day.venue}
-                </p>
-                <div className="mt-3 w-12 h-0.5 bg-gold" />
+              <div className="mb-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                <div>
+                  <h2 className="font-heading text-2xl sm:text-3xl text-navy font-extrabold tracking-tight">
+                    {day.date}
+                  </h2>
+                  <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-navy/55">
+                    <MapPin className="w-4 h-4 text-gold" />
+                    {day.venue}
+                  </p>
+                  <div className="mt-3 w-12 h-0.5 bg-gold" />
+                </div>
+                {day.blocks.some((block) => block.type === "schedule") && (
+                  <a
+                    href={meta.brochureUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="self-start inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-navy border border-navy/25 rounded-lg hover:border-navy/60 transition-colors whitespace-nowrap"
+                  >
+                    <Download className="w-4 h-4" />
+                    Updated Schedule
+                  </a>
+                )}
               </div>
               <DayBlocks blocks={day.blocks} />
             </div>
