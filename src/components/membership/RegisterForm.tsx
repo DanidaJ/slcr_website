@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { CheckCircle2, AlertCircle, Loader2, Eye, EyeOff } from "lucide-react";
+import { CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { fadeUp } from "@/lib/motion";
 import CustomSelect from "@/components/ui/CustomSelect";
 import RadioGroup from "@/components/ui/RadioGroup";
@@ -77,44 +77,6 @@ function SectionLegend({ children }: { children: React.ReactNode }) {
   );
 }
 
-function PasswordField({
-  name,
-  placeholder,
-  error,
-  onBlur,
-}: {
-  name: string;
-  placeholder?: string;
-  error?: string | null;
-  onBlur?: React.FocusEventHandler<HTMLInputElement>;
-}) {
-  const [visible, setVisible] = useState(false);
-
-  return (
-    <div className="relative">
-      <input
-        name={name}
-        type={visible ? "text" : "password"}
-        placeholder={placeholder}
-        onBlur={onBlur}
-        className={`${inputClass} pr-11 ${error ? inputErrorClass : ""}`}
-      />
-      <button
-        type="button"
-        onClick={() => setVisible((v) => !v)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
-        aria-label={visible ? "Hide password" : "Show password"}
-      >
-        {visible ? (
-          <EyeOff className="w-4 h-4" />
-        ) : (
-          <Eye className="w-4 h-4" />
-        )}
-      </button>
-    </div>
-  );
-}
-
 function fieldClass(error?: string | null) {
   return `${inputClass}${error ? ` ${inputErrorClass}` : ""}`;
 }
@@ -172,18 +134,6 @@ export default function RegisterForm() {
         return validateMobile(value, "WhatsApp number");
       case "residence":
         return validateResidence(value);
-      case "password":
-        if (!value) return "Password is required.";
-        if (value.length < 8) return "Password must be at least 8 characters.";
-        return null;
-      case "confirmPassword": {
-        const passwordInput = form?.elements.namedItem("password");
-        const passwordVal =
-          passwordInput instanceof HTMLInputElement ? passwordInput.value : "";
-        if (!value) return "Please confirm your password.";
-        if (value !== passwordVal) return "Passwords do not match.";
-        return null;
-      }
       default:
         return null;
     }
@@ -212,8 +162,6 @@ export default function RegisterForm() {
       "mobile",
       "preferredContact",
       "residence",
-      "password",
-      "confirmPassword",
     ] as const;
 
     for (const field of textFields) {
@@ -266,7 +214,6 @@ export default function RegisterForm() {
           pgQualifications: data.get("pgQualifications"),
           specialInterest: data.get("specialInterest"),
           username: data.get("email"),
-          password: data.get("password"),
         }),
       });
 
@@ -310,8 +257,9 @@ export default function RegisterForm() {
           Application Submitted
         </h2>
         <p className="text-sm text-white/60 max-w-sm mx-auto leading-relaxed">
-          Your application is pending review by the College. You will be able
-          to sign in once an administrator approves your account.
+          Your application is pending review by the College. Once an
+          administrator approves your account, we&apos;ll email you your
+          sign-in details.
         </p>
         <div className="mt-6 w-12 h-0.5 bg-gold mx-auto" />
         <p className="mt-6 text-sm text-white/40">
@@ -590,44 +538,6 @@ export default function RegisterForm() {
                 className={textareaClass}
               />
             </FormField>
-          </fieldset>
-
-          <div className="h-px bg-white/[0.06]" />
-
-          <fieldset>
-            <SectionLegend>User Credentials</SectionLegend>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <div className="sm:col-span-2">
-                <FormField label="Username" required>
-                  <input
-                    type="text"
-                    readOnly
-                    value={email}
-                    placeholder="Same as your email above"
-                    className={`${inputClass} text-white/60 cursor-default focus:ring-0 focus:border-white/10`}
-                    tabIndex={-1}
-                  />
-                </FormField>
-              </div>
-
-              <FormField label="Password" required error={showError("password")}>
-                <PasswordField
-                  name="password"
-                  placeholder="••••••••"
-                  error={showError("password")}
-                  onBlur={(e) => handleBlur("password", e.target.value)}
-                />
-              </FormField>
-
-              <FormField label="Confirm Password" required error={showError("confirmPassword")}>
-                <PasswordField
-                  name="confirmPassword"
-                  placeholder="••••••••"
-                  error={showError("confirmPassword")}
-                  onBlur={(e) => handleBlur("confirmPassword", e.target.value)}
-                />
-              </FormField>
-            </div>
           </fieldset>
 
           {error && (

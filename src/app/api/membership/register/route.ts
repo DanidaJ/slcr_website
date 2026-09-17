@@ -1,13 +1,15 @@
 import type { NextRequest } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import type { Member, MemberRegistration } from "@/lib/types";
-import { hashPassword } from "@/lib/password";
 
 export const dynamic = "force-dynamic";
 
-/** Public — member self-registration. Creates a pending application. */
+/**
+ * Public — member self-registration. Creates a pending application with no
+ * password; the admin's approval assigns the default one and emails it out.
+ */
 export async function POST(request: NextRequest) {
-  let body: Partial<MemberRegistration> & { password?: string };
+  let body: Partial<MemberRegistration>;
   try {
     body = await request.json();
   } catch {
@@ -17,17 +19,10 @@ export async function POST(request: NextRequest) {
   const email = body.email?.trim().toLowerCase();
   const fullName = body.fullName?.trim();
   const mobile = body.mobile?.trim();
-  const password = typeof body.password === "string" ? body.password : "";
 
   if (!email || !fullName || !mobile) {
     return Response.json(
       { error: "Full name, email, and mobile are required" },
-      { status: 400 }
-    );
-  }
-  if (!password || password.length < 8) {
-    return Response.json(
-      { error: "Password must be at least 8 characters" },
       { status: 400 }
     );
   }
@@ -77,7 +72,6 @@ export async function POST(request: NextRequest) {
     email,
     name: fullName,
     username: body.username?.trim().toLowerCase() || email,
-    passwordHash: hashPassword(password),
     status: "pending",
     createdAt: new Date().toISOString(),
     registration,

@@ -103,6 +103,7 @@ async function send({ to, subject, html }: SendArgs): Promise<boolean> {
 
 const APP_ORIGIN = () => (process.env.APP_URL ?? "").replace(/\/$/, "");
 const PORTAL_URL = () => `${APP_ORIGIN()}/member-portal/inbox`;
+const LOGIN_URL = () => `${APP_ORIGIN()}/membership/member-login`;
 
 type ShellArgs = {
   heading: string;
@@ -110,6 +111,8 @@ type ShellArgs = {
   preview?: string;
   ctaHref: string;
   ctaLabel: string;
+  /** Optional guidance rendered between the CTA and the footer. */
+  note?: string;
   footer: string;
 };
 
@@ -119,6 +122,7 @@ function shell({
   preview,
   ctaHref,
   ctaLabel,
+  note,
   footer,
 }: ShellArgs): string {
   return `
@@ -135,6 +139,11 @@ function shell({
           : ""
       }
       <a href="${ctaHref}" style="display:inline-block;background:#0f1e3d;color:#fff;text-decoration:none;padding:10px 20px;border-radius:8px;font-weight:600">${ctaLabel}</a>
+      ${
+        note
+          ? `<p style="margin:18px 0 0;line-height:1.5;font-size:13px;color:#374151">${note}</p>`
+          : ""
+      }
       <p style="margin:20px 0 0;font-size:12px;color:#9ca3af">${footer}</p>
     </div>
   </div>`;
@@ -188,6 +197,68 @@ export function notifyDirectMessage(
         ? "You have a new message with an attached file in your member inbox."
         : "You have a new message in your member inbox."
     ),
+  });
+}
+
+export type MemberApprovedArgs = {
+  to: string;
+  name?: string;
+  memberNumber?: string;
+  /** Temporary password — only passed when one was just assigned. */
+  password?: string;
+};
+
+/**
+ * Notify an applicant that an admin approved their membership, and hand them
+ * the temporary password assigned at approval. Sent on the pending → active
+ * transition, so the CTA points at sign-in (they have no session yet).
+ */
+export function notifyMemberApproved({
+  to,
+  name,
+  memberNumber,
+  password,
+}: MemberApprovedArgs) {
+  const who = name?.trim();
+  const intro = [
+    who ? `Dear ${esc(who)},` : "Hello,",
+    "your application for membership of the Sri Lanka College of Radiologists has been approved.",
+    memberNumber?.trim()
+      ? `Your membership number is <strong>${esc(memberNumber.trim())}</strong>.`
+      : "",
+    password
+      ? "You can now sign in to the member portal with the details below."
+      : "You can now sign in to the member portal.",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const credentials = password
+    ? `Username: <strong>${esc(to)}</strong><br />Temporary password: <strong>${esc(password)}</strong>`
+    : undefined;
+
+  const note = [
+    password
+      ? "For your security, please change this password as soon as you sign in — you can do it under <strong>Change Password</strong> on your member profile page."
+      : "",
+    "If your email address is a Gmail address, you can skip the password altogether and use the <strong>Continue with Google</strong> option on the sign-in page.",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return send({
+    to,
+    subject: "Your SLCR membership has been approved",
+    html: shell({
+      heading: "Membership approved",
+      intro,
+      preview: credentials,
+      ctaHref: LOGIN_URL(),
+      ctaLabel: "Sign in to the member portal",
+      note,
+      footer:
+        "You're receiving this because you applied for SLCR membership. If you didn't apply, please contact us.",
+    }),
   });
 }
 

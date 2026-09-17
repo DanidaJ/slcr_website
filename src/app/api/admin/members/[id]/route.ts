@@ -2,6 +2,8 @@ import { ObjectId } from "mongodb";
 import type { NextRequest } from "next/server";
 import { getDb } from "@/lib/mongodb";
 import { requireAdmin } from "@/lib/auth";
+import { notifyMemberApproved } from "@/lib/email";
+import { hashPassword, DEFAULT_MEMBER_PASSWORD } from "@/lib/password";
 
 export const dynamic = "force-dynamic";
 
@@ -58,9 +60,28 @@ export async function PATCH(
   const update: Record<string, unknown> = { status: body.status };
   if (memberNumber) update.memberNumber = memberNumber;
 
+  // Applicants don't choose a password at registration, so approval is where
+  // they get one. Never overwrite a password the member already set.
+  const assignsDefaultPassword = isApproval && !existing.passwordHash;
+  if (assignsDefaultPassword) {
+    update.passwordHash = hashPassword(DEFAULT_MEMBER_PASSWORD);
+  }
+
   await db
     .collection(COLLECTION)
     .updateOne({ _id: new ObjectId(id) }, { $set: update });
+
+  // Best-effort approval email. Awaited rather than fired-and-forgotten so
+  // the serverless function isn't frozen mid-send; `send` logs and swallows
+  // its own failures, so a broken mailbox never fails the approval.
+  if (isApproval && typeof existing.email === "string") {
+    await notifyMemberApproved({
+      to: existing.email,
+      name: typeof existing.name === "string" ? existing.name : undefined,
+      memberNumber: memberNumber || existing.memberNumber,
+      password: assignsDefaultPassword ? DEFAULT_MEMBER_PASSWORD : undefined,
+    });
+  }
 
   return Response.json({ ok: true });
 }
