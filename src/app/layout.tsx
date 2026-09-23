@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Montserrat, Inter } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import LoginToast from "@/components/ui/LoginToast";
 
 const inter = Inter({
@@ -41,6 +42,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         {children}
         <LoginToast />
+        <Analytics />
       </body>
     </html>
   );
