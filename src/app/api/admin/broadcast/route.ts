@@ -65,9 +65,12 @@ export async function POST(request: NextRequest) {
   };
   await db.collection("broadcasts").insertOne(broadcast);
 
-  // Best-effort emails — never block or fail the request on email problems.
-  await Promise.allSettled(
-    members.map((m) => notifyBroadcast(m.email, subject, message))
+  // Best-effort emails, sent in batches — `notifyBroadcast` logs and swallows
+  // its own failures, so email problems never fail the request.
+  await notifyBroadcast(
+    members.map((m) => m.email),
+    subject,
+    message
   );
 
   return Response.json(
