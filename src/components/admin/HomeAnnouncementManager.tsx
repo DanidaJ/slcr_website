@@ -10,10 +10,12 @@ import {
 } from "lucide-react";
 import { isHomeAnnouncementActive } from "@/lib/homeAnnouncement";
 import type { HomeAnnouncement } from "@/lib/types";
+import { useDialog } from "@/components/ui/DialogProvider";
 
 type Status = { type: "idle" | "success" | "error"; message?: string };
 
 export default function HomeAnnouncementManager() {
+  const { confirm } = useDialog();
   const [current, setCurrent] = useState<HomeAnnouncement | null>(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -78,7 +80,12 @@ export default function HomeAnnouncementManager() {
   }
 
   async function handleDelete() {
-    if (!confirm("Remove this announcement from the home page?")) return;
+    const ok = await confirm({
+      title: "Remove this announcement?",
+      description: "It will no longer be shown on the home page.",
+      confirmLabel: "Remove",
+    });
+    if (!ok) return;
 
     setSubmitting(true);
     try {

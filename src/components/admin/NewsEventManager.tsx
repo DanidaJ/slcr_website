@@ -13,10 +13,12 @@ import {
   X,
 } from "lucide-react";
 import type { NewsEvent } from "@/lib/types";
+import { useDialog } from "@/components/ui/DialogProvider";
 
 type Status = { type: "idle" | "success" | "error"; message?: string };
 
 export default function NewsEventManager() {
+  const { confirm, alert } = useDialog();
   const [list, setList] = useState<NewsEvent[]>([]);
   const [loadingList, setLoadingList] = useState(true);
 
@@ -225,13 +227,21 @@ export default function NewsEventManager() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this news item? This cannot be undone.")) return;
+    const ok = await confirm({
+      title: "Delete this news item?",
+      description: "This cannot be undone.",
+      confirmLabel: "Delete",
+    });
+    if (!ok) return;
     if (editTarget?._id === id) cancelEdit();
     const res = await fetch(`/api/news-events/${id}`, { method: "DELETE" });
     if (res.ok) {
       setList((prev) => prev.filter((n) => n._id !== id));
     } else {
-      alert("Failed to delete.");
+      alert({
+        title: "Failed to delete news item",
+        description: "Something went wrong. Please try again.",
+      });
     }
   }
 

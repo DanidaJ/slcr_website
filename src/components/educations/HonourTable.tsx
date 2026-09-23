@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Loader2, Plus, Trash2, AlertCircle } from "lucide-react";
-import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import { useDialog } from "@/components/ui/DialogProvider";
 import {
   HONOUR_CONFIG,
   type HonourCategory,
@@ -22,6 +22,7 @@ export default function HonourTable({
   category: HonourCategory;
 }) {
   const config = HONOUR_CONFIG[category];
+  const { confirm, alert } = useDialog();
 
   const [records, setRecords] = useState<HonourRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +31,6 @@ export default function HonourTable({
   const [draft, setDraft] = useState<BlankRow>(emptyRow);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -90,10 +90,13 @@ export default function HonourTable({
     }
   }
 
-  async function confirmDelete() {
-    const id = pendingDeleteId;
-    setPendingDeleteId(null);
-    if (!id) return;
+  async function handleDelete(id: string) {
+    const ok = await confirm({
+      title: "Delete this record?",
+      description: "This cannot be undone.",
+      confirmLabel: "Delete",
+    });
+    if (!ok) return;
 
     const res = await fetch(`/api/honours/${category}/${id}`, {
       method: "DELETE",
@@ -101,7 +104,10 @@ export default function HonourTable({
     if (res.ok) {
       setRecords((prev) => prev.filter((r) => r._id !== id));
     } else {
-      alert("Failed to delete record.");
+      alert({
+        title: "Failed to delete record",
+        description: "Something went wrong. Please try again.",
+      });
     }
   }
 
@@ -169,7 +175,7 @@ export default function HonourTable({
                   {isAdmin && (
                     <td className="px-5 py-3.5 text-right">
                       <button
-                        onClick={() => setPendingDeleteId(record._id)}
+                        onClick={() => handleDelete(record._id)}
                         className="p-1.5 rounded-md text-navy/40 hover:text-red-500 hover:bg-red-50 transition-colors"
                         aria-label="Delete record"
                       >
@@ -231,15 +237,6 @@ export default function HonourTable({
           )}
         </form>
       )}
-
-      <ConfirmDialog
-        open={pendingDeleteId !== null}
-        title="Delete this record?"
-        description="This cannot be undone."
-        confirmLabel="Delete"
-        onConfirm={confirmDelete}
-        onCancel={() => setPendingDeleteId(null)}
-      />
     </div>
   );
 }

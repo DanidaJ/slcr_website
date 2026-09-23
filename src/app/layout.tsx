@@ -3,6 +3,7 @@ import { Montserrat, Inter } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import LoginToast from "@/components/ui/LoginToast";
+import DialogProvider from "@/components/ui/DialogProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -40,7 +41,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${montserrat.variable}`}>
       <body className="font-sans antialiased">
-        {children}
+        <DialogProvider>{children}</DialogProvider>
         <LoginToast />
         <Analytics />
       </body>

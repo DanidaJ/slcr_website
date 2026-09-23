@@ -10,6 +10,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import type { Newsletter } from "@/lib/types";
+import { useDialog } from "@/components/ui/DialogProvider";
 
 const MONTHS = [
   "January", "February", "March", "April", "May", "June",
@@ -19,6 +20,7 @@ const MONTHS = [
 type Status = { type: "idle" | "success" | "error"; message?: string };
 
 export default function NewsletterManager() {
+  const { confirm, alert } = useDialog();
   const [list, setList] = useState<Newsletter[]>([]);
   const [loadingList, setLoadingList] = useState(true);
 
@@ -125,12 +127,20 @@ export default function NewsletterManager() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this newsletter? This cannot be undone.")) return;
+    const ok = await confirm({
+      title: "Delete this newsletter?",
+      description: "This cannot be undone.",
+      confirmLabel: "Delete",
+    });
+    if (!ok) return;
     const res = await fetch(`/api/newsletters/${id}`, { method: "DELETE" });
     if (res.ok) {
       setList((prev) => prev.filter((n) => n._id !== id));
     } else {
-      alert("Failed to delete.");
+      alert({
+        title: "Failed to delete newsletter",
+        description: "Something went wrong. Please try again.",
+      });
     }
   }
 

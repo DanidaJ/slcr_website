@@ -17,10 +17,12 @@ import {
 } from "lucide-react";
 import type { Member } from "@/lib/types";
 import MemberApplicationModal from "@/components/admin/MemberApplicationModal";
+import { useDialog } from "@/components/ui/DialogProvider";
 
 type Status = { type: "idle" | "success" | "error"; message?: string };
 
 export default function MemberManager() {
+  const { confirm, alert } = useDialog();
   const [list, setList] = useState<Member[]>([]);
   const [loadingList, setLoadingList] = useState(true);
 
@@ -96,7 +98,10 @@ export default function MemberManager() {
         prev.map((m) => (m._id === member._id ? { ...m, status: next } : m))
       );
     } else {
-      alert("Failed to update member.");
+      alert({
+        title: "Failed to update member",
+        description: "The member's status could not be changed. Please try again.",
+      });
     }
   }
 
@@ -133,17 +138,20 @@ export default function MemberManager() {
   }
 
   async function handleDelete(id: string, email: string) {
-    if (
-      !confirm(
-        `Remove ${email}? They will immediately lose access. This cannot be undone.`
-      )
-    )
-      return;
+    const ok = await confirm({
+      title: "Remove this member?",
+      description: `${email} will immediately lose access. This cannot be undone.`,
+      confirmLabel: "Remove",
+    });
+    if (!ok) return;
     const res = await fetch(`/api/admin/members/${id}`, { method: "DELETE" });
     if (res.ok) {
       setList((prev) => prev.filter((m) => m._id !== id));
     } else {
-      alert("Failed to delete.");
+      alert({
+        title: "Failed to remove member",
+        description: "Something went wrong. Please try again.",
+      });
     }
   }
 

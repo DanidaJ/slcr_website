@@ -10,10 +10,12 @@ import {
   AlertCircle,
 } from "lucide-react";
 import type { FellowshipDocument } from "@/lib/types";
+import { useDialog } from "@/components/ui/DialogProvider";
 
 type Status = { type: "idle" | "success" | "error"; message?: string };
 
 export default function FellowshipDocManager() {
+  const { confirm, alert } = useDialog();
   const [list, setList] = useState<FellowshipDocument[]>([]);
   const [loadingList, setLoadingList] = useState(true);
 
@@ -108,14 +110,22 @@ export default function FellowshipDocManager() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this document? This cannot be undone.")) return;
+    const ok = await confirm({
+      title: "Delete this document?",
+      description: "This cannot be undone.",
+      confirmLabel: "Delete",
+    });
+    if (!ok) return;
     const res = await fetch(`/api/membership/fellowship/${id}`, {
       method: "DELETE",
     });
     if (res.ok) {
       setList((prev) => prev.filter((d) => d._id !== id));
     } else {
-      alert("Failed to delete.");
+      alert({
+        title: "Failed to delete document",
+        description: "Something went wrong. Please try again.",
+      });
     }
   }
 
