@@ -10,7 +10,9 @@ import CustomSelect from "@/components/ui/CustomSelect";
 import RadioGroup from "@/components/ui/RadioGroup";
 import DatePicker from "@/components/ui/DatePicker";
 import HospitalCombobox from "@/components/ui/HospitalCombobox";
+import PhoneInput from "@/components/ui/PhoneInput";
 import {
+  extractNicBirthYear,
   validateEmail,
   validateMobile,
   validateResidence,
@@ -87,8 +89,12 @@ export default function RegisterForm() {
   const [post, setPost] = useState("");
   const [gender, setGender] = useState("");
   const [dob, setDob] = useState("");
+  const [dobYearHint, setDobYearHint] = useState<number | null>(null);
   const [email, setEmail] = useState("");
   const [hospital, setHospital] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [sameAsMobile, setSameAsMobile] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -145,6 +151,35 @@ export default function RegisterForm() {
     setFieldError(field, validateField(field, value, form));
   }
 
+  function handleMobileChange(next: string) {
+    setMobile(next);
+    if (sameAsMobile) {
+      setWhatsapp(next);
+      if (touched.preferredContact) {
+        setFieldError("preferredContact", validateMobile(next, "WhatsApp number"));
+      }
+    }
+    if (touched.mobile) {
+      setFieldError("mobile", validateMobile(next, "Mobile number"));
+    }
+  }
+
+  function handleSameAsMobile(checked: boolean) {
+    setSameAsMobile(checked);
+    if (checked) {
+      setWhatsapp(mobile);
+      touch("preferredContact");
+      setFieldError(
+        "preferredContact",
+        validateMobile(mobile, "WhatsApp number")
+      );
+    }
+  }
+
+  function handleNicChange(raw: string) {
+    setDobYearHint(extractNicBirthYear(raw));
+  }
+
   function validateForm(form: HTMLFormElement): boolean {
     const data = new FormData(form);
     const nextErrors: FieldErrors = {};
@@ -159,8 +194,6 @@ export default function RegisterForm() {
       "nic",
       "email",
       "confirmEmail",
-      "mobile",
-      "preferredContact",
       "residence",
     ] as const;
 
@@ -170,11 +203,20 @@ export default function RegisterForm() {
       if (message) nextErrors[field] = message;
     }
 
+    const mobileErr = validateMobile(mobile, "Mobile number");
+    if (mobileErr) nextErrors.mobile = mobileErr;
+
+    const whatsappValue = sameAsMobile ? mobile : whatsapp;
+    const whatsappErr = validateMobile(whatsappValue, "WhatsApp number");
+    if (whatsappErr) nextErrors.preferredContact = whatsappErr;
+
     setErrors(nextErrors);
     setTouched({
       salutation: true,
       gender: true,
       post: true,
+      mobile: true,
+      preferredContact: true,
       ...Object.fromEntries(textFields.map((f) => [f, true])),
     });
 
@@ -206,9 +248,9 @@ export default function RegisterForm() {
           province,
           hospital,
           post,
-          mobile: data.get("mobile"),
+          mobile,
           residence: data.get("residence"),
-          preferredContact: data.get("preferredContact"),
+          preferredContact: sameAsMobile ? mobile : whatsapp,
           medicalDegree: data.get("medicalDegree"),
           medicalSchool: data.get("medicalSchool"),
           pgQualifications: data.get("pgQualifications"),
@@ -229,8 +271,12 @@ export default function RegisterForm() {
       setPost("");
       setGender("");
       setDob("");
+      setDobYearHint(null);
       setEmail("");
       setHospital("");
+      setMobile("");
+      setWhatsapp("");
+      setSameAsMobile(false);
       setErrors({});
       setTouched({});
     } catch {
@@ -351,14 +397,20 @@ export default function RegisterForm() {
                 <input
                   name="nic"
                   type="text"
-                  placeholder="199012345678V"
+                  placeholder="199012345678"
                   className={fieldClass(showError("nic"))}
+                  onChange={(e) => handleNicChange(e.target.value)}
                   onBlur={(e) => handleBlur("nic", e.target.value)}
                 />
               </FormField>
 
               <FormField label="Date of Birth">
-                <DatePicker name="dob" value={dob} onChange={setDob} />
+                <DatePicker
+                  name="dob"
+                  value={dob}
+                  onChange={setDob}
+                  yearHint={dobYearHint}
+                />
               </FormField>
 
               <div className="sm:col-span-2">
@@ -457,24 +509,58 @@ export default function RegisterForm() {
               </FormField>
 
               <FormField label="Mobile Number" required error={showError("mobile")}>
-                <input
+                <PhoneInput
                   name="mobile"
-                  type="tel"
-                  placeholder="07X XXX XXXX or +94 7X XXX XXXX"
-                  className={fieldClass(showError("mobile"))}
-                  onBlur={(e) => handleBlur("mobile", e.target.value)}
+                  value={mobile}
+                  onChange={handleMobileChange}
+                  onBlur={(v) => {
+                    touch("mobile");
+                    setFieldError("mobile", validateMobile(v, "Mobile number"));
+                  }}
+                  error={showError("mobile")}
                 />
               </FormField>
 
-              <FormField label="WhatsApp Number" required error={showError("preferredContact")}>
-                <input
+              <div>
+                <label className="block text-sm font-medium text-white/80 mb-1.5">
+                  WhatsApp Number
+                  <span className="text-gold ml-0.5">*</span>
+                </label>
+                <PhoneInput
                   name="preferredContact"
-                  type="tel"
-                  placeholder="07X XXX XXXX or +94 7X XXX XXXX"
-                  className={fieldClass(showError("preferredContact"))}
-                  onBlur={(e) => handleBlur("preferredContact", e.target.value)}
+                  value={sameAsMobile ? mobile : whatsapp}
+                  onChange={(v) => {
+                    if (sameAsMobile) return;
+                    setWhatsapp(v);
+                    if (touched.preferredContact) {
+                      setFieldError("preferredContact", validateMobile(v, "WhatsApp number"));
+                    }
+                  }}
+                  onBlur={(v) => {
+                    touch("preferredContact");
+                    setFieldError(
+                      "preferredContact",
+                      validateMobile(v, "WhatsApp number")
+                    );
+                  }}
+                  error={showError("preferredContact")}
+                  disabled={sameAsMobile}
                 />
-              </FormField>
+                <label className="mt-2 inline-flex items-center gap-2 text-xs text-white/50 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={sameAsMobile}
+                    onChange={(e) => handleSameAsMobile(e.target.checked)}
+                    className="size-3.5 rounded border-white/20 bg-white/[0.07] accent-gold"
+                  />
+                  Same as Mobile Number
+                </label>
+                {showError("preferredContact") && (
+                  <p className="mt-1.5 text-xs text-red-300" role="alert">
+                    {showError("preferredContact")}
+                  </p>
+                )}
+              </div>
 
               <FormField label="Residence Telephone Number" error={showError("residence")}>
                 <input

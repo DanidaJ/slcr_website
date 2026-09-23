@@ -20,6 +20,8 @@ interface DatePickerProps {
   placeholder?: string;
   minYear?: number;
   maxYear?: number;
+  /** Prefills the calendar year (e.g. from NIC) when no date is selected yet. */
+  yearHint?: number | null;
 }
 
 export default function DatePicker({
@@ -29,10 +31,11 @@ export default function DatePicker({
   placeholder = "dd / mm / yyyy",
   minYear = 1920,
   maxYear = new Date().getFullYear(),
+  yearHint = null,
 }: DatePickerProps) {
   const [open, setOpen] = useState(false);
   const [viewYear, setViewYear] = useState(
-    value ? parseInt(value.split("-")[0]) : defaultViewYear()
+    value ? parseInt(value.split("-")[0]) : yearHint ?? defaultViewYear()
   );
   const [viewMonth, setViewMonth] = useState(
     value ? parseInt(value.split("-")[1]) - 1 : 0
@@ -53,6 +56,18 @@ export default function DatePicker({
     document.addEventListener("mousedown", handleOutside);
     return () => document.removeEventListener("mousedown", handleOutside);
   }, []);
+
+  useEffect(() => {
+    if (value) {
+      const [y, m] = value.split("-");
+      setViewYear(parseInt(y));
+      setViewMonth(parseInt(m) - 1);
+      return;
+    }
+    if (yearHint != null && yearHint >= minYear && yearHint <= maxYear) {
+      setViewYear(yearHint);
+    }
+  }, [value, yearHint, minYear, maxYear]);
 
   function formatDisplay(dateStr: string) {
     const [y, m, d] = dateStr.split("-");
