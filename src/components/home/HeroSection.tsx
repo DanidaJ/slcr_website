@@ -6,7 +6,8 @@ import Link from "next/link";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { fadeUp } from "@/lib/motion";
 import HeroAnnouncement from "@/components/home/HeroAnnouncement";
-import { SESSIONS_VIDEO_AUTOPLAY_KEY } from "@/lib/sessionsVideo";
+// Sessions film autoplay — restore with SessionsVideoSection on upcoming-sessions
+// import { SESSIONS_VIDEO_AUTOPLAY_KEY } from "@/lib/sessionsVideo";
 
 const DESKTOP_SRCS = [
   { webm: "/videos/background1.webm", mp4: "/videos/background1.mp4" },
@@ -178,20 +179,21 @@ export default function HeroSection({ announcement = null }: HeroSectionProps) {
         >
           <Link
             href="/academic-sessions/upcoming-sessions"
-            onClick={() => {
-              try {
-                sessionStorage.setItem(SESSIONS_VIDEO_AUTOPLAY_KEY, "1");
-              } catch {
-                /* private mode — the page simply opens without the video */
-              }
-            }}
+            // Restore when SessionsVideoSection is re-enabled on upcoming-sessions:
+            // onClick={() => {
+            //   try {
+            //     sessionStorage.setItem(SESSIONS_VIDEO_AUTOPLAY_KEY, "1");
+            //   } catch {
+            //     /* private mode — the page simply opens without the video */
+            //   }
+            // }}
             className="relative inline-flex items-center gap-4 pl-7 pr-3 py-3 rounded-full border border-white/30 bg-white/[0.07] backdrop-blur-sm overflow-hidden group"
           >
             {/* Sliding white fill */}
             <span className="absolute inset-0 bg-white scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-in-out" />
 
             <span className="relative z-10 text-white group-hover:text-navy font-semibold text-base sm:text-lg transition-colors duration-400">
-              Annual Academic Sessions 2026
+              Annual Academic Sessions 2027
             </span>
             <span className="relative z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white/20 group-hover:bg-navy transition-colors duration-400 flex-shrink-0">
               <ArrowRight className="w-5 h-5 text-white" />

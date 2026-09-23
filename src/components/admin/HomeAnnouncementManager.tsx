@@ -114,7 +114,7 @@ export default function HomeAnnouncementManager() {
               Home Page Announcement
             </h1>
             <p className="text-sm text-navy/50">
-              Limited-time message shown under Annual Academic Sessions 2026 on
+              Limited-time message shown under Annual Academic Sessions 2027 on
               the home page
             </p>
           </div>

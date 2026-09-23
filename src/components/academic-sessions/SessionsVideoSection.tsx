@@ -1,5 +1,13 @@
 "use client";
 
+/**
+ * Academic Sessions promo film section.
+ *
+ * Currently not mounted on upcoming-sessions (commented out there until the
+ * AAS 2027 video is ready). Component, modal, and assets remain intact for
+ * drop-in reuse — see the restore checklist on upcoming-sessions/page.tsx.
+ */
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Play } from "lucide-react";

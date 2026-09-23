@@ -80,10 +80,11 @@ const NAV_ITEMS: NavItem[] = [
         href: "/academic-sessions/upcoming-sessions",
       },
       { label: "PAST SESSIONS", href: "/academic-sessions/past-sessions" },
-      {
-        label: "REGISTRATION",
-        href: "/academic-sessions/registration",
-      },
+      // AAS registration — restore when registration opens for the current year
+      // {
+      //   label: "REGISTRATION",
+      //   href: "/academic-sessions/registration",
+      // },
     ],
   },
   {
