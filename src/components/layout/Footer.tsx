@@ -6,7 +6,7 @@ const FACEBOOK_LINK = "https://www.facebook.com/570661699637887?ref=embed_page";
 
 export default function Footer() {
   return (
-    <footer className="bg-navy-dark text-white/75">
+    <footer className="mt-auto bg-navy-dark text-white/75">
       <div className="max-w-7xl 2xl:max-w-screen-2xl mx-auto px-5 sm:px-6 lg:px-8 py-12 sm:py-14">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
           {/* About */}

@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import BackToTop from "@/components/layout/BackToTop";
+import PageShell from "@/components/layout/PageShell";
 import HeroSection from "@/components/home/HeroSection";
 import LatestStories from "@/components/home/LatestStories";
 import OurCollege from "@/components/home/OurCollege";
@@ -21,7 +22,7 @@ export default async function Home() {
   ]);
 
   return (
-    <main>
+    <PageShell>
       <Navbar />
       <HeroSection
         announcement={
@@ -40,6 +41,6 @@ export default async function Home() {
       <BackToTop />
       <QuickLinksFloat />
       <XrayGameFloat />
-    </main>
+    </PageShell>
   );
 }

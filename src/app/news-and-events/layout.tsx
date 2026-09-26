@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import BackToTop from "@/components/layout/BackToTop";
+import PageShell from "@/components/layout/PageShell";
 
 export default function NewsAndEventsLayout({
   children,
@@ -9,11 +10,11 @@ export default function NewsAndEventsLayout({
   children: ReactNode;
 }) {
   return (
-    <main>
+    <PageShell>
       <Navbar transparentOnTop={false} />
       {children}
       <Footer />
       <BackToTop />
-    </main>
+    </PageShell>
   );
 }

@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import BackToTop from "@/components/layout/BackToTop";
+import PageShell from "@/components/layout/PageShell";
 import PageHeader from "@/components/the-college/PageHeader";
 import ContactForm from "@/components/contact/ContactForm";
 
@@ -9,7 +10,7 @@ const MAP_EMBED_URL =
 
 export default function ContactUsPage() {
   return (
-    <main>
+    <PageShell>
       <Navbar transparentOnTop={false} />
       <PageHeader title="Contact Us" eyebrow="Get in Touch" tone="dark" />
       <section className="py-14 sm:py-16 lg:py-20 bg-linear-to-b from-surface to-white">
@@ -102,6 +103,6 @@ export default function ContactUsPage() {
       </section>
       <Footer />
       <BackToTop />
-    </main>
+    </PageShell>
   );
 }

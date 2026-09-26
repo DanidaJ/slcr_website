@@ -3,6 +3,7 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import BackToTop from "@/components/layout/BackToTop";
+import PageShell from "@/components/layout/PageShell";
 import PageHeader from "@/components/the-college/PageHeader";
 
 export const metadata: Metadata = {
@@ -90,7 +91,7 @@ const SECTIONS = [
 
 export default function PrivacyPolicyPage() {
   return (
-    <main>
+    <PageShell>
       <Navbar transparentOnTop={false} />
       <PageHeader
         title="Privacy Policy"
@@ -127,6 +128,6 @@ export default function PrivacyPolicyPage() {
       </section>
       <Footer />
       <BackToTop />
-    </main>
+    </PageShell>
   );
 }
