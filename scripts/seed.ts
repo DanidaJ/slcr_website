@@ -412,7 +412,7 @@ const PAST_PRESIDENTS: Omit<PastPresident, "order">[] = [
   { name: "Dr. (Mrs.) K.Pathirane", term: "2003 – 2004", image: "/images/past-presidents/Dr.-Mrs-K.Pathirane.jpg" },
   { name: "Dr. (Mrs.) N. Somaweera", term: "2004 - 2005", image: "/images/past-presidents/Dr.-Mrs.-N.-Somaweera.jpg" },
   { name: "Dr. S. V. Alahakoon", term: "2005 – 2006", image: "/images/past-presidents/Dr.-S.-V.-Alahakoon.jpg" },
-  { name: "Dr. N.G. Atulugama", term: "2006 – 2007" },
+  { name: "Dr. N.G. Atulugama", term: "2006 – 2007", image: "/images/past-presidents/Dr.-N.G.-Atulugama.jpg" },
   { name: "Dr. I. N. Lekamge", term: "2007 - 2008", image: "/images/past-presidents/Dr.-I.-N.-LEKAMGE.jpg" },
   { name: "Dr. P.B. Hewavithana", term: "2008 - 2009", image: "/images/past-presidents/Dr.P.B.Hewavithana.jpg" },
   { name: "Dr. (Mrs.) Rajapaksha", term: "2009 – 2010", image: "/images/past-presidents/Dr-Mrs-T.G.T.Rajapaksha.jpg" },
